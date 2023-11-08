@@ -1,48 +1,64 @@
 #!/bin/bash
 
-# Update and upgrade the system
-sudo apt-get update && sudo apt-get upgrade -y
+# Check if telepi is installed
+if command -v telepi &> /dev/null; then
+    # Telepi is installed, stop the service
+    sudo systemctl stop telepi.service
 
-# Install Node.js 18.x, npm, and aria2
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt-get install -y nodejs aria2
+    # Update telepi from npmjs
+    sudo npm install -g telepi@latest
 
-# Prompt user for TELEGRAMBOT variable with regex check
-while true; do
-  read -p "Please enter your Telegram bot token: " TELEGRAMBOT
-  if [[ $TELEGRAMBOT =~ ^[0-9]{9,10}:[A-Za-z0-9_-]{35}$ ]]; then
-    break
-  else
-    echo "Invalid Telegram bot token. Please try again."
-  fi
-done
+    # Start the telepi service again
+    sudo systemctl start telepi.service
 
-# Set TELEGRAMBOT as an environment variable
-echo "export TELEGRAMBOT=$TELEGRAMBOT" >> ~/.bashrc
+    echo "Telepi service stopped, updated, and started again."
+else
+    # Telepi is not installed, proceed with installation
 
-# Reload the shell environment
-source ~/.bashrc
+    # Update and upgrade the system
+    sudo apt-get update && sudo apt-get upgrade -y
 
-# Install telepi globally
-sudo npm install -g telepi
+    # Install Node.js 18.x, npm, and aria2
+    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+    sudo apt-get install -y nodejs aria2
 
-# Create telepi systemd service
-sudo tee /etc/systemd/system/telepi.service >/dev/null <<EOF
-[Unit]
-Description=telepi Service
-After=network.target
+    # Prompt user for TELEGRAMBOT variable with regex check
+    while true; do
+      read -p "Please enter your Telegram bot token: " TELEGRAMBOT
+      if [[ $TELEGRAMBOT =~ ^[0-9]{9,10}:[A-Za-z0-9_-]{35}$ ]]; then
+        break
+      else
+        echo "Invalid Telegram bot token. Please try again."
+      fi
+    done
 
-[Service]
-ExecStart=/usr/bin/env telepi
-Restart=always
-Environment="TELEGRAMBOT=$TELEGRAMBOT"
+    # Set TELEGRAMBOT as an environment variable
+    echo "export TELEGRAMBOT=$TELEGRAMBOT" >> ~/.bashrc
 
-[Install]
-WantedBy=multi-user.target
-EOF
+    # Reload the shell environment
+    source ~/.bashrc
 
-# Reload systemd daemon and enable telepi service
-sudo systemctl daemon-reload
-sudo systemctl enable telepi.service
+    # Install telepi globally
+    sudo npm install -g telepi
 
-echo "telepi installation and service setup complete!"
+    # Create telepi systemd service
+    sudo tee /etc/systemd/system/telepi.service >/dev/null <<EOF
+    [Unit]
+    Description=telepi Service
+    After=network.target
+
+    [Service]
+    ExecStart=/usr/bin/env telepi
+    Restart=always
+    Environment="TELEGRAMBOT=$TELEGRAMBOT"
+
+    [Install]
+    WantedBy=multi-user.target
+    EOF
+
+    # Reload systemd daemon and enable telepi service
+    sudo systemctl daemon-reload
+    sudo systemctl enable telepi.service
+
+    echo "telepi installation and service setup complete!"
+fi
