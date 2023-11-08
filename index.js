@@ -1,4 +1,6 @@
-const { getIpAddress, getSys, getUptime } = require('./modules/os.js');
+require('dotenv').config();
+
+const { getIpAddress, getPublicIp, getSys, getUptime } = require('./modules/os.js');
 
 const { bytesToSize } = require('./modules/utils.js');
 
@@ -34,9 +36,10 @@ bot.on('message', async (ctx) => {
 		}
 
 		if (lowerCaseCommand === '/ip') {
-			const ipAddress = await getIpAddress();
+			const ipLocal = await getIpAddress();
+			const ipPublic = await getPublicIp();
 
-			ctx.reply(`IP : ${ipAddress}`);
+			ctx.reply(`Local IP : ${ipLocal} and Public IP : ${ipPublic}`);
 		}
 	} catch (error) {
 		console.log(error);
