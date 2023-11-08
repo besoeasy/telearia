@@ -6,11 +6,13 @@ const { bytesToSize } = require('./modules/utils.js');
 
 const { openTunnels, openServeoTunnel } = require('./modules/tunnel.js');
 
-const { getGlobalStats, downloadAria, getDownloadStatus, cancelDownload } = require('./modules/aria2.js');
+const { getGlobalStats, downloadAria, getDownloadStatus, cancelDownload, httpServer } = require('./modules/aria2.js');
 
 const { Telegraf } = require('telegraf');
 
 const bot = new Telegraf(process.env.TELEGRAMBOT);
+
+const port = process.env.PORT || Math.floor(Math.random() * (2890 - 2280 + 1)) + 2280;
 
 bot.on('message', async (ctx) => {
 	try {
@@ -103,6 +105,12 @@ bot.on('message', async (ctx) => {
 
 			ctx.reply(`Download canceled with id: ${downloadId}`);
 		}
+
+		if (lowerCaseCommand === '/content') {
+			const ipAddress = await getIpAddress();
+
+			ctx.reply(`HTTP : http://${ipAddress}:${port}`);
+		}
 	} catch (error) {
 		console.error(error);
 		ctx.reply('An error occurred. Please try again later.');
@@ -110,3 +118,4 @@ bot.on('message', async (ctx) => {
 });
 
 bot.launch();
+httpServer.listen(port);

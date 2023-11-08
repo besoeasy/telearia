@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const { spawn } = require('child_process');
 
-const saveDirectory = '/tmp/telepi';
+const saveDirectory = '/tmp/telepi/';
 
 const aria2c = spawn('aria2c', [
 	'--seed-time=60',
@@ -72,6 +72,17 @@ const cancelDownload = async (gid) => {
 	return data;
 };
 
+const handler = require('serve-handler');
+
+const http = require('http');
+
+const httpServer = http.createServer((request, response) => {
+	return handler(request, response, {
+		public: saveDirectory,
+		rewrites: [{ source: '**', destination: '/index.html' }],
+	});
+});
+
 module.exports = {
 	getVersion,
 	getGlobalStats,
@@ -79,4 +90,5 @@ module.exports = {
 	getDownloadStatus,
 	cancelDownload,
 	saveDirectory,
+	httpServer,
 };
