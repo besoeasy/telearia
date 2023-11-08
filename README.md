@@ -1,26 +1,41 @@
-# Introduction 
+# Introduction
 
-telepi is simple tool to monitor and use your raspberry pi ( and similar linux based systems) via telegram, it eleminates needs to a dedicated web setup.
+Telepi is a simple tool that allows you to monitor and control your Raspberry Pi (and other Linux-based systems) via Telegram. It eliminates the need for a dedicated web setup and provides a convenient way to manage your device remotely.
 
-Features 
-1. Download Anything ( HTTP, FTP, TORRENT )
-2. Monitor System Health
-3. Monitor RAM & Storage
-4. Get public & Local Network IP
-5. Speedtest
-6. Fetch any file
-   
+# Features
 
-# Install
+Telepi offers several features, including:
 
-Run the following command to install :
+- Downloading files from HTTP, FTP, and torrent sources
+- Monitoring system health, RAM, and storage usage
+- Retrieving public and local network IP addresses
+- Running speed tests
+- Fetching any file
+
+# Installation
+
+To install Telepi, run the following command:
 
 ```
 sudo bash -c "$(curl -sL https://unpkg.com/telepi)"
 ```
 
-# Notes
+# Usage
 
+Once installed, you can start using Telepi by sending commands to your Telegram bot. Here are some examples:
 
-Currently telepi should work on everything running on debain, which includes almost all of popular SBCs and OSs
+- To download a file: `/download <URL>`
+- To get system information: `/info`
+- To retrieve network IP addresses: `/ip`
+- To run a speed test: `/speedtest`
+- To fetch a file: `/fetch <FILE_PATH>`
 
+For more information on how to use Telepi, please refer to the documentation.
+
+# Requirements
+
+Telepi requires a Raspberry Pi or other Linux-based system running Debian. It also requires a Telegram account and a Telegram bot token.
+
+# Future Updates
+
+We plan to add more features to Telepi in the future, including support for additional file transfer protocols and improved performance. Stay tuned for updates!
