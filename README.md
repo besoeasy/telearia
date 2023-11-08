@@ -30,8 +30,6 @@ Once installed, you can start using Telepi by sending commands to your Telegram 
 - To run a speed test: `/speedtest`
 - To fetch a file: `/fetch <FILE_PATH>`
 
-For more information on how to use Telepi, please refer to the documentation.
-
 # Requirements
 
 Telepi requires a Raspberry Pi or other Linux-based system running Debian. It also requires a Telegram account and a Telegram bot token.
