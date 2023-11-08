@@ -1,9 +1,8 @@
 require('dotenv').config();
 
 const { getIpAddress, getPublicIp, getSys, getUptime } = require('./modules/os.js');
-
 const { bytesToSize } = require('./modules/utils.js');
-
+const { openTunnels, openServeoTunnel } = require('./modules/tunnel.js');
 const { Telegraf } = require('telegraf');
 
 const bot = new Telegraf(process.env.TELEGRAMBOT);
@@ -22,7 +21,6 @@ bot.on('message', async (ctx) => {
 
 		if (lowerCaseCommand === '/stats') {
 			const { totalMemory, freeMemory, usedMemoryPercentage } = await getSys();
-
 			const { uptimeHours, uptimeMinutes } = await getUptime();
 
 			const msgToSend =
@@ -43,8 +41,23 @@ bot.on('message', async (ctx) => {
 				`Local IP : ${ipLocal} \nPublic IP : ${ipPublic.ip}\nISP : ${ipPublic.isp}\nCity : ${ipPublic.city}\nCountry : ${ipPublic.country}`
 			);
 		}
+
+		if (lowerCaseCommand === '/tunnels') {
+			ctx.reply(`openTunnels ${openTunnels}`);
+		}
+
+		if (lowerCaseCommand === '/open') {
+			const port = parseInt(args[0]);
+			if (!isNaN(port)) {
+				ctx.reply(`Trying to connect to port ${port}...`);
+				openServeoTunnel(port, 80);
+			} else {
+				ctx.reply('Invalid port number. Please provide a valid port as an argument.');
+			}
+		}
 	} catch (error) {
-		console.log(error);
+		console.error(error);
+		ctx.reply('An error occurred. Please try again later.');
 	}
 });
 
