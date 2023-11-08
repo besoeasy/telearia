@@ -1,0 +1,27 @@
+{
+  "name": "telepi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "unpkg": "install.sh",
+  "bin": {
+    "telepi": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "besoeasy",
+  "license": "ISC",
+  "description": "telepi",
+  "bugs": {
+    "url": "https://github.com/besoeasy/telepi/issues"
+  },
+  "homepage": "https://github.com/besoeasy/telepi#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/besoeasy/telepi.git"
+  },
+  "dependencies": {
+    "telegraf": "^4.15.0"
+  }
+}
