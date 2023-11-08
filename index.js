@@ -43,6 +43,8 @@ bot.on('message', async (ctx) => {
 		}
 
 		if (lowerCaseCommand === '/tunnels') {
+			openTunnels = [...new Set(openTunnels)];
+
 			ctx.reply(`openTunnels ${openTunnels}`);
 		}
 

@@ -17,6 +17,7 @@ function openServeoTunnel(localPort, remotePort) {
 		console.log(data);
 
 		const das = parseUrlsFromString(data);
+
 		openTunnels.push(das);
 	});
 
