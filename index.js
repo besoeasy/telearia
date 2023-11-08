@@ -43,7 +43,7 @@ bot.on('message', async (ctx) => {
 		}
 
 		if (lowerCaseCommand === '/tunnels') {
-			ctx.reply(`openTunnels ${openTunnels}`);
+			ctx.reply(`openTunnels :  ${openTunnels}`);
 		}
 
 		if (lowerCaseCommand === '/open') {
