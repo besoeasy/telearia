@@ -1,5 +1,7 @@
 const { getIpAddress, getSys, getUptime } = require('./modules/os.js');
 
+const { bytesToSize } = require('./modules/utils.js');
+
 const { Telegraf } = require('telegraf');
 
 const bot = new Telegraf(process.env.TELEGRAMBOT);
@@ -12,17 +14,11 @@ bot.on('message', async (ctx) => {
 
 		const lowerCaseCommand = command.toLowerCase().trim();
 
-		const trimmedArgs = args.map((arg) => arg.trim());
-
-		console.log(`@${from.username || 'X'} - ${chat.id} - ${text}`);
-
 		if (lowerCaseCommand === '/start') {
-			ctx.reply(`Your user id is: ${chat.id}, Ver : ${version}`);
+			ctx.reply(`Your user id is: ${chat.id}`);
 		}
 
 		if (lowerCaseCommand === '/stats') {
-			const { result: stats } = await getGlobalStats();
-
 			const { totalMemory, freeMemory, usedMemoryPercentage } = await getSys();
 
 			const { uptimeHours, uptimeMinutes } = await getUptime();
@@ -32,14 +28,7 @@ bot.on('message', async (ctx) => {
 				`\n\n` +
 				`Server Memory: ${bytesToSize(totalMemory)}\n` +
 				`Free Memory: ${bytesToSize(freeMemory)}\n` +
-				`Server Memory Used: ${usedMemoryPercentage}%\n` +
-				`\n\n` +
-				`Download speed: ${bytesToSize(stats.downloadSpeed)}\n` +
-				`Upload speed: ${bytesToSize(stats.uploadSpeed)}\n` +
-				`\n\n` +
-				`Active downloads: ${stats.numActive}\n` +
-				`Waiting downloads: ${stats.numWaiting}\n` +
-				`Stopped downloads: ${stats.numStopped}`;
+				`Server Memory Used: ${usedMemoryPercentage}%\n`;
 
 			ctx.reply(msgToSend);
 		}
