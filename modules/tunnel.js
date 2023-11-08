@@ -19,6 +19,12 @@ function openServeoTunnel(localPort, remotePort) {
 		const das = parseUrlsFromString(data);
 
 		openTunnels.push(das);
+
+		const uniqueArray = openTunnels.filter((element, index, array) => {
+			return array.indexOf(element) === index;
+		});
+
+		openTunnels = uniqueArray;
 	});
 
 	child.stderr.on('data', (data) => {
