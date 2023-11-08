@@ -106,7 +106,7 @@ bot.on('message', async (ctx) => {
 			ctx.reply(`Download canceled with id: ${downloadId}`);
 		}
 
-		if (lowerCaseCommand === '/content') {
+		if (lowerCaseCommand === '/downloads') {
 			const ipAddress = await getIpAddress();
 
 			ctx.reply(`HTTP : http://${ipAddress}:${port}`);
