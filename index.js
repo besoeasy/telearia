@@ -39,7 +39,9 @@ bot.on('message', async (ctx) => {
 			const ipLocal = await getIpAddress();
 			const ipPublic = await getPublicIp();
 
-			ctx.reply(`Local IP : ${ipLocal} and Public IP : ${ipPublic}`);
+			ctx.reply(
+				`Local IP : ${ipLocal} \nPublic IP : ${ipPublic.ip}\nISP : ${ipPublic.isp}\nCity : ${ipPublic.city}\nCountry : ${ipPublic.country}`
+			);
 		}
 	} catch (error) {
 		console.log(error);

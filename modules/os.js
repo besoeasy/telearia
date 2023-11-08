@@ -56,11 +56,17 @@ async function getIpAddress() {
 }
 
 async function getPublicIp() {
-	const apiUrl = 'https://api.ipify.org';
+	const apiUrl = 'http://ip-api.com/json';
 
 	try {
 		const response = await axios.get(apiUrl);
-		return response.data;
+
+		return {
+			ip: response.data.query || null,
+			isp: response.data.isp || null,
+			city: response.data.city || null,
+			country: response.data.country || null,
+		};
 	} catch (error) {
 		console.error(error);
 		throw new Error('Failed to get public IP address');
