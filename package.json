@@ -12,7 +12,7 @@
   "keywords": [],
   "author": "besoeasy",
   "license": "ISC",
-  "description": "telepi",
+  "description": "Telepi is a simple tool that allows you to monitor and control your Raspberry Pi (and other Linux-based systems) via Telegram. It eliminates the need for a dedicated web setup and provides a convenient way to manage your device remotely.",
   "bugs": {
     "url": "https://github.com/besoeasy/telepi/issues"
   },
