@@ -12,7 +12,7 @@ const { Telegraf } = require('telegraf');
 
 const bot = new Telegraf(process.env.TELEGRAMBOT);
 
-const port = process.env.PORT || Math.floor(Math.random() * (2890 - 2280 + 1)) + 2280;
+const port = process.env.PORT || 6700;
 
 bot.on('message', async (ctx) => {
 	try {
