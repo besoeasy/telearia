@@ -8,6 +8,8 @@ const { openTunnels, openServeoTunnel } = require('./modules/tunnel.js');
 
 const { getGlobalStats, downloadAria, getDownloadStatus, cancelDownload, httpServer } = require('./modules/aria2.js');
 
+const { compareVersions } = require('./modules/update.js');
+
 const { Telegraf } = require('telegraf');
 
 const bot = new Telegraf(process.env.TELEGRAMBOT);
@@ -26,6 +28,10 @@ bot.on('message', async (ctx) => {
 
 		if (lowerCaseCommand === '/start') {
 			ctx.reply(`Your user id is: ${chat.id}`);
+
+			const { textSend } = await compareVersions();
+
+			ctx.reply(`Checking TelePI Versions :\n\n${textSend}`);
 		}
 
 		if (lowerCaseCommand === '/stats') {
