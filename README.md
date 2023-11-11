@@ -24,11 +24,67 @@ sudo bash -c "$(curl -sL https://unpkg.com/telepi)"
 
 Once installed, you can start using Telepi by sending commands to your Telegram bot. Here are some examples:
 
-- To download a file: `/download <URL>`
-- To get system information: `/info`
-- To retrieve network IP addresses: `/ip`
-- To run a speed test: `/speedtest`
-- To fetch a file: `/fetch <FILE_PATH>`
+### About
+
+- **Command**: `/about`
+- **Description**: Get information about the TelePI project.
+- **Example**: `/about`
+
+### Start
+
+- **Command**: `/start`
+- **Description**: Start the bot and check TelePI versions.
+- **Example**: `/start`
+
+### Stats
+
+- **Command**: `/stats`
+- **Description**: Get server statistics, including uptime, memory usage, and download/upload speed.
+- **Example**: `/stats`
+
+### IP
+
+- **Command**: `/ip`
+- **Description**: Get local and public IP information.
+- **Example**: `/ip`
+
+### Tunnels
+
+- **Command**: `/tunnels`
+- **Description**: Get information about open tunnels.
+- **Example**: `/tunnels`
+
+### Open Tunnel
+
+- **Command**: `/open {port}`
+- **Description**: Open a tunnel on the specified port.
+- **Example**: `/open 8080`
+
+### Download
+
+- **Command**: `/download {url}`
+- **Alias**: `/dl {url}`
+- **Description**: Start a download with Aria2.
+- **Example**: `/download https://example.com/file.zip`
+
+### Status
+
+- **Command**: `/status_{downloadId}`
+- **Description**: Get the status of a download.
+- **Example**: `/status_123`
+
+### Cancel
+
+- **Command**: `/cancel_{downloadId}`
+- **Description**: Cancel a download.
+- **Example**: `/cancel_123`
+
+### Downloads
+
+- **Command**: `/downloads`
+- **Description**: Get the HTTP server URL for downloading files.
+- **Example**: `/downloads`
+
 
 # Requirements
 
