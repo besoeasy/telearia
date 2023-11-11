@@ -26,6 +26,10 @@ bot.on('message', async (ctx) => {
 
 		const trimmedArgs = args.map((arg) => arg.trim());
 
+		if (lowerCaseCommand === '/about') {
+			ctx.reply(`https://github.com/besoeasy/telepi`);
+		}
+
 		if (lowerCaseCommand === '/start') {
 			ctx.reply(`Your user id is: ${chat.id}`);
 
