@@ -20,7 +20,7 @@ else
 
     # Install Node.js 18.x, npm, and aria2
     curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-    sudo apt-get install -y nodejs aria2
+    sudo apt-get install -y nodejs aria2 curl wget
 
     # Prompt user for TELEGRAMBOT variable with regex check
     while true; do
