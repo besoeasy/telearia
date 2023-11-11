@@ -9,7 +9,6 @@
   "scripts": {
     "start": "node index.js"
   },
-  "keywords": [],
   "author": "besoeasy",
   "license": "ISC",
   "description": "Telepi is a simple tool that allows you to monitor and control your Raspberry Pi (and other Linux-based systems) via Telegram. It eliminates the need for a dedicated web setup and provides a convenient way to manage your device remotely.",
@@ -25,5 +24,29 @@
     "axios": "^1.6.0",
     "dotenv": "^16.3.1",
     "telegraf": "^4.15.0"
-  }
+  },
+  "keywords": [
+    "telepi",
+    "raspberry pi",
+    "telegram",
+    "monitoring",
+    "control",
+    "http",
+    "ftp",
+    "torrent",
+    "speed test",
+    "aria2",
+    "linux",
+    "system",
+    "file transfer",
+    "network",
+    "tunnel",
+    "download",
+    "uptime",
+    "memory usage",
+    "IP address",
+    "performance",
+    "file transfer protocol",
+    "Debian"
+  ]
 }
