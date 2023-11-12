@@ -1,4 +1,11 @@
 #!/bin/bash
+set -e
+
+# Check for sudo privileges
+if [ "$EUID" -ne 0 ]; then
+    echo "Please run as root or with sudo."
+    exit 1
+fi
 
 # Check if telepi is installed
 if command -v telepi &> /dev/null; then
@@ -33,28 +40,25 @@ else
     done
 
     # Set TELEGRAMBOT as an environment variable
-    echo "export TELEGRAMBOT=$TELEGRAMBOT" >> ~/.bashrc
-
-    # Reload the shell environment
-    source ~/.bashrc
+    echo "export TELEGRAMBOT=$TELEGRAMBOT" >> /etc/environment
 
     # Install telepi globally
     sudo npm install -g telepi
 
     # Create telepi systemd service
     sudo tee /etc/systemd/system/telepi.service >/dev/null <<EOF
-    [Unit]
-    Description=telepi Service
-    After=network.target
+[Unit]
+Description=telepi Service
+After=network.target
 
-    [Service]
-    ExecStart=/usr/bin/env telepi
-    Restart=always
-    Environment="TELEGRAMBOT=$TELEGRAMBOT"
+[Service]
+ExecStart=/usr/bin/env telepi
+Restart=always
+Environment="TELEGRAMBOT=$TELEGRAMBOT"
 
-    [Install]
-    WantedBy=multi-user.target
-    EOF
+[Install]
+WantedBy=multi-user.target
+EOF
 
     # Reload systemd daemon and enable telepi service
     sudo systemctl daemon-reload
