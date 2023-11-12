@@ -102,7 +102,8 @@ bot.on('message', async (ctx) => {
 			if (trimmedArgs.length > 0) {
 				const [url] = trimmedArgs;
 
-				const { result: ddta } = await downloadAria(chat.id, url);
+				const ddta = await downloadAria(chat.id, url);
+
 				const downloadId = ddta.result;
 
 				ctx.reply(`Download started with id: ${downloadId} \n\n/status_${downloadId}\n\n/cancel_${downloadId}`);
@@ -160,3 +161,20 @@ bot.on('message', async (ctx) => {
 
 bot.launch();
 
+const { spawn } = require('child_process');
+
+
+const aria2c = spawn('aria2c', [
+	'--seed-time=60',
+	'--enable-rpc',
+	'--rpc-listen-all',
+	'--rpc-allow-origin-all',
+	'--rpc-listen-port=6800',
+	'--enable-dht=true',
+	'--dht-listen-port=6881-7999',
+	'--dht-entry-point=router.bittorrent.com:6881',
+	'--dht-entry-point6=router.bittorrent.com:6881',
+	'--dht-entry-point6=router.utorrent.com:6881',
+	'--dht-entry-point6=dht.transmissionbt.com:6881',
+	'--dht-entry-point6=dht.aelitis.com:6881',
+]);
