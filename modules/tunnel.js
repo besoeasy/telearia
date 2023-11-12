@@ -11,7 +11,7 @@ function parseUrlsFromString(inputString) {
 }
 
 function openServeoTunnel(localPort, remotePort) {
-	const child = exec(`ssh -R ${remotePort}:localhost:${localPort} serveo.net`);
+	const child = exec(`ssh -o StrictHostKeyChecking=no  -R ${remotePort}:localhost:${localPort} serveo.net`);
 
 	child.stdout.on('data', (data) => {
 		console.log(data);

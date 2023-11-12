@@ -93,6 +93,8 @@ bot.on('message', async (ctx) => {
 			if (!isNaN(port)) {
 				ctx.reply(`Trying to connect to port ${port}...`);
 				openServeoTunnel(port, 80);
+
+				ctx.reply(`See opened tunnels using /tunnels`);
 			} else {
 				ctx.reply('Invalid port number. Please provide a valid port as an argument.');
 			}
@@ -113,7 +115,7 @@ bot.on('message', async (ctx) => {
 		if (lowerCaseCommand.startsWith('/status_')) {
 			const downloadId = lowerCaseCommand.split('_')[1];
 
-			const { result: ddta } = await getDownloadStatus(downloadId);
+			const ddta = await getDownloadStatus(downloadId);
 
 			const downloadSize_c = (ddta.result.completedLength / 1024 / 1024 || 0).toFixed(2);
 
@@ -125,7 +127,7 @@ bot.on('message', async (ctx) => {
 		if (lowerCaseCommand.startsWith('/cancel_')) {
 			const downloadId = lowerCaseCommand.split('_')[1];
 
-			const { result: ddta } = await cancelDownload(downloadId);
+			const ddta = await cancelDownload(downloadId);
 
 			ctx.reply(`Download canceled with id: ${downloadId}`);
 		}
