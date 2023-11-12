@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 require('dotenv').config();
 
 const { getIpAddress, getPublicIp, getSys, getUptime } = require('./modules/os.js');
