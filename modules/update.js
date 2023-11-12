@@ -19,12 +19,13 @@ async function compareVersions() {
         // Get versions from remote and local
         const remoteVersion = await getVersionFromRemote();
         const localVersion = getLocalVersion();
+
         const textSend = `Remote: ${remoteVersion}, Local: ${localVersion}`
 
         return {
             remoteVersion: remoteVersion,
             localVersion: localVersion,
-            text: textSend
+            textSend: textSend
         }
 
     } catch (error) {
