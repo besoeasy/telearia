@@ -16,6 +16,8 @@ const bot = new Telegraf(process.env.TELEGRAMBOT);
 
 const port = process.env.PORT || 6700;
 
+let httpServerRunning = false;
+
 bot.on('message', async (ctx) => {
 	try {
 		const { message_id, from, chat, date, text } = ctx.message;
@@ -45,20 +47,31 @@ bot.on('message', async (ctx) => {
 
 			const { uptimeHours, uptimeMinutes } = await getUptime();
 
-			const msgToSend =
-				`Server Uptime: ${uptimeHours} hours and ${uptimeMinutes} minutes\n` +
-				`\n\n` +
+
+			// Format uptime in hours and minutes
+			const uptimeMessage = `Server Uptime: ${uptimeHours} hours and ${uptimeMinutes} minutes`;
+
+			// Display server memory information
+			const memoryMessage =
 				`Server Memory: ${bytesToSize(totalMemory)}\n` +
 				`Free Memory: ${bytesToSize(freeMemory)}\n` +
-				`Server Memory Used: ${usedMemoryPercentage}%\n` +
-				`\n\n` +
+				`Server Memory Used: ${usedMemoryPercentage}%`;
+
+			// Display network speed information
+			const networkMessage =
 				`Download speed: ${bytesToSize(stats.downloadSpeed)}\n` +
-				`Upload speed: ${bytesToSize(stats.uploadSpeed)}\n` +
-				`\n\n` +
+				`Upload speed: ${bytesToSize(stats.uploadSpeed)}`;
+
+			// Display download statistics
+			const downloadStatsMessage =
 				`Active downloads: ${stats.numActive}\n` +
 				`Waiting downloads: ${stats.numWaiting}\n` +
 				`Stopped downloads: ${stats.numStopped}`;
 
+			// Combine all messages
+			const msgToSend = `${uptimeMessage}\n\n${memoryMessage}\n\n${networkMessage}\n\n${downloadStatsMessage}`;
+
+			// Send the formatted message
 			ctx.reply(msgToSend);
 		}
 
@@ -117,9 +130,27 @@ bot.on('message', async (ctx) => {
 		}
 
 		if (lowerCaseCommand === '/downloads') {
+
+			const portx = parseInt(args[0]) || port;
+
 			const ipAddress = await getIpAddress();
 
-			ctx.reply(`HTTP : http://${ipAddress}:${port}`);
+
+			if (!httpServerRunning) {
+
+				ctx.reply(`Summoning a http server for the downloads folder ......`);
+
+				httpServer.listen(portx, () => {
+					console.log(`HTTP server started on port ${portx}`);
+					httpServerRunning = true;
+				});
+			}
+
+
+			ctx.reply(`HTTP : http://${ipAddress}:${portx}`);
+
+
+
 		}
 	} catch (error) {
 		console.error(error);
@@ -128,4 +159,4 @@ bot.on('message', async (ctx) => {
 });
 
 bot.launch();
-// httpServer.listen(port);
+
