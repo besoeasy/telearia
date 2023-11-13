@@ -67,6 +67,12 @@ Once installed, you can start using Telepi by sending commands to your Telegram 
 - **Description**: Start a download with Aria2.
 - **Example**: `/download https://example.com/file.zip`
 
+### Ongoing
+
+- **Command**: `/ongoing`
+- **Description**: Get information about ongoing downloads, including their unique identifiers (GIDs).
+- **Example**: `/ongoing`
+
 ### Status
 
 - **Command**: `/status_{downloadId}`
