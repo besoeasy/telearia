@@ -13,6 +13,8 @@ const { bytesToSize } = require("./modules/utils.js");
 
 const { openTunnels, openServeoTunnel } = require("./modules/tunnel.js");
 
+const { getUrls } = require("./modules/db.js");
+
 const {
   getGlobalStats,
   downloadAria,
@@ -92,7 +94,12 @@ bot.on("message", async (ctx) => {
     }
 
     if (lowerCaseCommand === "/tunnels") {
-      ctx.reply(`openTunnels :  ${openTunnels}`);
+      const dddta = (await getUrls()) || null;
+
+      dddta.map((url) => {
+        const { id, url: urlx, port } = url;
+        ctx.reply(`URL: ${urlx} | PORT: ${port}`);
+      });
     }
 
     if (lowerCaseCommand === "/open") {
@@ -179,9 +186,7 @@ bot.on("message", async (ctx) => {
     if (!lowerCaseCommand.startsWith("/")) {
       ctx.reply(`I don't understand this command: ${lowerCaseCommand}`);
     }
-
-
-    } catch (error) {
+  } catch (error) {
     console.error(error);
     ctx.reply("An error occurred. Please try again later.");
   }

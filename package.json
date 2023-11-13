@@ -1,6 +1,6 @@
 {
   "name": "telepi",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "index.js",
   "unpkg": "install.sh",
   "bin": {
@@ -23,7 +23,9 @@
   "dependencies": {
     "axios": "^1.6.0",
     "dotenv": "^16.3.1",
+    "sequelize": "^6.35.0",
     "serve-handler": "^6.1.5",
+    "sqlite3": "^5.1.6",
     "telegraf": "^4.15.0"
   },
   "keywords": [
