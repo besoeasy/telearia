@@ -128,7 +128,6 @@ bot.on("message", async (ctx) => {
 
       const gids = ongoingDownloads.map((download) => download.gid);
 
-      // Sending GIDs in the format of '/status_'
       const formattedGids = gids.map((gid) => `/status_${gid}`).join(", ");
 
       ctx.reply(`Ongoing Downloads GIDs: ${formattedGids}`);
@@ -178,9 +177,11 @@ bot.on("message", async (ctx) => {
     }
 
     if (!lowerCaseCommand.startsWith("/")) {
-      ctx.reply(`You sent: ${text}`);
+      ctx.reply(`I don't understand this command: ${lowerCaseCommand}`);
     }
-  } catch (error) {
+
+
+    } catch (error) {
     console.error(error);
     ctx.reply("An error occurred. Please try again later.");
   }
