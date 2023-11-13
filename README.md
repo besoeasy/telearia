@@ -2,8 +2,6 @@
 
 Telepi is a simple tool that allows you to monitor and control your Raspberry Pi (and other Linux-based systems) via Telegram. It eliminates the need for a dedicated web setup and provides a convenient way to manage your device remotely.
 
-![image](https://github.com/besoeasy/telepi/assets/8281782/b87f7ee4-d865-4511-aa07-066193236b77)
-
 # Features
 
 Telepi offers several features, including:
@@ -21,6 +19,9 @@ To install Telepi, run the following command:
 ```
 sudo bash -c "$(curl -sL https://unpkg.com/telepi)"
 ```
+
+![image](https://github.com/besoeasy/telepi/assets/8281782/b87f7ee4-d865-4511-aa07-066193236b77)
+
 
 # Usage
 
