@@ -14,7 +14,7 @@ Telepi offers several features, including:
 
 # Installation
 
-To install Telepi, run the following command:
+To install or update Telepi, run the following command:
 
 ```
 sudo bash -c "$(curl -sL https://unpkg.com/telepi)"
