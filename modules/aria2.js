@@ -1,68 +1,41 @@
-const axios = require('axios');
+import axios from 'axios';
 
 const saveDirectory = '/tmp/telepi/';
 
-const getVersion = async () => {
+const axiosPost = async (method, params = []) => {
     const { data } = await axios.post('http://localhost:6800/jsonrpc', {
         jsonrpc: '2.0',
-        method: 'aria2.getVersion',
+        method,
         id: 1,
+        params,
     });
 
     return data;
+};
+
+const getVersion = async () => {
+    return await axiosPost('aria2.getVersion');
 };
 
 const getGlobalStats = async () => {
-    const { data } = await axios.post('http://localhost:6800/jsonrpc', {
-        jsonrpc: '2.0',
-        method: 'aria2.getGlobalStat',
-        id: 1,
-    });
-
-    return data;
+    return await axiosPost('aria2.getGlobalStat');
 };
 
 const downloadAria = async (id, url) => {
-    const { data } = await axios.post('http://localhost:6800/jsonrpc', {
-        jsonrpc: '2.0',
-        method: 'aria2.addUri',
-        id: 1,
-        params: [[url], { dir: saveDirectory + id + '/', enableDHT: true, enablePeerExchange: true }],
-    });
-
-    return data;
+    return await axiosPost('aria2.addUri', [[url], { dir: `${saveDirectory}${id}/`, enableDHT: true, enablePeerExchange: true }]);
 };
 
 const getDownloadStatus = async (gid) => {
-    const { data } = await axios.post('http://localhost:6800/jsonrpc', {
-        jsonrpc: '2.0',
-        method: 'aria2.tellStatus',
-        id: 1,
-        params: [gid],
-    });
-
-    return data;
+    return await axiosPost('aria2.tellStatus', [gid]);
 };
 
 const getOngoingDownloads = async () => {
-    const { data } = await axios.post('http://localhost:6800/jsonrpc', {
-        jsonrpc: '2.0',
-        method: 'aria2.tellActive',
-        id: 1,
-    });
-
-    return data;
+    return await axiosPost('aria2.tellActive');
 };
 
-const cancelDownload = async (gid) => {
-    const { data } = await axios.post('http://localhost:6800/jsonrpc', {
-        jsonrpc: '2.0',
-        method: 'aria2.remove',
-        id: 1,
-        params: [gid],
-    });
 
-    return data;
+const cancelDownload = async (gid) => {
+    return await axiosPost('aria2.remove', [gid]);
 };
 
 const handler = require('serve-handler');
