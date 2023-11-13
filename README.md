@@ -20,9 +20,6 @@ To install Telepi, run the following command:
 sudo bash -c "$(curl -sL https://unpkg.com/telepi)"
 ```
 
-![image](https://github.com/besoeasy/telepi/assets/8281782/b87f7ee4-d865-4511-aa07-066193236b77)
-
-
 # Usage
 
 Once installed, you can start using Telepi by sending commands to your Telegram bot. Here are some examples:
