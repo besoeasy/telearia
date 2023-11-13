@@ -8,7 +8,7 @@ const { bytesToSize } = require('./modules/utils.js');
 
 const { openTunnels, openServeoTunnel } = require('./modules/tunnel.js');
 
-const { getGlobalStats, downloadAria, getDownloadStatus, cancelDownload, httpServer } = require('./modules/aria2.js');
+const { getGlobalStats, downloadAria, getDownloadStatus, getOngoingDownloads, cancelDownload, httpServer } = require('./modules/aria2.js');
 
 const { compareVersions } = require('./modules/update.js');
 
@@ -114,6 +114,18 @@ bot.on('message', async (ctx) => {
 			}
 		}
 
+
+		if (lowerCaseCommand === '/ongoing') {
+			const { result: ongoingDownloads } = await getOngoingDownloads();
+		
+			const gids = ongoingDownloads.map(download => download.gid);
+			
+			// Sending GIDs in the format of '/status_'
+			const formattedGids = gids.map(gid => `/status_${gid}`).join(', ');
+		
+			ctx.reply(`Ongoing Downloads GIDs: ${formattedGids}`);
+		}
+		
 		if (lowerCaseCommand.startsWith('/status_')) {
 			const downloadId = lowerCaseCommand.split('_')[1];
 
