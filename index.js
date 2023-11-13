@@ -169,6 +169,10 @@ bot.on('message', async (ctx) => {
 
 
 		}
+
+
+
+
 	} catch (error) {
 		console.error(error);
 		ctx.reply('An error occurred. Please try again later.');
