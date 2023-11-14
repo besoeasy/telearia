@@ -32,11 +32,18 @@ const Url = sequelize.define("Url", {
 
 function insertUrl(url, port) {
   try {
-    const newUrl = Url.create({
-      url,
-      port,
-    }).then((url) => {
-      console.log(`Inserted url: ${url.url} with port: ${url.port}`);
+    Url.findOne({ where: { url: url } }).then((url) => {
+      if (url) {
+        console.log("URL already present");
+        return;
+      } else {
+        const newUrl = Url.create({
+          url,
+          port,
+        }).then((url) => {
+          console.log(`Inserted url: ${url.url} with port: ${url.port}`);
+        });
+      }
     });
   } catch (error) {
     console.log(error);
