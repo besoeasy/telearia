@@ -1,3 +1,16 @@
+function checkifurlValid(url) {
+  var pattern = new RegExp(
+    "^(https?:\\/\\/)?" + // protocol
+      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|" + // domain name
+      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+      "(\\#[-a-z\\d_]*)?$",
+    "i"
+  ); // fragment locator
+  return !!pattern.test(url);
+}
+
 const { Sequelize, DataTypes } = require("sequelize");
 
 const sequelize = new Sequelize({
@@ -30,23 +43,26 @@ const Url = sequelize.define("Url", {
   await sequelize.sync({ force: true });
 })();
 
-function insertUrl(url, port) {
+async function insertUrl(url, port) {
   try {
-    Url.findOne({ where: { url: url } }).then((url) => {
-      if (url) {
-        console.log("URL already present");
-        return;
-      } else {
-        const newUrl = Url.create({
-          url,
-          port,
-        }).then((url) => {
-          console.log(`Inserted url: ${url.url} with port: ${url.port}`);
-        });
-      }
-    });
+    if (!checkifurlValid(url)) {
+      console.log("Invalid URL");
+      return;
+    }
+
+    const existingUrl = await Url.findOne({ where: { url: url } });
+    if (existingUrl) {
+      console.log("URL already present");
+      return;
+    } else {
+      await Url.create({
+        url,
+        port,
+      });
+      console.log(`Inserted url: ${url} with port: ${port}`);
+    }
   } catch (error) {
-    console.log(error);
+    console.error(`Error inserting URL: ${error}`);
   }
 }
 
