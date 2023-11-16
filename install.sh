@@ -30,7 +30,7 @@ else
     # Telepi is not installed, proceed with installation
 
     # Install Node.js using snap
-    sudo snap install node --channel=18/stable --classic
+    sudo snap install node --classic
 
     # Install aria2 using snap
     sudo snap install aria2
