@@ -7,10 +7,11 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+sudo apt-get update -y
+
 # Check if snap is installed
 if ! command -v snap &> /dev/null; then
     # Install snap
-    sudo apt-get update
     sudo apt-get install -y snapd
 fi
 
@@ -33,7 +34,7 @@ else
     sudo snap install node --classic
 
     # Install aria2 using snap
-    sudo snap install aria2
+    sudo snap install aria2c
 
     # Prompt user for TELEGRAMBOT variable with regex check
     while true; do
