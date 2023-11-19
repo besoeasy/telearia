@@ -8,12 +8,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 sudo apt-get update -y
-
-# Check if snap is installed
-if ! command -v snap &> /dev/null; then
-    # Install snap
-    sudo apt-get install -y snapd
-fi
+sudo apt install aria2 nodejs npm -y
 
 # Check if telepi is installed
 if command -v telepi &> /dev/null; then
@@ -30,12 +25,6 @@ if command -v telepi &> /dev/null; then
 else
     # Telepi is not installed, proceed with installation
 
-    # Install Node.js using snap
-    sudo snap install node --classic
-
-    # Install aria2 using snap
-    sudo snap install aria2c
-
     # Prompt user for TELEGRAMBOT variable with regex check
     while true; do
       read -p "Please enter your Telegram bot token: " TELEGRAMBOT
@@ -50,7 +39,7 @@ else
     echo "export TELEGRAMBOT=$TELEGRAMBOT" >> /etc/environment
 
     # Install telepi globally
-    sudo npm install -g telepi
+    sudo npm install -g telepi || { echo "Telepi installation failed."; exit 1; }
 
     # Create telepi systemd service
     sudo tee /etc/systemd/system/telepi.service >/dev/null <<EOF
