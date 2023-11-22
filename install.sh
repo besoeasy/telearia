@@ -8,6 +8,7 @@ command_exists() {
 
 # Function to install a package
 install_package() {
+    sudo apt-get update -y
     sudo apt-get install -y "$1"
 }
 
@@ -18,7 +19,6 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Update and install necessary packages
-sudo apt-get update -y
 install_package ca-certificates
 install_package curl
 install_package gnupg
@@ -32,7 +32,7 @@ else
     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
     NODE_MAJOR=20
     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
-    sudo apt-get update && install_package nodejs
+    install_package nodejs
     node --version
     echo "Node.js installation complete!"
 fi
@@ -65,7 +65,6 @@ else
 
     # Install telepi globally
     sudo npm install -g telepi
-
 
         # Create telepi systemd service
     sudo tee /etc/systemd/system/telepi.service >/dev/null <<EOF
