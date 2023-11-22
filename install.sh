@@ -1,55 +1,55 @@
 #!/bin/bash
 set -e
 
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" &> /dev/null
+}
+
+# Function to install a package
+install_package() {
+    sudo apt-get install -y "$1"
+}
+
 # Check for sudo privileges
 if [ "$EUID" -ne 0 ]; then
     echo "Please run as root or with sudo."
     exit 1
 fi
 
+# Update and install necessary packages
 sudo apt-get update -y
-sudo apt-get install -y ca-certificates curl gnupg aria2
+install_package ca-certificates
+install_package curl
+install_package gnupg
+install_package aria2
 
-# Chech if Node.js is installed
-if command -v node &> /dev/null; then
+# Check and install Node.js
+if command_exists node; then
     echo "Node.js is already installed."
 else
     # Install Node.js from NodeSource repository
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
     NODE_MAJOR=20
     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
-
-    # Update and install Node.js
-    sudo apt-get update && apt-get install nodejs -y
-
-    # Check Node.js version
+    sudo apt-get update && install_package nodejs
     node --version
-
     echo "Node.js installation complete!"
 fi
 
-    # Check if npm is installed
-    if ! command -v npm &> /dev/null; then
-        echo "npm is not installed. Please install npm first."
-        exit 1
-    fi
+# Check and install npm
+if ! command_exists npm; then
+    echo "npm is not installed. Please install npm first."
+    exit 1
+fi
 
-# Check if telepi is installed
-if command -v telepi &> /dev/null; then
-
-    # Telepi is installed, stop the service
+# Check and update telepi
+if command_exists telepi; then
     sudo systemctl stop telepi.service
-
-    # Update telepi from npmjs
     sudo npm install -g telepi@latest
-
-    # Start the telepi service again
     sudo systemctl start telepi.service
-
     echo "Telepi service stopped, updated, and started again."
 else
-    # Telepi is not installed, proceed with installation
-
     # Prompt user for TELEGRAMBOT variable with regex check
     while true; do
       read -p "Please enter your Telegram bot token: " TELEGRAMBOT
@@ -66,7 +66,8 @@ else
     # Install telepi globally
     sudo npm install -g telepi
 
-    # Create telepi systemd service
+
+        # Create telepi systemd service
     sudo tee /etc/systemd/system/telepi.service >/dev/null <<EOF
 [Unit]
 Description=telepi Service
@@ -86,4 +87,5 @@ EOF
     sudo systemctl enable telepi.service
 
     echo "telepi installation and service setup complete!"
+
 fi
