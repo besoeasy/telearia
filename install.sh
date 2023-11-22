@@ -28,15 +28,14 @@ else
     echo "Node.js installation complete!"
 fi
 
-# Check if telepi is installed
-if command -v telepi &> /dev/null; then
-
     # Check if npm is installed
     if ! command -v npm &> /dev/null; then
         echo "npm is not installed. Please install npm first."
         exit 1
     fi
 
+# Check if telepi is installed
+if command -v telepi &> /dev/null; then
 
     # Telepi is installed, stop the service
     sudo systemctl stop telepi.service
