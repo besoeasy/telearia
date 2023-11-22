@@ -8,7 +8,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 sudo apt-get update -y
-sudo apt-get install aria2 snapd -y
+sudo apt-get install aria2 -y
 
 # Check if telepi is installed
 if command -v telepi &> /dev/null; then
@@ -25,8 +25,8 @@ if command -v telepi &> /dev/null; then
 else
     # Telepi is not installed, proceed with installation
 
-    # Install Node.js using snap
-    sudo snap install node --classic
+    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+    sudo apt-get install -y nodejs
 
     # Prompt user for TELEGRAMBOT variable with regex check
     while true; do
