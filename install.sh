@@ -12,6 +12,19 @@ install_package() {
     sudo apt-get install -y "$1"
 }
 
+# Function to check if the Telegram bot token is valid
+check_telegram_token() {
+    local bot_token="$1"
+    local response=$(curl -s "https://api.telegram.org/bot${bot_token}/getMe")
+    
+    if [[ $response == *"ok\":true"* ]]; then
+        echo "Telegram bot token is valid."
+    else
+        echo "Telegram bot token is invalid or the bot could not be reached."
+        exit 1
+    fi
+}
+
 # Check for sudo privileges
 if [ "$EUID" -ne 0 ]; then
     echo "Please run as root or with sudo."
@@ -59,6 +72,8 @@ else
             echo "Invalid Telegram bot token. Please try again."
         fi
     done
+
+    check_telegram_token "$TELEGRAMBOT"
 
     # Set TELEGRAMBOT as an environment variable
     if grep -q "TELEGRAMBOT" /etc/environment; then
