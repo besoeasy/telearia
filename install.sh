@@ -52,24 +52,24 @@ if command_exists telepi; then
 else
     # Prompt user for TELEGRAMBOT variable with regex check
     while true; do
-      read -p "Please enter your Telegram bot token: " TELEGRAMBOT
-      if [[ $TELEGRAMBOT =~ ^[0-9]{9,10}:[A-Za-z0-9_-]{35}$ ]]; then
-        break
-      else
-        echo "Invalid Telegram bot token. Please try again."
-      fi
+        read -p "Please enter your Telegram bot token: " TELEGRAMBOT
+        if [[ $TELEGRAMBOT =~ ^[0-9]{9,10}:[A-Za-z0-9_-]{35}$ ]]; then
+            break
+        else
+            echo "Invalid Telegram bot token. Please try again."
+        fi
     done
 
-# Set TELEGRAMBOT as an environment variable
-if grep -q "TELEGRAMBOT" /etc/environment; then
-    sudo sed -i '/TELEGRAMBOT/d' /etc/environment
-fi
-echo "export TELEGRAMBOT=$TELEGRAMBOT" | sudo tee -a /etc/environment
+    # Set TELEGRAMBOT as an environment variable
+    if grep -q "TELEGRAMBOT" /etc/environment; then
+        sudo sed -i '/TELEGRAMBOT/d' /etc/environment
+    fi
+    echo "export TELEGRAMBOT=$TELEGRAMBOT" | sudo tee -a /etc/environment
 
     # Install telepi globally
     sudo npm install -g telepi
 
-        # Create telepi systemd service
+    # Create telepi systemd service
     sudo tee /etc/systemd/system/telepi.service >/dev/null <<EOF
 [Unit]
 Description=telepi Service
@@ -89,5 +89,4 @@ EOF
     sudo systemctl enable telepi.service
 
     echo "telepi installation and service setup complete!"
-
 fi
