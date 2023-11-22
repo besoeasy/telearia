@@ -60,8 +60,11 @@ else
       fi
     done
 
-    # Set TELEGRAMBOT as an environment variable
-    echo "export TELEGRAMBOT=$TELEGRAMBOT" >> /etc/environment
+# Set TELEGRAMBOT as an environment variable
+if grep -q "TELEGRAMBOT" /etc/environment; then
+    sudo sed -i '/TELEGRAMBOT/d' /etc/environment
+fi
+echo "export TELEGRAMBOT=$TELEGRAMBOT" | sudo tee -a /etc/environment
 
     # Install telepi globally
     sudo npm install -g telepi
