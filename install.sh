@@ -82,6 +82,8 @@ else
     fi
     echo "export TELEGRAMBOT=$TELEGRAMBOT" | sudo tee -a /etc/environment
 
+    export TELEGRAMBOT="$TELEGRAMBOT"
+
     # Install telepi globally
     sudo npm install -g telepi
 
