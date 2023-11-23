@@ -42,18 +42,19 @@ if command_exists node; then
     echo "Node.js is already installed."
 else
     # Install Node.js from NodeSource repository
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-    NODE_MAJOR=20
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
     install_package nodejs
     node --version
     echo "Node.js installation complete!"
 fi
 
 # Check and install npm
-if ! command_exists npm; then
-    echo "npm is not installed. Please install npm first."
-    exit 1
+if command_exists npm; then
+    echo "npm is already installed."
+else
+    # Install Node.js from NodeSource repository
+    install_package npm
+    npm --version
+    echo "npm installation complete!"
 fi
 
 # Check and update telepi
