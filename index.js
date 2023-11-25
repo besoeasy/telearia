@@ -222,7 +222,7 @@ bot.launch();
 const { spawn } = require("child_process");
 
 const aria2c = spawn("aria2c", [
-  "--seed-time=60",
+  "--seed-time=240",
   "--enable-rpc",
   "--rpc-listen-all",
   "--rpc-allow-origin-all",
