@@ -28,13 +28,11 @@ const { compareVersions } = require("./modules/update.js");
 
 const { getWeather } = require("./modules/wea.js");
 
-const util = require("util");
-
-const exec = util.promisify(require("child_process").exec);
-
 const { Telegraf } = require("telegraf");
 
-const bot = new Telegraf(process.env.TELEGRAMBOT);
+const bot = new Telegraf(process.env.TELEGRAMBOT, {
+  telegram: { polling: { interval: 3 * 1000 } },
+});
 
 const port = process.env.PORT || 6700;
 
@@ -217,6 +215,10 @@ bot.on("message", async (ctx) => {
   }
 });
 
+bot.catch((err, ctx) => {
+  console.log(`Ooops, encountered an error for ${ctx.updateType}`, err);
+});
+
 bot.launch();
 
 const { spawn } = require("child_process");
@@ -234,4 +236,5 @@ const aria2c = spawn("aria2c", [
   "--dht-entry-point6=router.utorrent.com:6881",
   "--dht-entry-point6=dht.transmissionbt.com:6881",
   "--dht-entry-point6=dht.aelitis.com:6881",
+  "--dht-entry-point6=dht.libtorrent.org:25401",
 ]);
