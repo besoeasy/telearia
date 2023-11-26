@@ -33,7 +33,6 @@ const getOngoingDownloads = async () => {
     return await axiosPost('aria2.tellActive');
 };
 
-
 const cancelDownload = async (gid) => {
     return await axiosPost('aria2.remove', [gid]);
 };
