@@ -224,7 +224,10 @@ bot.launch();
 const { spawn } = require("child_process");
 
 const aria2c = spawn("aria2c", [
-  "--seed-time=240",
+  "--retry-wait=240",
+  "--continue=true",
+  "--seed-ratio=2",
+  "--seed-time=1440",
   "--enable-rpc",
   "--rpc-listen-all",
   "--rpc-allow-origin-all",
