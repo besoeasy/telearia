@@ -235,6 +235,4 @@ const aria2c = spawn("aria2c", [
   "--dht-entry-point6=router.bittorrent.com:6881",
   "--dht-entry-point6=router.utorrent.com:6881",
   "--dht-entry-point6=dht.transmissionbt.com:6881",
-  "--dht-entry-point6=dht.aelitis.com:6881",
-  "--dht-entry-point6=dht.libtorrent.org:25401",
 ]);
