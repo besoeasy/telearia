@@ -12,6 +12,18 @@ Telepi offers several features, including:
 - Running speed tests
 - Fetching any file
 
+## Requirements
+
+1. A Telegram bot token. Follow the steps below to create a Telegram bot and get the token:
+
+   - Open the Telegram app and search for the 'BotFather' bot.
+   - Start a chat with BotFather by clicking the 'Start' button.
+   - Type '/newbot' and send it. BotFather will ask you for a name for your bot. Provide a name.
+   - Next, BotFather will ask for a username for your bot. The username must end in 'bot'. For example, 'my_test_bot'.
+   - Once you've provided the username, BotFather will give you a token for your bot. Keep this token safe as you'll need it.
+
+2. Run the installation script. It will ask for the Telegram bot token. Provide the token you got from BotFather.
+
 # Installation
 
 To install or update Telepi, run the following command:
@@ -90,12 +102,3 @@ Once installed, you can start using Telepi by sending commands to your Telegram 
 - **Command**: `/downloads`
 - **Description**: Get the HTTP server URL for downloading files.
 - **Example**: `/downloads`
-
-
-# Requirements
-
-Telepi requires a Raspberry Pi or other Linux-based system running Debian. It also requires a Telegram account and a Telegram bot token.
-
-# Future Updates
-
-We plan to add more features to Telepi in the future, including support for additional file transfer protocols and improved performance. Stay tuned for updates!
