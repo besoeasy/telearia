@@ -36,6 +36,9 @@ install_package ca-certificates
 install_package curl
 install_package gnupg
 install_package aria2
+install_package neofetch
+
+sudo neofetch
 
 # Check and install Node.js
 if command_exists node; then
