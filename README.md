@@ -3,9 +3,6 @@
 Telepi simplifies Raspberry Pi and Linux system management via Telegram, featuring file downloads, system monitoring, network insights, speed tests, and the ability to open HTTP tunnels for efficient remote control
 
 # Features
-
-Telepi offers several features, including:
-
 - Downloading files from HTTP, FTP, and torrent sources
 - Monitoring system health, RAM, and storage usage
 - Retrieving public and local network IP addresses
