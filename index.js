@@ -2,7 +2,6 @@
 
 const { spawn } = require("child_process");
 const { Telegraf } = require("telegraf");
-
 const {
   getGlobalStats,
   downloadAria,
@@ -10,19 +9,19 @@ const {
   getOngoingDownloads,
   cancelDownload,
 } = require("./x/aria2.js");
-
 const { bytesToSize, ariaconfig } = require("./x/utils.js");
 
+// Check for required environment variable
 if (!process.env.TELEGRAMBOT) {
   console.error("Error: TELEGRAMBOT environment variable is not set.");
   process.exit(1);
 }
 
+// Spawn aria2c process
 const aria2c = spawn("aria2c", ariaconfig);
 
-const bot = new Telegraf(process.env.TELEGRAMBOT, {
-  telegram: { polling: { interval: 3000 } },
-});
+// Initialize bot
+const bot = new Telegraf(process.env.TELEGRAMBOT);
 
 const handleAbout = (ctx) => {
   ctx.reply("https://github.com/besoeasy/telearia");
@@ -30,28 +29,28 @@ const handleAbout = (ctx) => {
 
 const handleStart = (ctx) => {
   ctx.reply(`Your user id is: ${ctx.chat.id}`);
+
+  const commands = [
+    "/about - About this bot",
+    "/start - Start this bot",
+    "/stats - Get global stats",
+    "/download <url> - Start a download",
+    "/ongoing - Get ongoing downloads",
+    "/status_<gid> - Get status of a download",
+    "/cancel_<gid> - Cancel a download",
+  ];
+
+  ctx.reply(`Available commands:\n${commands.join("\n")}`);
 };
 
 const handleStats = async (ctx) => {
   try {
     const { result: stats } = await getGlobalStats();
-    const { totalMemory, freeMemory, usedMemoryPercentage } = await getSys();
-    const { uptimeHours, uptimeMinutes } = await getUptime();
-
-    const uptimeMessage = `Server Uptime: ${uptimeHours} hours and ${uptimeMinutes} minutes`;
-    const memoryMessage = `Server Memory: ${bytesToSize(
-      totalMemory
-    )}\nFree Memory: ${bytesToSize(
-      freeMemory
-    )}\nServer Memory Used: ${usedMemoryPercentage}%`;
     const networkMessage = `Download speed: ${bytesToSize(
       stats.downloadSpeed
     )}\nUpload speed: ${bytesToSize(stats.uploadSpeed)}`;
     const downloadStatsMessage = `Active downloads: ${stats.numActive}\nWaiting downloads: ${stats.numWaiting}\nStopped downloads: ${stats.numStopped}`;
-
-    ctx.reply(
-      `${uptimeMessage}\n\n${memoryMessage}\n\n${networkMessage}\n\n${downloadStatsMessage}`
-    );
+    ctx.reply(`${networkMessage}\n\n${downloadStatsMessage}`);
   } catch (error) {
     console.error(error);
     ctx.reply("Failed to retrieve stats. Please try again later.");
@@ -65,7 +64,6 @@ const handleDownload = async (ctx, url) => {
     ctx.reply(
       `Download started with id: ${downloadId}\n\n/status_${downloadId}\n\n/cancel_${downloadId}`
     );
-
     ctx.reply(`Track all downloads with /ongoing`);
   } catch (error) {
     console.error(error);
@@ -170,4 +168,8 @@ bot.catch((err, ctx) => {
   console.error(`Encountered an error for ${ctx.updateType}`, err);
 });
 
-bot.launch();
+bot.launch({
+  polling: {
+    interval: 3000,
+  },
+});
