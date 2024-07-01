@@ -1,19 +1,7 @@
 #!/usr/bin/env node
 
-require("dotenv").config();
-
-const {
-  getIpAddress,
-  getPublicIp,
-  getSys,
-  getUptime,
-} = require("./modules/os.js");
-
-const { bytesToSize } = require("./modules/utils.js");
-
-const { openTunnels, openServeoTunnel } = require("./modules/tunnel.js");
-
-const { getUrls } = require("./modules/db.js");
+const { spawn } = require("child_process");
+const { Telegraf } = require("telegraf");
 
 const {
   getGlobalStats,
@@ -21,207 +9,14 @@ const {
   getDownloadStatus,
   getOngoingDownloads,
   cancelDownload,
-  httpServer,
-} = require("./modules/aria2.js");
+} = require("./x/aria2.js");
 
-const { compareVersions } = require("./modules/update.js");
+const { bytesToSize } = require("./x/utils.js");
 
-const { getWeather } = require("./modules/wea.js");
-
-const { Telegraf } = require("telegraf");
-
-const bot = new Telegraf(process.env.TELEGRAMBOT, {
-  telegram: { polling: { interval: 3 * 1000 } },
-});
-
-const port = process.env.PORT || 6700;
-
-let httpServerRunning = false;
-
-bot.on("message", async (ctx) => {
-  if (ctx.message.text) {
-    try {
-      const { message_id, from, chat, date, text } = ctx.message;
-
-      const [command, ...args] = text.split(" ");
-
-      const lowerCaseCommand = command.toLowerCase().trim();
-
-      const trimmedArgs = args.map((arg) => arg.trim());
-
-      console.log(
-        `Message received from ${from.username} (id: ${from.id}) at ${date}: ${text}`
-      );
-
-      if (lowerCaseCommand === "/about") {
-        ctx.reply(`https://github.com/besoeasy/telepi`);
-      }
-
-      if (lowerCaseCommand === "/start") {
-        ctx.reply(`Your user id is: ${chat.id}`);
-
-        const { textSend } = await compareVersions();
-
-        ctx.reply(`Checking TelePI Versions :\n\n${textSend}`);
-      }
-
-      if (lowerCaseCommand === "/stats") {
-        const { result: stats } = await getGlobalStats();
-
-        const { totalMemory, freeMemory, usedMemoryPercentage } =
-          await getSys();
-
-        const { uptimeHours, uptimeMinutes } = await getUptime();
-
-        const uptimeMessage = `Server Uptime: ${uptimeHours} hours and ${uptimeMinutes} minutes`;
-
-        const memoryMessage =
-          `Server Memory: ${bytesToSize(totalMemory)}\n` +
-          `Free Memory: ${bytesToSize(freeMemory)}\n` +
-          `Server Memory Used: ${usedMemoryPercentage}%`;
-
-        const networkMessage =
-          `Download speed: ${bytesToSize(stats.downloadSpeed)}\n` +
-          `Upload speed: ${bytesToSize(stats.uploadSpeed)}`;
-
-        const downloadStatsMessage =
-          `Active downloads: ${stats.numActive}\n` +
-          `Waiting downloads: ${stats.numWaiting}\n` +
-          `Stopped downloads: ${stats.numStopped}`;
-
-        const msgToSend = `${uptimeMessage}\n\n${memoryMessage}\n\n${networkMessage}\n\n${downloadStatsMessage}`;
-
-        ctx.reply(msgToSend);
-      }
-
-      if (lowerCaseCommand === "/ip") {
-        const ipLocal = await getIpAddress();
-        const ipPublic = await getPublicIp();
-
-        ctx.reply(
-          `Local IP : ${ipLocal} \nPublic IP : ${ipPublic.ip}\nISP : ${ipPublic.isp}\nCity : ${ipPublic.city}\nCountry : ${ipPublic.country}`
-        );
-      }
-
-      if (lowerCaseCommand === "/tunnels") {
-        const dddta = (await getUrls()) || null;
-
-        dddta.map((url) => {
-          const { id, url: urlx, port } = url;
-          ctx.reply(`URL: ${urlx} | PORT: ${port}`);
-        });
-      }
-
-      if (lowerCaseCommand === "/open") {
-        const port = parseInt(args[0]);
-        if (!isNaN(port)) {
-          ctx.reply(`Trying to connect to port ${port}...`);
-          openServeoTunnel(port, 80);
-
-          ctx.reply(`See opened tunnels using /tunnels`);
-        } else {
-          ctx.reply(
-            "Invalid port number. Please provide a valid port as an argument."
-          );
-        }
-      }
-
-      if (lowerCaseCommand === "/download" || lowerCaseCommand === "/dl") {
-        if (trimmedArgs.length > 0) {
-          const [url] = trimmedArgs;
-
-          const ddta = await downloadAria(chat.id, url);
-
-          const downloadId = ddta.result;
-
-          ctx.reply(
-            `Download started with id: ${downloadId} \n\n/status_${downloadId}\n\n/cancel_${downloadId}`
-          );
-        }
-      }
-
-      if (lowerCaseCommand === "/ongoing") {
-        const { result: ongoingDownloads } = await getOngoingDownloads();
-
-        const gids = ongoingDownloads.map((download) => download.gid);
-
-        const formattedGids = gids.map((gid) => `/status_${gid}`).join(", ");
-
-        ctx.reply(`Ongoing Downloads GIDs: ${formattedGids}`);
-      }
-
-      if (lowerCaseCommand.startsWith("/status_")) {
-        const downloadId = lowerCaseCommand.split("_")[1];
-
-        const ddta = await getDownloadStatus(downloadId);
-
-        const downloadSize_c = (
-          ddta.result.completedLength / 1024 / 1024 || 0
-        ).toFixed(2);
-
-        const downloadSize_t = (
-          ddta.result.totalLength / 1024 / 1024 || 0
-        ).toFixed(2);
-
-        ctx.reply(
-          `Download status: ${ddta.result.status} \n\nDownload size: ${downloadSize_c} MB / ${downloadSize_t} MB`
-        );
-      }
-
-      if (lowerCaseCommand.startsWith("/cancel_")) {
-        const downloadId = lowerCaseCommand.split("_")[1];
-
-        const ddta = await cancelDownload(downloadId);
-
-        ctx.reply(`Download canceled with id: ${downloadId}`);
-      }
-
-      if (lowerCaseCommand === "/downloads") {
-        const portx = parseInt(args[0]) || port;
-
-        const ipAddress = await getIpAddress();
-
-        if (!httpServerRunning) {
-          ctx.reply(`Summoning a http server for the downloads folder ......`);
-
-          httpServer.listen(portx, () => {
-            console.log(`HTTP server started on port ${portx}`);
-            httpServerRunning = true;
-          });
-        }
-
-        ctx.reply(`HTTP : http://${ipAddress}:${portx}`);
-      }
-
-      if (!lowerCaseCommand.startsWith("/")) {
-        ctx.reply(`I don't understand this command: ${lowerCaseCommand}`);
-      }
-    } catch (error) {
-      console.error(error);
-      ctx.reply("An error occurred. Please try again later.");
-    }
-  }
-
-  if (ctx.message.location) {
-    try {
-      const { latitude, longitude } = ctx.message.location;
-
-      const { temperature } = await getWeather(latitude, longitude);
-
-      ctx.reply(`Temperature: ${temperature}°C`);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-});
-
-bot.catch((err, ctx) => {
-  console.log(`Ooops, encountered an error for ${ctx.updateType}`, err);
-});
-
-bot.launch();
-
-const { spawn } = require("child_process");
+if (!process.env.TELEGRAMBOT) {
+  console.error("Error: TELEGRAMBOT environment variable is not set.");
+  process.exit(1);
+}
 
 const aria2c = spawn("aria2c", [
   "--retry-wait=240",
@@ -238,4 +33,160 @@ const aria2c = spawn("aria2c", [
   "--dht-entry-point6=router.bittorrent.com:6881",
   "--dht-entry-point6=router.utorrent.com:6881",
   "--dht-entry-point6=dht.transmissionbt.com:6881",
+  "--dht-entry-point6=dht.aelitis.com:6881",
+  "--dht-entry-point6=dht.libtorrent.org:25401",
+  "--dht-entry-point6=router.silotis.us:6881",
+  "--dht-entry-point6=wehack.in:6881",
+  "--dht-entry-point6=dht.novage.com:6881",
+  "--dht-entry-point6=dht.snails.email:6881",
 ]);
+
+const bot = new Telegraf(process.env.TELEGRAMBOT, {
+  telegram: { polling: { interval: 3000 } },
+});
+
+const handleAbout = (ctx) => {
+  ctx.reply("https://github.com/besoeasy/telearia");
+};
+
+const handleStart = (ctx) => {
+  ctx.reply(`Your user id is: ${ctx.chat.id}`);
+};
+
+const handleStats = async (ctx) => {
+  try {
+    const { result: stats } = await getGlobalStats();
+    const { totalMemory, freeMemory, usedMemoryPercentage } = await getSys();
+    const { uptimeHours, uptimeMinutes } = await getUptime();
+
+    const uptimeMessage = `Server Uptime: ${uptimeHours} hours and ${uptimeMinutes} minutes`;
+    const memoryMessage = `Server Memory: ${bytesToSize(
+      totalMemory
+    )}\nFree Memory: ${bytesToSize(
+      freeMemory
+    )}\nServer Memory Used: ${usedMemoryPercentage}%`;
+    const networkMessage = `Download speed: ${bytesToSize(
+      stats.downloadSpeed
+    )}\nUpload speed: ${bytesToSize(stats.uploadSpeed)}`;
+    const downloadStatsMessage = `Active downloads: ${stats.numActive}\nWaiting downloads: ${stats.numWaiting}\nStopped downloads: ${stats.numStopped}`;
+
+    ctx.reply(
+      `${uptimeMessage}\n\n${memoryMessage}\n\n${networkMessage}\n\n${downloadStatsMessage}`
+    );
+  } catch (error) {
+    console.error(error);
+    ctx.reply("Failed to retrieve stats. Please try again later.");
+  }
+};
+
+const handleDownload = async (ctx, url) => {
+  try {
+    const ddta = await downloadAria(ctx.chat.id, url);
+    const downloadId = ddta.result;
+    ctx.reply(
+      `Download started with id: ${downloadId}\n\n/status_${downloadId}\n\n/cancel_${downloadId}`
+    );
+  } catch (error) {
+    console.error(error);
+    ctx.reply("Failed to start download. Please try again later.");
+  }
+};
+
+const handleOngoing = async (ctx) => {
+  try {
+    const { result: ongoingDownloads } = await getOngoingDownloads();
+    const gids = ongoingDownloads.map((download) => download.gid);
+    const formattedGids = gids.map((gid) => `/status_${gid}`).join(", ");
+    ctx.reply(`Ongoing Downloads GIDs: ${formattedGids}`);
+  } catch (error) {
+    console.error(error);
+    ctx.reply("Failed to retrieve ongoing downloads. Please try again later.");
+  }
+};
+
+const handleStatus = async (ctx, downloadId) => {
+  try {
+    const ddta = await getDownloadStatus(downloadId);
+    const downloadSize_c = (
+      ddta.result.completedLength / 1024 / 1024 || 0
+    ).toFixed(2);
+    const downloadSize_t = (ddta.result.totalLength / 1024 / 1024 || 0).toFixed(
+      2
+    );
+    ctx.reply(
+      `Download status: ${ddta.result.status}\n\nDownload size: ${downloadSize_c} MB / ${downloadSize_t} MB`
+    );
+  } catch (error) {
+    console.error(error);
+    ctx.reply(
+      `Failed to retrieve status for download id: ${downloadId}. Please try again later.`
+    );
+  }
+};
+
+const handleCancel = async (ctx, downloadId) => {
+  try {
+    await cancelDownload(downloadId);
+    ctx.reply(`Download canceled with id: ${downloadId}`);
+  } catch (error) {
+    console.error(error);
+    ctx.reply(
+      `Failed to cancel download with id: ${downloadId}. Please try again later.`
+    );
+  }
+};
+
+bot.on("message", async (ctx) => {
+  if (ctx.message.text) {
+    try {
+      const { text } = ctx.message;
+      const [command, ...args] = text.split(" ");
+      const lowerCaseCommand = command.toLowerCase().trim();
+      const trimmedArgs = args.map((arg) => arg.trim());
+
+      console.log(
+        `Message received from ${ctx.from.username} (id: ${ctx.from.id}) at ${ctx.message.date}: ${text}`
+      );
+
+      switch (lowerCaseCommand) {
+        case "/about":
+          handleAbout(ctx);
+          break;
+        case "/start":
+          handleStart(ctx);
+          break;
+        case "/stats":
+          handleStats(ctx);
+          break;
+        case "/download":
+        case "/dl":
+          if (trimmedArgs.length > 0) {
+            handleDownload(ctx, trimmedArgs[0]);
+          } else {
+            ctx.reply("Please provide a URL to download.");
+          }
+          break;
+        case "/ongoing":
+          handleOngoing(ctx);
+          break;
+        default:
+          if (lowerCaseCommand.startsWith("/status_")) {
+            handleStatus(ctx, lowerCaseCommand.split("_")[1]);
+          } else if (lowerCaseCommand.startsWith("/cancel_")) {
+            handleCancel(ctx, lowerCaseCommand.split("_")[1]);
+          } else {
+            ctx.reply(`Unknown command: ${lowerCaseCommand}`);
+          }
+      }
+    } catch (error) {
+      console.error(error);
+      ctx.reply("An error occurred. Please try again later.");
+    }
+  }
+});
+
+bot.catch((err, ctx) => {
+  console.error(`Encountered an error for ${ctx.updateType}`, err);
+});
+
+bot.launch();

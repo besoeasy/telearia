@@ -1,101 +1,37 @@
-# Introduction
+**TeleAria: The Ultimate Telegram-Controlled Aria2 Downloader**
 
-Telepi simplifies Raspberry Pi and Linux system management via Telegram, featuring file downloads, system monitoring, network insights, speed tests, and the ability to open HTTP tunnels for efficient remote control
+TeleAria is a powerful download manager that seamlessly integrates Aria2's robust downloading capabilities with the convenience of Telegram control. Whether you need to download files, torrents, or videos, TeleAria can handle it all with ease. Here are some of the key features:
 
-# Features
-- Downloading files from HTTP, FTP, and torrent sources
-- Monitoring system health, RAM, and storage usage
-- Retrieving public and local network IP addresses
-- Running speed tests
-- Fetching any file
+- **Comprehensive Download Support**: Download virtually anything, including files, torrents, and videos, with Aria2’s multi-protocol support.
+- **Telegram Integration**: Control your downloads directly from your Telegram app. Start, stop, and manage downloads remotely with simple commands.
+- **High-Speed Downloads**: Enjoy fast and efficient downloading with Aria2's advanced download acceleration.
+- **User-Friendly Interface**: Easy setup and intuitive commands make managing downloads a breeze.
+- **Real-Time Notifications**: Get instant updates on your download status, ensuring you’re always in the loop.
 
-## Requirements
+With TeleAria, downloading has never been easier or more efficient. Perfect for users who demand flexibility and performance in their download management.
 
-1. A Telegram bot token. Follow the steps below to create a Telegram bot and get the token:
+### Steps to Use `telearia` Docker Container:
 
-   - Open the Telegram app and search for the 'BotFather' bot.
-   - Start a chat with BotFather by clicking the 'Start' button.
-   - Type '/newbot' and send it. BotFather will ask you for a name for your bot. Provide a name.
-   - Next, BotFather will ask for a username for your bot. The username must end in 'bot'. For example, 'my_test_bot'.
-   - Once you've provided the username, BotFather will give you a token for your bot. Keep this token safe as you'll need it.
+   Replace `your-telegram-bot-token` with your actual Telegram bot token. Also, ensure the `~/Downloads` directory on the host is mounted to `/downloads` in the container.
 
-2. Run the installation script. It will ask for the Telegram bot token. Provide the token you got from BotFather.
+   ```bash
+docker run -d \
+  --name telearia \
+  --restart unless-stopped \
+  -p 6800:6800 \
+  -p 6881-7999:6881-7999 \
+  -e TELEGRAMBOT=your-telegram-bot-token \
+  -v ~/Downloads:/downloads \
+  ghcr.io/besoeasy/telearia:main
+   ```
 
-# Installation
+   This command does the following:
+   - `-d`: Runs the container in detached mode (background).
+   - `--name telearia`: Names the container `telearia` for easy management.
+   - `-p 6800:6800`: Maps port `6800` on the host to port `6800` in the container for aria2 RPC.
+   - `-p 6881-7999:6881-7999`: Maps ports `6881-7999` for BitTorrent.
+   - `-e TELEGRAMBOT=your-telegram-bot-token`: Sets the environment variable `TELEGRAMBOT` with your Telegram bot token.
+   - `-v ~/Downloads:/downloads`: Mounts the `~/Downloads` directory on your host to `/downloads` inside the container for downloading files.
+ 
 
-To install or update Telepi, run the following command:
-
-```
-sudo bash -c "$(curl -sL https://unpkg.com/telepi)"
-```
-
-# Usage
-
-Once installed, you can start using Telepi by sending commands to your Telegram bot. Here are some examples:
-
-### About
-
-- **Command**: `/about`
-- **Description**: Get information about the TelePI project.
-- **Example**: `/about`
-
-### Start
-
-- **Command**: `/start`
-- **Description**: Start the bot and check TelePI versions.
-- **Example**: `/start`
-
-### Stats
-
-- **Command**: `/stats`
-- **Description**: Get server statistics, including uptime, memory usage, and download/upload speed.
-- **Example**: `/stats`
-
-### IP
-
-- **Command**: `/ip`
-- **Description**: Get local and public IP information.
-- **Example**: `/ip`
-
-### Tunnels
-
-- **Command**: `/tunnels`
-- **Description**: Get information about open tunnels.
-- **Example**: `/tunnels`
-
-### Open Tunnel
-
-- **Command**: `/open {port}`
-- **Description**: Open a tunnel on the specified port.
-- **Example**: `/open 8080`
-
-### Download
-
-- **Command**: `/download {url}`
-- **Alias**: `/dl {url}`
-- **Description**: Start a download with Aria2.
-- **Example**: `/download https://example.com/file.zip`
-
-### Ongoing
-
-- **Command**: `/ongoing`
-- **Description**: Get information about ongoing downloads, including their unique identifiers (GIDs).
-- **Example**: `/ongoing`
-
-### Status
-
-- **Command**: `/status_{downloadId}`
-- **Description**: Get the status of a download.
-- **Example**: `/status_123`
-
-### Cancel
-
-- **Command**: `/cancel_{downloadId}`
-- **Description**: Cancel a download.
-- **Example**: `/cancel_123`
-
-### Downloads
-
-- **Command**: `/downloads`
-- **Description**: Get the HTTP server URL for downloading files.
-- **Example**: `/downloads`
+Make sure to replace `your-telegram-bot-token` with your actual Telegram bot token before running the Docker container. This readme update reflects pulling the Docker image directly from GitHub Container Registry.

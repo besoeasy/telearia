@@ -1,55 +1,33 @@
 {
-  "name": "telepi",
-  "version": "1.2.4",
+  "name": "telearia",
+  "version": "1.0.0",
+  "description": "TeleAria is a powerful download manager that seamlessly integrates Aria2's robust downloading capabilities with the convenience of Telegram control. Whether you need to download files, torrents, or videos, TeleAria can handle it all with ease. ",
   "main": "index.js",
-  "unpkg": "install.sh",
-  "bin": {
-    "telepi": "./index.js"
-  },
   "scripts": {
-    "start": "node index.js"
+    "test": "node index.js"
   },
-  "author": "besoeasy",
-  "license": "ISC",
-  "description": "Telepi is a simple tool that allows you to monitor and control your Raspberry Pi (and other Linux-based systems) via Telegram. It eliminates the need for a dedicated web setup and provides a convenient way to manage your device remotely.",
-  "bugs": {
-    "url": "https://github.com/besoeasy/telepi/issues"
+  "bin": {
+    "telearia": "./index.js"
   },
-  "homepage": "https://github.com/besoeasy/telepi#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/besoeasy/telepi.git"
-  },
-  "dependencies": {
-    "axios": "^1.6.0",
-    "dotenv": "^16.3.1",
-    "sequelize": "^6.35.0",
-    "serve-handler": "^6.1.5",
-    "sqlite3": "^5.1.6",
-    "telegraf": "^4.15.0"
+    "url": "git+https://github.com/besoeasy/telearia.git"
   },
   "keywords": [
-    "telepi",
-    "raspberry pi",
-    "telegram",
-    "monitoring",
-    "control",
-    "http",
-    "ftp",
-    "torrent",
-    "speed test",
     "aria2",
-    "linux",
-    "system",
-    "file transfer",
-    "network",
-    "tunnel",
-    "download",
-    "uptime",
-    "memory usage",
-    "IP address",
-    "performance",
-    "file transfer protocol",
-    "Debian"
-  ]
+    "aria",
+    "downloader",
+    "telegram",
+    "aria2c"
+  ],
+  "author": "besoeasy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/besoeasy/telearia/issues"
+  },
+  "homepage": "https://github.com/besoeasy/telearia#readme",
+  "dependencies": {
+    "axios": "^1.7.2",
+    "telegraf": "^4.16.3"
+  }
 }
