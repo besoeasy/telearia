@@ -8,10 +8,11 @@ const {
   getDownloadStatus,
   getOngoingDownloads,
   cancelDownload,
+  server,
 } = require("./x/aria2.js");
+
 const { bytesToSize, ariaconfig } = require("./x/utils.js");
 
-// Check for required environment variable
 if (!process.env.TELEGRAMBOT) {
   console.error("Error: TELEGRAMBOT environment variable is not set.");
   process.exit(1);
@@ -172,4 +173,15 @@ bot.launch({
   polling: {
     interval: 3000,
   },
+});
+
+server.listen(6600, () => {
+  console.log("Server started on http://localhost:6600");
+});
+
+process.once("SIGINT", () => {
+  console.log("SIGINT received. Exiting...");
+  bot.stop("SIGINT");
+  aria2c.kill("SIGINT");
+  process.exit();
 });

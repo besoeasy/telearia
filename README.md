@@ -18,6 +18,7 @@ With TeleAria, downloading has never been easier or more efficient. Perfect for 
 docker run -d \
   --name telearia \
   --restart unless-stopped \
+  -p 6600:6600 \
   -p 6800:6800 \
   -p 6881-7999:6881-7999 \
   -e TELEGRAMBOT=your-telegram-bot-token \
