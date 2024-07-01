@@ -65,6 +65,8 @@ const handleDownload = async (ctx, url) => {
     ctx.reply(
       `Download started with id: ${downloadId}\n\n/status_${downloadId}\n\n/cancel_${downloadId}`
     );
+
+    ctx.reply(`Track all downloads with /ongoing`);
   } catch (error) {
     console.error(error);
     ctx.reply("Failed to start download. Please try again later.");
