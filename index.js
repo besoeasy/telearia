@@ -39,6 +39,7 @@ const handleStart = (ctx) => {
     "/ongoing - Get ongoing downloads",
     "/status_<gid> - Get status of a download",
     "/cancel_<gid> - Cancel a download",
+    "/server <on/off> - Start/Stop http the server",
   ];
 
   ctx.reply(`Available commands:\n${commands.join("\n")}`);
@@ -116,6 +117,21 @@ const handleCancel = async (ctx, downloadId) => {
   }
 };
 
+const handleServer = async (ctx, server) => {
+  try {
+    if (server === "on") {
+      server.listen(6600, () => {});
+      ctx.reply("Server started");
+    } else {
+      server.close();
+      ctx.reply("Server stopped");
+    }
+  } catch (error) {
+    console.error(error);
+    ctx.reply("Failed to start server. Please try again later.");
+  }
+};
+
 bot.on("message", async (ctx) => {
   if (ctx.message.text) {
     try {
@@ -132,12 +148,15 @@ bot.on("message", async (ctx) => {
         case "/about":
           handleAbout(ctx);
           break;
+
         case "/start":
           handleStart(ctx);
           break;
+
         case "/stats":
           handleStats(ctx);
           break;
+
         case "/download":
         case "/dl":
           if (trimmedArgs.length > 0) {
@@ -146,9 +165,15 @@ bot.on("message", async (ctx) => {
             ctx.reply("Please provide a URL to download.");
           }
           break;
+
         case "/ongoing":
           handleOngoing(ctx);
           break;
+
+        case "/server":
+          handleServer(ctx, server);
+          break;
+
         default:
           if (lowerCaseCommand.startsWith("/status_")) {
             handleStatus(ctx, lowerCaseCommand.split("_")[1]);
@@ -173,10 +198,6 @@ bot.launch({
   polling: {
     interval: 3000,
   },
-});
-
-server.listen(6600, () => {
-  console.log("Server started on http://localhost:6600");
 });
 
 process.once("SIGINT", () => {
