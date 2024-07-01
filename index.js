@@ -11,35 +11,14 @@ const {
   cancelDownload,
 } = require("./x/aria2.js");
 
-const { bytesToSize } = require("./x/utils.js");
+const { bytesToSize, ariaconfig } = require("./x/utils.js");
 
 if (!process.env.TELEGRAMBOT) {
   console.error("Error: TELEGRAMBOT environment variable is not set.");
   process.exit(1);
 }
 
-const aria2c = spawn("aria2c", [
-  "--retry-wait=240",
-  "--continue=true",
-  "--seed-ratio=2",
-  "--seed-time=1440",
-  "--enable-rpc",
-  "--rpc-listen-all",
-  "--rpc-allow-origin-all",
-  "--rpc-listen-port=6800",
-  "--enable-dht=true",
-  "--dht-listen-port=6881-7999",
-  "--dht-entry-point=router.bittorrent.com:6881",
-  "--dht-entry-point6=router.bittorrent.com:6881",
-  "--dht-entry-point6=router.utorrent.com:6881",
-  "--dht-entry-point6=dht.transmissionbt.com:6881",
-  "--dht-entry-point6=dht.aelitis.com:6881",
-  "--dht-entry-point6=dht.libtorrent.org:25401",
-  "--dht-entry-point6=router.silotis.us:6881",
-  "--dht-entry-point6=wehack.in:6881",
-  "--dht-entry-point6=dht.novage.com:6881",
-  "--dht-entry-point6=dht.snails.email:6881",
-]);
+const aria2c = spawn("aria2c", ariaconfig);
 
 const bot = new Telegraf(process.env.TELEGRAMBOT, {
   telegram: { polling: { interval: 3000 } },
