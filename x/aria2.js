@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const saveDirectory = "/downloads/";
+const saveDirectory = "/tmp/downloads/";
 
 const axiosPost = async (method, params = []) => {
   const { data } = await axios.post("http://localhost:6800/jsonrpc", {

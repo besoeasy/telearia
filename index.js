@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+// dontev config
+require("dotenv").config();
+
 const { spawn } = require("child_process");
 const { Telegraf } = require("telegraf");
 const {
@@ -39,7 +42,7 @@ const handleStart = (ctx) => {
     "/ongoing - Get ongoing downloads",
     "/status_<gid> - Get status of a download",
     "/cancel_<gid> - Cancel a download",
-    "/server <on/off> - Start/Stop http the server",
+    "/server - Start/Stop http the server",
   ];
 
   ctx.reply(`Available commands:\n${commands.join("\n")}`);
@@ -63,10 +66,10 @@ const handleDownload = async (ctx, url) => {
   try {
     const ddta = await downloadAria(ctx.chat.id, url);
     const downloadId = ddta.result;
+
     ctx.reply(
-      `Download started with id: ${downloadId}\n\n/status_${downloadId}\n\n/cancel_${downloadId}`
+      `Track all downloads with /ongoing \n\nDownload started with id: ${downloadId}\n\n/status_${downloadId}\n\n/cancel_${downloadId}`
     );
-    ctx.reply(`Track all downloads with /ongoing`);
   } catch (error) {
     console.error(error);
     ctx.reply("Failed to start download. Please try again later.");
@@ -78,7 +81,12 @@ const handleOngoing = async (ctx) => {
     const { result: ongoingDownloads } = await getOngoingDownloads();
     const gids = ongoingDownloads.map((download) => download.gid);
     const formattedGids = gids.map((gid) => `/status_${gid}`).join(", ");
-    ctx.reply(`Ongoing Downloads GIDs: ${formattedGids}`);
+
+    if (ongoingDownloads.length > 0) {
+      ctx.reply(`Ongoing Downloads GIDs: ${formattedGids}`);
+    } else {
+      ctx.reply("No ongoing downloads.");
+    }
   } catch (error) {
     console.error(error);
     ctx.reply("Failed to retrieve ongoing downloads. Please try again later.");
@@ -117,15 +125,19 @@ const handleCancel = async (ctx, downloadId) => {
   }
 };
 
-const handleServer = async (ctx, server) => {
+let servertoggle = true;
+
+const handleServer = async (ctx) => {
   try {
-    if (server === "on") {
+    if (servertoggle) {
       server.listen(6600, () => {});
       ctx.reply("Server started");
     } else {
       server.close();
       ctx.reply("Server stopped");
     }
+
+    servertoggle = !servertoggle;
   } catch (error) {
     console.error(error);
     ctx.reply("Failed to start server. Please try again later.");
@@ -141,7 +153,7 @@ bot.on("message", async (ctx) => {
       const trimmedArgs = args.map((arg) => arg.trim());
 
       console.log(
-        `Message received from ${ctx.from.username} (id: ${ctx.from.id}) at ${ctx.message.date}: ${text}`
+        `@${ctx.from.username} (id: ${ctx.from.id}) at ${ctx.message.date}: ${text}`
       );
 
       switch (lowerCaseCommand) {

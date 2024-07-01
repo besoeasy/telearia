@@ -10,29 +10,49 @@ TeleAria is a powerful download manager that seamlessly integrates Aria2's robus
 
 With TeleAria, downloading has never been easier or more efficient. Perfect for users who demand flexibility and performance in their download management.
 
-### Steps to Use `telearia` Docker Container:
+### Install NPM
 
-   Replace `your-telegram-bot-token` with your actual Telegram bot token. Also, ensure the `~/Downloads` directory on the host is mounted to `/downloads` in the container.
+Install using npm ( Requires Git Installed )
 
-   ```bash
+```bash
+npm install -G github:besoeasy/telearia
+```
+
+Running
+
+```bash
+TELEGRAMBOT=your-telegram-bot-token telearia
+```
+
+### Install Docker Container:
+
+Replace `your-telegram-bot-token` with your actual Telegram bot token. Also, ensure the `~/Downloads` directory on the host is mounted to `/downloads` in the container.
+
+```bash
 docker run -d \
-  --name telearia \
-  --restart unless-stopped \
-  -p 6600:6600 \
-  -p 6800:6800 \
-  -p 6881-7999:6881-7999 \
-  -e TELEGRAMBOT=your-telegram-bot-token \
-  -v ~/Downloads:/downloads \
-  ghcr.io/besoeasy/telearia:main
-   ```
+--name telearia \
+--restart unless-stopped \
+-p 6600:6600 \
+-p 6800:6800 \
+-p 6881-7999:6881-7999 \
+-e TELEGRAMBOT=your-telegram-bot-token \
+-v ~/Downloads:/tmp/downloads \
+ghcr.io/besoeasy/telearia:main
+```
 
-   This command does the following:
-   - `-d`: Runs the container in detached mode (background).
-   - `--name telearia`: Names the container `telearia` for easy management.
-   - `-p 6800:6800`: Maps port `6800` on the host to port `6800` in the container for aria2 RPC.
-   - `-p 6881-7999:6881-7999`: Maps ports `6881-7999` for BitTorrent.
-   - `-e TELEGRAMBOT=your-telegram-bot-token`: Sets the environment variable `TELEGRAMBOT` with your Telegram bot token.
-   - `-v ~/Downloads:/downloads`: Mounts the `~/Downloads` directory on your host to `/downloads` inside the container for downloading files.
- 
+This command does the following:
+
+- `-d`: Runs the container in detached mode (background).
+- `--name telearia`: Names the container `telearia` for easy management.
+- `-p 6800:6800`: Maps port `6800` on the host to port `6800` in the container for aria2 RPC.
+- `-p 6600:6600`: Maps port `6600` on the host to port `6600` in the container for server http.
+- `-p 6881-7999:6881-7999`: Maps ports `6881-7999` for BitTorrent.
+- `-e TELEGRAMBOT=your-telegram-bot-token`: Sets the environment variable `TELEGRAMBOT` with your Telegram bot token.
+- `-v ~/Downloads:/downloads`: Mounts the `~/Downloads` directory on your host to `/downloads` inside the container for downloading files.
 
 Make sure to replace `your-telegram-bot-token` with your actual Telegram bot token before running the Docker container. This readme update reflects pulling the Docker image directly from GitHub Container Registry.
+
+
+## Pair with Cloudflare tunnel 
+
+To have your own self hosted cloud download manager, controlled via telegram.
