@@ -23,7 +23,7 @@ RUN mkdir -p /downloads && chmod -R 777 /downloads
 EXPOSE 6600 6800 6881-7999
 
 # Set environment variables (you can override these at runtime)
-ENV TELEGRAMBOT=your-telegram-bot-token
+ENV TELEGRAMBOT=Telegram-Bot-Token
 
 # Run the application
 CMD ["node", "index.js"]
