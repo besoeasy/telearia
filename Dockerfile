@@ -1,5 +1,5 @@
 # Use the official Node.js 20 image as a base for ARM64
-FROM node:20-slim
+FROM node:slim
 
 # Set the working directory in the container
 WORKDIR /app

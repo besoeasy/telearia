@@ -21,11 +21,6 @@ const ariaconfig = [
   "--dht-entry-point6=router.utorrent.com:6881",
   "--dht-entry-point6=dht.transmissionbt.com:6881",
   "--dht-entry-point6=dht.aelitis.com:6881",
-  "--dht-entry-point6=dht.libtorrent.org:25401",
-  "--dht-entry-point6=router.silotis.us:6881",
-  "--dht-entry-point6=wehack.in:6881",
-  "--dht-entry-point6=dht.novage.com:6881",
-  "--dht-entry-point6=dht.snails.email:6881",
 ];
 
 module.exports = { bytesToSize, ariaconfig };
