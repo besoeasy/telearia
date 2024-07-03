@@ -3,7 +3,9 @@
 require("dotenv").config();
 
 const { spawn } = require("child_process");
+
 const { Telegraf } = require("telegraf");
+
 const {
   getGlobalStats,
   downloadAria,
@@ -67,7 +69,7 @@ const handleDownload = async (ctx, url) => {
     const downloadId = ddta.result;
 
     ctx.reply(
-      `Track all downloads with /ongoing \n\nDownload started with id: ${downloadId}\n\n/status_${downloadId}\n\n/cancel_${downloadId}`
+      `Track all downloads with /ongoing \n\nDownload started with id: ${downloadId}\n\n/status_${downloadId}`
     );
   } catch (error) {
     console.error(error);
@@ -82,7 +84,7 @@ const handleOngoing = async (ctx) => {
     const formattedGids = gids.map((gid) => `/status_${gid}`).join(", ");
 
     if (ongoingDownloads.length > 0) {
-      ctx.reply(`Ongoing Downloads GIDs: ${formattedGids}`);
+      ctx.reply(`Ongoing Downloads GIDs:\n${formattedGids}`);
     } else {
       ctx.reply("No ongoing downloads.");
     }
@@ -101,9 +103,26 @@ const handleStatus = async (ctx, downloadId) => {
     const downloadSize_t = (ddta.result.totalLength / 1024 / 1024 || 0).toFixed(
       2
     );
-    ctx.reply(
-      `Download status: ${ddta.result.status}\n\nDownload size: ${downloadSize_c} MB / ${downloadSize_t} MB`
-    );
+
+    let reply = `Download status: ${ddta.result.status}\n\nDownload size: ${downloadSize_c} MB / ${downloadSize_t} MB`;
+
+    if (ddta.result.status === "active") {
+      reply = reply + `\n\nCancel download with /cancel_${downloadId}`;
+    }
+
+    if (ddta.result.status === "active") {
+      const file = ddta.result.files[0].path;
+
+      reply = reply + `\n\nDownloading file: ${file}`;
+    }
+
+    if (ddta.result.status === "complete") {
+      const files = ddta.result.files.map((file) => file.path).join("\n");
+
+      reply = reply + `\n\nDownloaded files:\n${files}`;
+    }
+
+    ctx.reply(reply);
   } catch (error) {
     console.error(error);
     ctx.reply(
