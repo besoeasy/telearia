@@ -15,7 +15,7 @@ const ariaconfig = [
   "--rpc-allow-origin-all",
   "--rpc-listen-port=6800",
   "--enable-dht=true",
-  "--dht-listen-port=6881-7999",
+  "--dht-listen-port=6881-6888",
   "--dht-entry-point=router.bittorrent.com:6881",
   "--dht-entry-point6=router.bittorrent.com:6881",
   "--dht-entry-point6=router.utorrent.com:6881",
