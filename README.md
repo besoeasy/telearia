@@ -38,9 +38,9 @@ docker run -d \
   --restart unless-stopped \
   -p 6600:6600 \
   -p 6800:6800 \
-  -p 6881-7999:6881-7999 \
-  -e TELEGRAMBOT=your-telegram-bot-token \
+  -p 6881-6888:6881-6888 \
   -v ~/Downloads:/downloads \
+  -e TELEGRAMBOT=your-telegram-bot-token \
   ghcr.io/besoeasy/telearia:main
 ```
 
