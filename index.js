@@ -15,7 +15,6 @@ const {
   server,
 } = require("./x/aria2.js");
 
-const { ipfsAgent, ipfsStats } = require("./x/ipfs.js");
 
 const { bytesToSize, ariaconfig } = require("./x/utils.js");
 
@@ -27,8 +26,6 @@ if (!process.env.TELEGRAMBOT) {
 // Spawn aria2c process
 const aria2c = spawn("aria2c", ariaconfig);
 
-const ipfsnode = spawn("ipfs", ["daemon"]);
-
 // Initialize bot
 const bot = new Telegraf(process.env.TELEGRAMBOT);
 
@@ -37,7 +34,6 @@ const handleAbout = (ctx) => {
 };
 
 const handleStart = (ctx) => {
-  ctx.reply(`Your user id is: ${ctx.chat.id}`);
 
   const commands = [
     "/about - About this bot",
@@ -48,10 +44,9 @@ const handleStart = (ctx) => {
     "/status_<gid> - Get status of a download",
     "/cancel_<gid> - Cancel a download",
     "/server - Start/Stop http the server",
-    "/share - Share files via IPFS",
   ];
 
-  ctx.reply(`Available commands:\n${commands.join("\n")}`);
+  ctx.reply(`Your user id is: ${ctx.chat.id}\n\nAvailable commands:\n${commands.join("\n")}`);
 };
 
 const handleStats = async (ctx) => {
@@ -60,9 +55,6 @@ const handleStats = async (ctx) => {
 
     let msg_ipfs = "";
 
-    const ipfsAgentData = await ipfsAgent();
-    const ipfsStatsData = await ipfsStats();
-
     msg_ipfs = `
     Download speed: ${bytesToSize(stats.downloadSpeed)}
     Upload speed: ${bytesToSize(stats.uploadSpeed)}
@@ -70,13 +62,6 @@ const handleStats = async (ctx) => {
     Active downloads: ${stats.numActive}
     Waiting downloads: ${stats.numWaiting}
     Stopped downloads: ${stats.numStopped}
-
-    IPFS Agent Version: ${ipfsAgentData.AgentVersion}
-    IPFS ID: ${ipfsAgentData.ID}
-    IPFS Public Key: ${ipfsAgentData.PublicKey}
-    
-    IPFS Total In: ${bytesToSize(ipfsStatsData.TotalIn)}
-    IPFS Total Out: ${bytesToSize(ipfsStatsData.TotalOut)}
     `;
 
     ctx.reply(`${msg_ipfs}`);
@@ -185,21 +170,6 @@ const handleServer = async (ctx) => {
   }
 };
 
-const handleIPFSshare = async (ctx) => {
-  try {
-    ipfsNode = spawn("ipfs", ["add", "-Q", "-r", "./downloads"]);
-
-    ipfsNode.stdout.on("data", (data) => {
-      ctx.reply(
-        `IPFS hash: \n\n${data.toString()}\n\nhttps://ipfs.io/ipfs/${data.toString()}`
-      );
-    });
-  } catch (error) {
-    console.error(error);
-    ctx.reply("Failed to share files. Please try again later.");
-  }
-};
-
 bot.on("message", async (ctx) => {
   if (ctx.message.text) {
     try {
@@ -242,10 +212,6 @@ bot.on("message", async (ctx) => {
           handleServer(ctx, server);
           break;
 
-        case "/share":
-          handleIPFSshare(ctx);
-          break;
-
         default:
           if (lowerCaseCommand.startsWith("/status_")) {
             handleStatus(ctx, lowerCaseCommand.split("_")[1]);
@@ -268,7 +234,7 @@ bot.catch((err, ctx) => {
 
 bot.launch({
   polling: {
-    interval: 3000,
+    interval: 8000,
   },
 });
 
@@ -276,6 +242,5 @@ process.once("SIGINT", () => {
   console.log("SIGINT received. Exiting...");
   bot.stop("SIGINT");
   aria2c.kill("SIGINT");
-  ipfsnode.kill("SIGINT");
   process.exit();
 });

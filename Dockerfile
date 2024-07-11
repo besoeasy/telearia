@@ -19,14 +19,8 @@ RUN apt-get update && apt-get install -y aria2
 # Create the save directory for downloads and set the proper permissions
 RUN mkdir -p /downloads && chmod -R 777 /downloads
 
-RUN npm install -g kubo
-
-RUN ipfs version
-
-RUN ipfs init --profile=lowpower
-
 # Expose the required ports for aria2c and the Telegram bot
-EXPOSE 5001 8080 6600 6800 6881-6888
+EXPOSE 6600 6800 6881-6888
 
 # Set environment variables (you can override these at runtime)
 ENV TELEGRAMBOT=Telegram-Bot-Token
