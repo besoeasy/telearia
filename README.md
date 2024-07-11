@@ -7,6 +7,10 @@ TeleAria is a powerful download manager that seamlessly integrates [Aria2's](htt
 - **High-Speed Downloads**: Enjoy fast and efficient downloading with Aria2's advanced download acceleration.
 - **User-Friendly Interface**: Easy setup and intuitive commands make managing downloads a breeze.
 - **Real-Time Notifications**: Get instant updates on your download status, ensuring you’re always in the loop.
+- **Smart File Organization**: Automatically organize downloaded files into folders based on file type or category.
+- **Download Scheduling**: Schedule downloads to start and stop at specific times for optimal bandwidth usage.
+- **Bandwidth Limiting**: Set limits on download and upload speeds to prioritize network resources.
+
 
 With TeleAria, downloading has never been easier or more efficient. Perfect for users who demand flexibility and performance in their download management.
 
@@ -36,8 +40,6 @@ You can also run TeleAria using Docker. Replace `your-telegram-bot-token` with y
 docker run -d \
   --name telearia \
   --restart unless-stopped \
-  -p 5001:5001 \
-  -p 8080:8080 \
   -p 6600:6600 \
   -p 6800:6800 \
   -p 6881-6888:6881-6888 \
