@@ -15,6 +15,8 @@ const {
   server,
 } = require("./x/aria2.js");
 
+const { ipfsAgent } = require("./x/ipfs.js");
+
 const { bytesToSize, ariaconfig } = require("./x/utils.js");
 
 if (!process.env.TELEGRAMBOT) {
@@ -44,6 +46,7 @@ const handleStart = (ctx) => {
     "/status_<gid> - Get status of a download",
     "/cancel_<gid> - Cancel a download",
     "/server - Start/Stop http the server",
+    "/ipfs - Start/Stop ipfs daemon",
   ];
 
   ctx.reply(`Available commands:\n${commands.join("\n")}`);
@@ -56,7 +59,16 @@ const handleStats = async (ctx) => {
       stats.downloadSpeed
     )}\nUpload speed: ${bytesToSize(stats.uploadSpeed)}`;
     const downloadStatsMessage = `Active downloads: ${stats.numActive}\nWaiting downloads: ${stats.numWaiting}\nStopped downloads: ${stats.numStopped}`;
-    ctx.reply(`${networkMessage}\n\n${downloadStatsMessage}`);
+
+    let msg_ipfs = "";
+
+    if (!ipfstoggle) {
+      const ipfsAgentData = await ipfsAgent();
+
+      msg_ipfs = `IPFS Agent Version: ${ipfsAgentData.AgentVersion}\nIPFS ID: ${ipfsAgentData.ID}\nIPFS Public Key: ${ipfsAgentData.PublicKey}`;
+    }
+
+    ctx.reply(`${networkMessage}\n\n${downloadStatsMessage}\n\n${msg_ipfs}`);
   } catch (error) {
     console.error(error);
     ctx.reply("Failed to retrieve stats. Please try again later.");
@@ -162,6 +174,48 @@ const handleServer = async (ctx) => {
   }
 };
 
+let ipfstoggle = true;
+let ipfsNode;
+
+const handleIpfs = async (ctx) => {
+  try {
+    if (ipfstoggle) {
+      const ipfsinit = spawn("ipfs", ["init", "--profile=lowpower"]);
+
+      ipfsnode = spawn("ipfs", ["daemon"]);
+      ctx.reply("Ipfs started");
+    } else {
+      ipfsNode.kill();
+      ctx.reply("IPFS daemon stopped");
+    }
+
+    ipfstoggle = !ipfstoggle;
+  } catch (error) {
+    console.error(error);
+    ctx.reply("Failed to start server. Please try again later.");
+  }
+};
+
+const handleIPFSshare = async (ctx) => {
+  try {
+    if (!ipfstoggle) {
+      ctx.reply("Please start the IPFS daemon first. using /ipfs");
+      return;
+    }
+
+    ipfsNode = spawn("ipfs", ["add", "-Q", "-r", "./downloads"]);
+
+    ipfsNode.stdout.on("data", (data) => {
+      ctx.reply(`IPFS hash: ${data.toString()}`);
+
+      ctx.reply(`https://ipfs.io/ipfs/${data.toString()}`);
+    });
+  } catch (error) {
+    console.error(error);
+    ctx.reply("Failed to start server. Please try again later.");
+  }
+};
+
 bot.on("message", async (ctx) => {
   if (ctx.message.text) {
     try {
@@ -202,6 +256,14 @@ bot.on("message", async (ctx) => {
 
         case "/server":
           handleServer(ctx, server);
+          break;
+
+        case "/ipfs":
+          handleIpfs(ctx);
+          break;
+
+        case "/share":
+          handleIPFSshare(ctx);
           break;
 
         default:
