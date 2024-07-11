@@ -15,7 +15,7 @@ const {
   server,
 } = require("./x/aria2.js");
 
-const { ipfsAgent, ipfsStats, ipfsPeers } = require("./x/ipfs.js");
+const { ipfsAgent, ipfsStats } = require("./x/ipfs.js");
 
 const { bytesToSize, ariaconfig } = require("./x/utils.js");
 
@@ -26,6 +26,7 @@ if (!process.env.TELEGRAMBOT) {
 
 // Spawn aria2c process
 const aria2c = spawn("aria2c", ariaconfig);
+
 const ipfsnode = spawn("ipfs", ["daemon"]);
 
 // Initialize bot
