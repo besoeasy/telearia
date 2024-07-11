@@ -23,6 +23,8 @@ RUN npm install -g kubo
 
 RUN ipfs version
 
+RUN ipfs init --profile=lowpower
+
 # Expose the required ports for aria2c and the Telegram bot
 EXPOSE 5001 8080 6600 6800 6881-6888
 

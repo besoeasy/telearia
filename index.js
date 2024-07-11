@@ -180,8 +180,6 @@ let ipfsNode;
 const handleIpfs = async (ctx) => {
   try {
     if (ipfstoggle) {
-      const ipfsinit = spawn("ipfs", ["init", "--profile=lowpower"]);
-
       ipfsnode = spawn("ipfs", ["daemon"]);
       ctx.reply("Ipfs started");
     } else {
