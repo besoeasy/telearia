@@ -56,28 +56,29 @@ const handleStart = (ctx) => {
 const handleStats = async (ctx) => {
   try {
     const { result: stats } = await getGlobalStats();
-    const networkMessage = `Download speed: ${bytesToSize(
-      stats.downloadSpeed
-    )}\nUpload speed: ${bytesToSize(stats.uploadSpeed)}`;
-    const downloadStatsMessage = `Active downloads: ${stats.numActive}\nWaiting downloads: ${stats.numWaiting}\nStopped downloads: ${stats.numStopped}`;
 
     let msg_ipfs = "";
 
     const ipfsAgentData = await ipfsAgent();
     const ipfsStatsData = await ipfsStats();
 
-    msg_ipfs = `IPFS Agent Version: ${ipfsAgentData.AgentVersion}\nIPFS ID: ${
-      ipfsAgentData.ID
-    }\nIPFS Public Key: ${
-      ipfsAgentData.PublicKey
-    } \n\nIPFS Total In: ${bytesToSize(
-      ipfsStatsData.TotalIn
-    )}\nIPFS Total Out: ${bytesToSize(ipfsStatsData.TotalOut)}
-    \nIPFS Peers: ${ipfsPeersData.Peers}\nIPFS Connected Peers: ${
-      ipfsPeersData.ConnectedPeers
-    }`;
+    msg_ipfs = `
+    Download speed: ${bytesToSize(stats.downloadSpeed)}
+    Upload speed: ${bytesToSize(stats.uploadSpeed)}
+    
+    Active downloads: ${stats.numActive}
+    Waiting downloads: ${stats.numWaiting}
+    Stopped downloads: ${stats.numStopped}
 
-    ctx.reply(`${networkMessage}\n\n${downloadStatsMessage}\n\n${msg_ipfs}`);
+    IPFS Agent Version: ${ipfsAgentData.AgentVersion}
+    IPFS ID: ${ipfsAgentData.ID}
+    IPFS Public Key: ${ipfsAgentData.PublicKey}
+    
+    IPFS Total In: ${bytesToSize(ipfsStatsData.TotalIn)}
+    IPFS Total Out: ${bytesToSize(ipfsStatsData.TotalOut)}
+    `;
+
+    ctx.reply(`${msg_ipfs}`);
   } catch (error) {
     console.error(error);
     ctx.reply("Failed to retrieve stats. Please try again later.");
