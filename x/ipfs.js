@@ -1,11 +1,5 @@
 const axios = require("axios");
 
-const FormData = require("form-data");
-const fs = require("fs");
-const path = require("path");
-
-const saveDirectory = "./downloads/";
-
 const ipfs_api = "http://127.0.0.1:5001/api/v0/";
 
 async function ipfsAgent() {

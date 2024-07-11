@@ -196,11 +196,6 @@ const handleIpfs = async (ctx) => {
 
 const handleIPFSshare = async (ctx) => {
   try {
-    if (!ipfstoggle) {
-      ctx.reply("Please start the IPFS daemon first. using /ipfs");
-      return;
-    }
-
     ipfsNode = spawn("ipfs", ["add", "-Q", "-r", "./downloads"]);
 
     ipfsNode.stdout.on("data", (data) => {
@@ -210,7 +205,7 @@ const handleIPFSshare = async (ctx) => {
     });
   } catch (error) {
     console.error(error);
-    ctx.reply("Failed to start server. Please try again later.");
+    ctx.reply("Failed to share files. Please try again later.");
   }
 };
 
@@ -294,5 +289,6 @@ process.once("SIGINT", () => {
   console.log("SIGINT received. Exiting...");
   bot.stop("SIGINT");
   aria2c.kill("SIGINT");
+  ipfsNode.kill("SIGINT");
   process.exit();
 });
