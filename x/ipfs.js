@@ -17,6 +17,21 @@ async function ipfsAgent() {
   }
 }
 
+async function ipfsStats() {
+  try {
+    const response = await axios.post(ipfs_api + "stats/bw");
+    const data = response.data;
+
+    return {
+      TotalIn: data.TotalIn,
+      TotalOut: data.TotalOut,
+    };
+  } catch (error) {
+    console.error("Error fetching agent version:", error);
+  }
+}
+
 module.exports = {
   ipfsAgent,
+  ipfsStats,
 };
