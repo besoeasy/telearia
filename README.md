@@ -36,6 +36,8 @@ You can also run TeleAria using Docker. Replace `your-telegram-bot-token` with y
 docker run -d \
   --name telearia \
   --restart unless-stopped \
+  -p 5001:5001 \
+  -p 8080:8080 \
   -p 6600:6600 \
   -p 6800:6800 \
   -p 6881-6888:6881-6888 \
