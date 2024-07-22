@@ -53,6 +53,17 @@ docker run -d \
   ghcr.io/besoeasy/telearia:main
 ```
 
+A simpler Option
+
+```bash
+docker run -d \
+  --name telearia \
+  --restart unless-stopped \
+  --network host \
+  -e TELEGRAMBOT=your-telegram-bot-token \
+  ghcr.io/besoeasy/telearia:main
+```
+
 This command does the following:
 
 - `-d`: Runs the container in detached mode (background).
