@@ -237,7 +237,7 @@ bot.on("message", async (ctx) => {
           } else if (lowerCaseCommand.startsWith("/cancel_")) {
             handleCancel(ctx, lowerCaseCommand.split("_")[1]);
           } else {
-            ctx.reply(`Unknown command: ${lowerCaseCommand}`);
+            ctx.reply(`Unknown command: ${lowerCaseCommand}` + "\n\n" + "Type /start to see available commands");
           }
       }
     } catch (error) {
