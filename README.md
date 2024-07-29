@@ -51,7 +51,6 @@ docker run -d \
 This command does the following:
 
 - `-e TELEGRAMBOT=your-telegram-bot-token`: Sets the environment variable `TELEGRAMBOT` with your Telegram bot token.
-- `-v ~/Downloads:/downloads`: Mounts the `~/Downloads` directory on your host to `/downloads` inside the container for downloading files.
 
 ## Pairing with Cloudflare Tunnel
 
