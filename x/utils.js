@@ -15,12 +15,13 @@ const ariaconfig = [
   "--rpc-allow-origin-all",
   "--rpc-listen-port=6800",
   "--enable-dht=true",
-  "--dht-listen-port=6881-6888",
+  "--dht-listen-port=6881-6999",
   "--dht-entry-point=router.bittorrent.com:6881",
   "--dht-entry-point6=router.bittorrent.com:6881",
   "--dht-entry-point6=router.utorrent.com:6881",
   "--dht-entry-point6=dht.transmissionbt.com:6881",
   "--dht-entry-point6=dht.aelitis.com:6881",
+  "--bt-enable-lpd=true",
 ];
 
 module.exports = { bytesToSize, ariaconfig };

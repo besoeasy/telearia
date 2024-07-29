@@ -11,13 +11,11 @@ TeleAria is a powerful download manager that seamlessly integrates [Aria2's](htt
 - **Download Scheduling**: Schedule downloads to start and stop at specific times for optimal bandwidth usage.
 - **Bandwidth Limiting**: Set limits on download and upload speeds to prioritize network resources.
 
-
 With TeleAria, downloading has never been easier or more efficient. Perfect for users who demand flexibility and performance in their download management.
 
 ![image](https://github.com/user-attachments/assets/08b2c939-b766-4926-ab82-91e94b6438ac)
 ![image](https://github.com/user-attachments/assets/890775b1-1858-4364-8d4f-c19f9f29c31d)
 ![image](https://github.com/user-attachments/assets/fe99c36b-bf9c-47e4-8ba8-05faaa218db9)
-
 
 ## Installation
 
@@ -45,20 +43,6 @@ You can also run TeleAria using Docker. Replace `your-telegram-bot-token` with y
 docker run -d \
   --name telearia \
   --restart unless-stopped \
-  -p 6600:6600 \
-  -p 6800:6800 \
-  -p 6881-6888:6881-6888 \
-  -v ~/Downloads:/downloads \
-  -e TELEGRAMBOT=your-telegram-bot-token \
-  ghcr.io/besoeasy/telearia:main
-```
-
-A simpler Option
-
-```bash
-docker run -d \
-  --name telearia \
-  --restart unless-stopped \
   --network host \
   -e TELEGRAMBOT=your-telegram-bot-token \
   ghcr.io/besoeasy/telearia:main
@@ -66,12 +50,6 @@ docker run -d \
 
 This command does the following:
 
-- `-d`: Runs the container in detached mode (background).
-- `--name telearia`: Names the container `telearia` for easy management.
-- `--restart unless-stopped`: Ensures the container restarts automatically unless it is explicitly stopped.
-- `-p 6600:6600`: Maps port 6600 on the host to port 6600 in the container for the server HTTP.
-- `-p 6800:6800`: Maps port 6800 on the host to port 6800 in the container for Aria2 RPC.
-- `-p 6881-7999:6881-7999`: Maps ports 6881-7999 for BitTorrent.
 - `-e TELEGRAMBOT=your-telegram-bot-token`: Sets the environment variable `TELEGRAMBOT` with your Telegram bot token.
 - `-v ~/Downloads:/downloads`: Mounts the `~/Downloads` directory on your host to `/downloads` inside the container for downloading files.
 
