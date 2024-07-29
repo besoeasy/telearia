@@ -15,16 +15,13 @@ With TeleAria, downloading has never been easier or more efficient. Perfect for 
 
 ## Installation
 
-### Using npm
+### Using NPM
 
 First, ensure you have [Git](https://git-scm.com/) installed on your system. Then, you can install TeleAria via npm with the following command:
 
 ```bash
 npm install -g github:besoeasy/telearia
 ```
-
-### Running TeleAria
-
 To start TeleAria, replace `your-telegram-bot-token` with your actual Telegram bot token and run:
 
 ```bash
