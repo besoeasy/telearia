@@ -13,10 +13,6 @@ TeleAria is a powerful download manager that seamlessly integrates [Aria2's](htt
 
 With TeleAria, downloading has never been easier or more efficient. Perfect for users who demand flexibility and performance in their download management.
 
-![image](https://github.com/user-attachments/assets/08b2c939-b766-4926-ab82-91e94b6438ac)
-![image](https://github.com/user-attachments/assets/890775b1-1858-4364-8d4f-c19f9f29c31d)
-![image](https://github.com/user-attachments/assets/fe99c36b-bf9c-47e4-8ba8-05faaa218db9)
-
 ## Installation
 
 ### Using npm
