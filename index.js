@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-require("dotenv").config();
-
 const { spawn } = require("child_process");
 
 const { Telegraf } = require("telegraf");
@@ -15,8 +13,7 @@ const {
   server,
 } = require("./x/aria2.js");
 
-
-const { bytesToSize, ariaconfig } = require("./x/utils.js");
+const { bytesToSize } = require("./x/utils.js");
 
 if (!process.env.TELEGRAMBOT) {
   console.error("Error: TELEGRAMBOT environment variable is not set.");
@@ -24,7 +21,23 @@ if (!process.env.TELEGRAMBOT) {
 }
 
 // Spawn aria2c process
-const aria2c = spawn("aria2c", ariaconfig);
+const aria2c = spawn("aria2c", [
+  "--retry-wait=240",
+  "--continue=true",
+  "--seed-ratio=2",
+  "--seed-time=1440",
+  "--enable-rpc",
+  "--rpc-listen-all",
+  "--rpc-allow-origin-all",
+  "--rpc-listen-port=6800",
+  "--enable-dht=true",
+  "--dht-listen-port=6881-6999",
+  "--dht-entry-point=router.bittorrent.com:6881",
+  "--dht-entry-point6=router.bittorrent.com:6881",
+  "--dht-entry-point6=router.utorrent.com:6881",
+  "--dht-entry-point6=dht.transmissionbt.com:6881",
+  "--dht-entry-point6=dht.aelitis.com:6881",
+]);
 
 // Initialize bot
 const bot = new Telegraf(process.env.TELEGRAMBOT);
@@ -34,7 +47,6 @@ const handleAbout = (ctx) => {
 };
 
 const handleStart = (ctx) => {
-
   const commands = [
     "/about - About this bot",
     "/start - Start this bot",
@@ -46,7 +58,11 @@ const handleStart = (ctx) => {
     "/server - Start/Stop http the server",
   ];
 
-  ctx.reply(`Your user id is: ${ctx.chat.id}\n\nAvailable commands:\n${commands.join("\n")}`);
+  ctx.reply(
+    `Your user id is: ${ctx.chat.id}\n\nAvailable commands:\n${commands.join(
+      "\n"
+    )}`
+  );
 };
 
 const handleStats = async (ctx) => {
@@ -73,7 +89,10 @@ const handleStats = async (ctx) => {
 
 const handleDownload = async (ctx, url) => {
   try {
-    const ddta = await downloadAria(ctx.chat.id, url);
+    const user_id = String(ctx.chat.id);
+
+    const ddta = await downloadAria(user_id, url);
+
     const downloadId = ddta.result;
 
     ctx.reply(
@@ -157,7 +176,7 @@ const handleServer = async (ctx) => {
   try {
     if (servertoggle) {
       server.listen(6600, () => {});
-      ctx.reply("Server started");
+      ctx.reply("Server started at http://localhost:6600");
     } else {
       server.close();
       ctx.reply("Server stopped");

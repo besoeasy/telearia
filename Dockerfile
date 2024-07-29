@@ -16,9 +16,6 @@ COPY . .
 # Install aria2 (if needed)
 RUN apt-get update && apt-get install -y aria2
 
-# Create the save directory for downloads and set the proper permissions
-RUN mkdir -p /downloads && chmod -R 777 /downloads
-
 # Expose the required ports for aria2c and the Telegram bot
 EXPOSE 6600 6800 6881-6888
 

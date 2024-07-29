@@ -1,6 +1,12 @@
 const axios = require("axios");
 
-const saveDirectory = "./downloads/";
+const path = require("path");
+
+const tempdir = require("os").tmpdir();
+
+const saveDirectory = path.join(tempdir, "downloads");
+
+console.log("Save directory:", saveDirectory);
 
 const axiosPost = async (method, params = []) => {
   const { data } = await axios.post("http://localhost:6800/jsonrpc", {
@@ -25,7 +31,7 @@ const downloadAria = async (id, url) => {
   return await axiosPost("aria2.addUri", [
     [url],
     {
-      dir: `${saveDirectory}${id}/`,
+      dir: path.join(saveDirectory, id),
       enableDHT: true,
       enablePeerExchange: true,
     },
@@ -45,7 +51,6 @@ const cancelDownload = async (gid) => {
 };
 
 const { createServer } = require("http");
-
 const handler = require("serve-handler");
 
 const server = createServer((request, response) => {
