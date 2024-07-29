@@ -33,7 +33,8 @@ TELEGRAMBOT=your-telegram-bot-token telearia
 
 ### Using Docker
 
-You can also run TeleAria using Docker. Replace `your-telegram-bot-token` with your actual Telegram bot token. Ensure the `~/Downloads` directory on the host is mounted to `/downloads` in the container.
+You can also run TeleAria using Docker. Replace `your-telegram-bot-token` with your actual Telegram bot token. 
+`-e TELEGRAMBOT=Telegram-Bot-Token`: Sets the environment variable `TELEGRAMBOT` with your Telegram bot token.
 
 ```bash
 docker run -d \
@@ -44,12 +45,6 @@ docker run -d \
   ghcr.io/besoeasy/telearia:main
 ```
 
-This command does the following:
-
-- `-e TELEGRAMBOT=your-telegram-bot-token`: Sets the environment variable `TELEGRAMBOT` with your Telegram bot token.
-
 ## Pairing with Cloudflare Tunnel
 
 To set up your own self-hosted cloud download manager controlled via Telegram, you can pair TeleAria with a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/).
-
-For more detailed instructions and troubleshooting, visit our [GitHub repository](https://github.com/besoeasy/telearia).
