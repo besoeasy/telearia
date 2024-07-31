@@ -217,6 +217,7 @@ const handleServer = async (ctx) => {
   }
 };
 
+// Handle messages
 bot.on("message", async (ctx) => {
   if (ctx.message.text) {
     try {
@@ -225,9 +226,9 @@ bot.on("message", async (ctx) => {
       const lowerCaseCommand = command.toLowerCase().trim();
       const trimmedArgs = args.map((arg) => arg.trim());
 
-      console.log(
-        `@${ctx.from.username} (id: ${ctx.from.id}) at ${ctx.message.date}: ${text}`
-      );
+      const log = `@${ctx.from.username} (id: ${ctx.from.id}) at ${ctx.message.date}: ${text}`;
+
+      console.log(log);
 
       switch (lowerCaseCommand) {
         case "/about":
