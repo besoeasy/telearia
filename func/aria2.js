@@ -15,15 +15,15 @@ const axiosPost = async (method, params = []) => {
   return data;
 };
 
-export const getVersion = async () => {
+const getVersion = async () => {
   return await axiosPost("aria2.getVersion");
 };
 
-export const getGlobalStats = async () => {
+const getGlobalStats = async () => {
   return await axiosPost("aria2.getGlobalStat");
 };
 
-export const downloadAria = async (id, url) => {
+const downloadAria = async (id, url) => {
   return await axiosPost("aria2.addUri", [
     [url],
     {
@@ -34,14 +34,24 @@ export const downloadAria = async (id, url) => {
   ]);
 };
 
-export const getDownloadStatus = async (gid) => {
+const getDownloadStatus = async (gid) => {
   return await axiosPost("aria2.tellStatus", [gid]);
 };
 
-export const getOngoingDownloads = async () => {
+const getOngoingDownloads = async () => {
   return await axiosPost("aria2.tellActive");
 };
 
-export const cancelDownload = async (gid) => {
+const cancelDownload = async (gid) => {
   return await axiosPost("aria2.remove", [gid]);
+};
+
+
+module.exports = {
+  getVersion,
+  getGlobalStats,
+  downloadAjson,
+  getDownloadStatus,
+  getOngoingDownloads,
+  cancelDownload,
 };
