@@ -22,8 +22,5 @@ EXPOSE 6600 6800 6881-6888
 # Set environment variables (you can override these at runtime)
 ENV TELEGRAMBOT=Telegram-Bot-Token
 
-# run the aria2c daemon in new screen
-RUN screen -d -m aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all --rpc-listen-port=6800 --enable-dht --dht-listen-port=6881-6888 
-
 # Run the application
 CMD ["node", "index.js"]
