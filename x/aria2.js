@@ -83,4 +83,5 @@ module.exports = {
   cancelDownload,
   saveDirectory,
   server,
+  getIpData
 };

@@ -11,6 +11,7 @@ const {
   getOngoingDownloads,
   cancelDownload,
   server,
+  getIpData,
 } = require("./x/aria2.js");
 
 const { bytesToSize } = require("./x/utils.js");
@@ -56,6 +57,7 @@ const handleStart = (ctx) => {
     "/status_<gid> - Get status of a download",
     "/cancel_<gid> - Cancel a download",
     "/server - Start/Stop http the server",
+    "/ip - Get IP data",
   ];
 
   ctx.reply(
@@ -170,6 +172,27 @@ const handleCancel = async (ctx, downloadId) => {
   }
 };
 
+const handleIpData = async (ctx) => {
+  try {
+    const ipdata = await getIpData();
+
+    let msg_ipdata = "";
+
+    msg_ipdata = `
+    IP: ${ipdata.query}
+    Country: ${ipdata.country}
+    Region: ${ipdata.regionName}
+    City: ${ipdata.city}
+    ISP: ${ipdata.isp}
+    `;
+
+    ctx.reply(`${msg_ipdata}`);
+  } catch (error) {
+    console.error(error);
+    ctx.reply("Failed to retrieve IP data. Please try again later.");
+  }
+};
+
 let servertoggle = true;
 
 const handleServer = async (ctx) => {
@@ -227,6 +250,10 @@ bot.on("message", async (ctx) => {
           handleOngoing(ctx);
           break;
 
+        case "/ip":
+          handleIpData(ctx);
+          break;
+
         case "/server":
           handleServer(ctx, server);
           break;
@@ -237,7 +264,11 @@ bot.on("message", async (ctx) => {
           } else if (lowerCaseCommand.startsWith("/cancel_")) {
             handleCancel(ctx, lowerCaseCommand.split("_")[1]);
           } else {
-            ctx.reply(`Unknown command: ${lowerCaseCommand}` + "\n\n" + "Type /start to see available commands");
+            ctx.reply(
+              `Unknown command: ${lowerCaseCommand}` +
+                "\n\n" +
+                "Type /start to see available commands"
+            );
           }
       }
     } catch (error) {
