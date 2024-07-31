@@ -114,10 +114,11 @@ const handleOngoing = async (ctx) => {
   try {
     const { result: ongoingDownloads } = await getOngoingDownloads();
     const gids = ongoingDownloads.map((download) => download.gid);
-    const formattedGids = gids.map((gid) => `/status_${gid}`).join(", ");
+
+    const formattedGids = gids.map((gid) => `/status_${gid}`).join("\n");
 
     if (ongoingDownloads.length > 0) {
-      ctx.reply(`Ongoing Downloads GIDs:\n${formattedGids}`);
+      ctx.reply(`Ongoing Downloads GIDs:\n\n${formattedGids}`);
     } else {
       ctx.reply("No ongoing downloads.");
     }
