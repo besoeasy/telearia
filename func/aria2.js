@@ -50,7 +50,7 @@ const cancelDownload = async (gid) => {
 module.exports = {
   getVersion,
   getGlobalStats,
-  downloadAjson,
+  downloadAria,
   getDownloadStatus,
   getOngoingDownloads,
   cancelDownload,
