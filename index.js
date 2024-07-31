@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-const { spawn } = require("child_process");
-
 const { Telegraf } = require("telegraf");
 
 const {
@@ -10,35 +8,18 @@ const {
   getDownloadStatus,
   getOngoingDownloads,
   cancelDownload,
-  server,
-  getIpData,
-} = require("./x/aria2.js");
+} = require("./func/aria2.js");
 
-const { bytesToSize } = require("./x/utils.js");
+const { getIpData } = require("./func/ip.js");
+
+const { bytesToSize } = require("./func/utils.js");
+
+const { server } = require("./func/server.js");
 
 if (!process.env.TELEGRAMBOT) {
   console.error("Error: TELEGRAMBOT environment variable is not set.");
   process.exit(1);
 }
-
-// Spawn aria2c process
-const aria2c = spawn("aria2c", [
-  "--retry-wait=240",
-  "--continue=true",
-  "--seed-ratio=2",
-  "--seed-time=1440",
-  "--enable-rpc",
-  "--rpc-listen-all",
-  "--rpc-allow-origin-all",
-  "--rpc-listen-port=6800",
-  "--enable-dht=true",
-  "--dht-listen-port=6881-6999",
-  "--dht-entry-point=router.bittorrent.com:6881",
-  "--dht-entry-point6=router.bittorrent.com:6881",
-  "--dht-entry-point6=router.utorrent.com:6881",
-  "--dht-entry-point6=dht.transmissionbt.com:6881",
-  "--dht-entry-point6=dht.aelitis.com:6881",
-]);
 
 // Initialize bot
 const bot = new Telegraf(process.env.TELEGRAMBOT);
@@ -282,15 +263,10 @@ bot.catch((err, ctx) => {
   console.error(`Encountered an error for ${ctx.updateType}`, err);
 });
 
-bot.launch({
-  polling: {
-    interval: 8000,
-  },
-});
+bot.launch();
 
 process.once("SIGINT", () => {
   console.log("SIGINT received. Exiting...");
   bot.stop("SIGINT");
-  aria2c.kill("SIGINT");
   process.exit();
 });
