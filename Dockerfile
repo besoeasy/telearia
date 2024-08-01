@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copy package.json and package-lock.json, then install dependencies
 COPY package*.json ./
-RUN npm install --production
+RUN npm install
 
 # Install aria2 and clean up
 RUN apt-get update && \
