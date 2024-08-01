@@ -22,10 +22,10 @@ First, ensure you have [Git](https://git-scm.com/) installed on your system. The
 ```bash
 npm install -g github:besoeasy/telearia
 ```
-To start TeleAria, replace `your-telegram-bot-token` with your actual Telegram bot token and run:
+To start TeleAria, replace `Telegram-Bot-Token` with your actual Telegram bot token and run:
 
 ```bash
-TELEGRAMBOT=your-telegram-bot-token telearia
+TELEGRAMBOT=Telegram-Bot-Token telearia
 ```
 
 ### Using Docker
