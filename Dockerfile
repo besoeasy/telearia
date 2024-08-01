@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Copy package.json and package-lock.json, then install dependencies
 COPY package*.json ./
+
 RUN npm install
 
 # Install aria2 and clean up
@@ -24,8 +25,4 @@ EXPOSE 6799 6800 6881-6888
 # Set environment variables (you can override these at runtime)
 ENV TELEGRAMBOT=Telegram-Bot-Token
 
-# start ari2c daemon
-RUN aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all=true --rpc-listen-port=6800 --max-concurrent-downloads=5 --max-connection-per-server=5 --min-split-size=10M --follow-torrent=true --split=5 --daemon=true
-
-# Start the application
-CMD ["npm", "start"]
+CMD ["/start.sh"]
