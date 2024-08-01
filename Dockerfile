@@ -24,4 +24,4 @@ EXPOSE 6799 6800 6881-6888
 ENV TELEGRAMBOT=Telegram-Bot-Token
 
 # Run the application
-CMD ["./start.sh"]
+CMD ["./docker.sh"]
