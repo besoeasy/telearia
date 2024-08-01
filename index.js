@@ -14,30 +14,7 @@ const { bytesToSize } = require("./func/utils.js");
 
 const { server } = require("./func/server.js");
 
-const { spawn } = require("child_process");
-
 const { Telegraf } = require("telegraf");
-
-// Spawn aria2c process
-const aria2c = spawn("aria2c", [
-  "--continue=true",
-  "--seed-ratio=2",
-  "--seed-time=2000",
-  "--enable-rpc",
-  "--rpc-listen-all",
-  "--rpc-allow-origin-all",
-  "--rpc-listen-port=6800",
-  "--enable-dht=true",
-  "--dht-listen-port=6881-6999",
-  "--dht-entry-point=router.bittorrent.com:6881",
-  "--dht-entry-point=router.utorrent.com:6881",
-  "--dht-entry-point=dht.transmissionbt.com:6881",
-  "--dht-entry-point=dht.aelitis.com:6881",
-  "--dht-entry-point6=router.bittorrent.com:6881",
-  "--dht-entry-point6=router.utorrent.com:6881",
-  "--dht-entry-point6=dht.transmissionbt.com:6881",
-  "--dht-entry-point6=dht.aelitis.com:6881",
-]);
 
 if (!process.env.TELEGRAMBOT) {
   console.error("Error: TELEGRAMBOT environment variable is not set.");
@@ -293,6 +270,5 @@ bot.launch();
 process.once("SIGINT", () => {
   console.log("SIGINT received. Exiting...");
   bot.stop("SIGINT");
-  aria2c.kill();
   process.exit();
 });
