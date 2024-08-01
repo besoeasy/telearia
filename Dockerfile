@@ -19,7 +19,7 @@ RUN apt-get update && \
 COPY . .
 
 # Expose the required ports for aria2c and the application
-EXPOSE 6600 6800 6881-6888
+EXPOSE 6799 6800 6881-6888
 
 # Set environment variables (you can override these at runtime)
 ENV TELEGRAMBOT=Telegram-Bot-Token
