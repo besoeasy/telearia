@@ -2,10 +2,10 @@ const axios = require("axios");
 
 const path = require("path");
 
-const { saveDirectory, aria2server } = require("./utils.js");
+const { saveDirectory } = require("./utils.js");
 
 const axiosPost = async (method, params = []) => {
-  const { data } = await axios.post(aria2server, {
+  const { data } = await axios.post("http://localhost:6800/jsonrpc", {
     jsonrpc: "2.0",
     method,
     id: 1,
@@ -45,7 +45,6 @@ const getOngoingDownloads = async () => {
 const cancelDownload = async (gid) => {
   return await axiosPost("aria2.remove", [gid]);
 };
-
 
 module.exports = {
   getVersion,

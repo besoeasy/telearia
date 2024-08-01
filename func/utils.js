@@ -11,10 +11,7 @@ const tempdir = require("os").tmpdir();
 
 const saveDirectory = path.join(tempdir, "downloads");
 
-const aria2server = process.env.ARIA2_SERVER || "http://localhost:6800/jsonrpc";
-
 module.exports = {
   bytesToSize,
   saveDirectory,
-  aria2server,
 };
