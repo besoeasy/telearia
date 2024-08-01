@@ -25,4 +25,4 @@ EXPOSE 6799 6800 6881-6888
 # Set environment variables (you can override these at runtime)
 ENV TELEGRAMBOT=Telegram-Bot-Token
 
-CMD ["/start.sh"]
+CMD ["./start.sh"]
