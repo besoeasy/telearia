@@ -24,9 +24,8 @@ EXPOSE 6799 6800 6881-6888
 # Set environment variables (you can override these at runtime)
 ENV TELEGRAMBOT=Telegram-Bot-Token
 
-# Copy the startup script and give it execution permissions
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
+# start ari2c daemon
+RUN aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all=true --rpc-listen-port=6800 --max-concurrent-downloads=5 --max-connection-per-server=5 --min-split-size=10M --follow-torrent=true --split=5 --daemon=true
 
-# Start the script
-CMD ["/start.sh"]
+# Start the application
+CMD ["npm", "start"]
