@@ -30,8 +30,12 @@ TELEGRAMBOT=Telegram-Bot-Token telearia
 
 ### Using Docker
 
-You can also run TeleAria using Docker. Replace `your-telegram-bot-token` with your actual Telegram bot token. 
-`-e TELEGRAMBOT=Telegram-Bot-Token`: Sets the environment variable `TELEGRAMBOT` with your Telegram bot token.
+You can also run TeleAria using Docker. 
+
+Replace `your-telegram-bot-token` with your actual Telegram bot token. 
+
+
+Simple Version
 
 ```bash
 docker run -d \
@@ -41,6 +45,19 @@ docker run -d \
   -e TELEGRAMBOT=your-telegram-bot-token \
   ghcr.io/besoeasy/telearia:main
 ```
+
+Complex Version 
+
+```bash
+docker run -d \
+  --name telearia \
+  --restart unless-stopped \
+  -p 6799:6799 \
+  -p 6881-6888:6881-6888 \
+  -e TELEGRAMBOT=your-telegram-bot-token \
+  ghcr.io/besoeasy/telearia:main
+```
+
 
 ## Pairing with Cloudflare Tunnel
 
