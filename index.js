@@ -10,7 +10,7 @@ const {
 
 const { getIpData } = require("./func/ip.js");
 
-const { bytesToSize } = require("./func/utils.js");
+const { bytesToSize, deleteOldFiles } = require("./func/utils.js");
 
 const { server } = require("./func/server.js");
 
@@ -239,6 +239,10 @@ bot.on("message", async (ctx) => {
 
         case "/server":
           handleServer(ctx, server);
+          break;
+
+        case "/purge":
+          deleteOldFiles(30);
           break;
 
         default:
