@@ -1,7 +1,7 @@
 {
   "name": "telearia",
   "version": "1.0.0",
-  "description": "TeleAria is a powerful download manager that seamlessly integrates Aria2's robust downloading capabilities with the convenience of Telegram control. Whether you need to download files, torrents, or videos, TeleAria can handle it all with ease. ",
+  "description": "TeleAria is a powerful download manager that seamlessly integrates Aria2's robust downloading capabilities with the convenience of Telegram control. Whether you need to download files, torrents, or videos, TeleAria can handle it all with ease. Enjoy features like download scheduling, bandwidth management, and real-time notifications for an optimized downloading experience.",
   "main": "index.js",
   "bin": {
     "telearia": "./index.js"
@@ -15,7 +15,12 @@
     "aria",
     "downloader",
     "telegram",
-    "aria2c"
+    "aria2c",
+    "download manager",
+    "file downloader",
+    "torrent downloader",
+    "video downloader",
+    "remote downloads"
   ],
   "author": "besoeasy",
   "license": "ISC",
