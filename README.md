@@ -1,4 +1,4 @@
-# TeleAria: The Ultimate Telegram-Controlled Aria2 Downloader
+# TeleAria: The Telegram-Controlled Cloud Downloader
 
 TeleAria is a powerful download manager that seamlessly integrates [Aria2's](https://aria2.github.io/) robust downloading capabilities with the convenience of [Telegram](https://telegram.org/) control. Whether you need to download files, torrents, or videos, TeleAria can handle it all with ease. Here are some of the key features:
 
