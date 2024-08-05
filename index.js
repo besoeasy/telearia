@@ -189,7 +189,9 @@ const handleServer = async (ctx) => {
       server.listen(6799, () => {});
       const localipdata = getLocalIP();
 
-      ctx.reply(`Server started at http://${localipdata}:6799`);
+      ctx.reply(
+        `Server started at port 6799 \n\nhttp://${localipdata}:6799 \n\nUse /server to stop the server`
+      );
     } else {
       server.close();
       ctx.reply("Server stopped");
