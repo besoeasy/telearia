@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+require("dotenv").config();
+
 const {
   getGlobalStats,
   downloadAria,
@@ -10,7 +12,7 @@ const {
 
 const { getIpData } = require("./func/ip.js");
 
-const { bytesToSize, deleteOldFiles } = require("./func/utils.js");
+const { bytesToSize, deleteOldFiles, getLocalIP } = require("./func/utils.js");
 
 const { server } = require("./func/server.js");
 
@@ -39,6 +41,7 @@ const handleStart = (ctx) => {
     "/cancel_<gid> - Cancel a download",
     "/server - Start/Stop http the server",
     "/ip - Get IP data",
+    "/purge - Delete old files",
   ];
 
   ctx.reply(
@@ -52,18 +55,14 @@ const handleStats = async (ctx) => {
   try {
     const { result: stats } = await getGlobalStats();
 
-    let msg_ipfs = "";
-
-    msg_ipfs = `
-    Download speed: ${bytesToSize(stats.downloadSpeed)}
-    Upload speed: ${bytesToSize(stats.uploadSpeed)}
-    
-    Active downloads: ${stats.numActive}
-    Waiting downloads: ${stats.numWaiting}
-    Stopped downloads: ${stats.numStopped}
-    `;
-
-    ctx.reply(`${msg_ipfs}`);
+    ctx.reply(`Download speed: ${bytesToSize(
+      stats.downloadSpeed
+    )}\nUpload speed: ${bytesToSize(stats.uploadSpeed)}\nActive downloads: ${
+      stats.numActive
+    }\nWaiting downloads: ${stats.numWaiting}\nStopped downloads: ${
+      stats.numStopped
+    }
+    `);
   } catch (error) {
     console.error(error);
     ctx.reply("Failed to retrieve stats. Please try again later.");
@@ -158,10 +157,17 @@ const handleIpData = async (ctx) => {
   try {
     const ipdata = await getIpData();
 
+    const localipdata = getLocalIP();
+
     let msg_ipdata = "";
 
     msg_ipdata = `
+
+
+    Local IP: ${localipdata}
+
     IP: ${ipdata.query}
+    
     Country: ${ipdata.country}
     Region: ${ipdata.regionName}
     City: ${ipdata.city}
@@ -181,7 +187,9 @@ const handleServer = async (ctx) => {
   try {
     if (servertoggle) {
       server.listen(6799, () => {});
-      ctx.reply("Server started at http://localhost:6799");
+      const localipdata = getLocalIP();
+
+      ctx.reply(`Server started at http://${localipdata}:6799`);
     } else {
       server.close();
       ctx.reply("Server stopped");
@@ -242,7 +250,7 @@ bot.on("message", async (ctx) => {
           break;
 
         case "/purge":
-          deleteOldFiles(30);
+          deleteOldFiles(ctx, 30);
           break;
 
         default:

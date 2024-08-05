@@ -11,28 +11,44 @@ const tempdir = require("os").tmpdir();
 
 const saveDirectory = path.join(tempdir, "downloads");
 
-function deleteOldFiles(days = 30 ) {
+const { exec } = require("child_process");
 
-  const command = `find "${saveDirectory}" -type f -mtime +${days} -exec rm {} \\;`;
+function deleteOldFiles(ctx, days = 30) {
+  ctx.reply(`Deleting files older than ${days} days`);
 
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error executing command: ${error.message}`);
-      return;
+  exec(
+    `find "${saveDirectory}" -type f -mtime +${days} -exec rm {} \\;`,
+    (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error executing command: ${error.message}`);
+        ctx.reply(`Error executing command: ${error.message}`);
+        return;
+      }
     }
+  );
+}
 
-    if (stderr) {
-      console.error(`stderr: ${stderr}`);
-      return;
-    }
+const os = require("os");
 
-    console.log(`stdout: ${stdout}`);
-    console.log('Old files deleted successfully.');
+function getLocalIP() {
+  const ifaces = os.networkInterfaces();
+
+  let ip = "";
+
+  Object.keys(ifaces).forEach((ifname) => {
+    ifaces[ifname].forEach((iface) => {
+      if (iface.family === "IPv4" && !iface.internal) {
+        ip = iface.address;
+      }
+    });
   });
+
+  return ip;
 }
 
 module.exports = {
   bytesToSize,
   saveDirectory,
-  deleteOldFiles
+  deleteOldFiles,
+  getLocalIP,
 };
