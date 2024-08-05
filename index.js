@@ -2,6 +2,8 @@
 
 require("dotenv").config();
 
+const { version } = require("./package.json");
+
 const {
   getGlobalStats,
   downloadAria,
@@ -45,9 +47,11 @@ const handleStart = (ctx) => {
   ];
 
   ctx.reply(
-    `Your user id is: ${ctx.chat.id}\n\nAvailable commands:\n${commands.join(
-      "\n"
-    )}`
+    `Your user id is: ${ctx.chat.id}\n\n 
+    
+     TeleAria Version : ${version} \n\n
+
+    \n\nAvailable commands:\n${commands.join("\n")}`
   );
 };
 
