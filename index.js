@@ -20,6 +20,19 @@ const { server } = require("./func/server.js");
 
 const { Telegraf } = require("telegraf");
 
+const commands = [
+  "/about - About this bot",
+  "/start - Start this bot",
+  "/stats - Get global stats",
+  "/download <url> - Start a download",
+  "/ongoing - Get ongoing downloads",
+  "/status_<gid> - Get status of a download",
+  "/cancel_<gid> - Cancel a download",
+  "/server - Start/Stop http the server",
+  "/ip - Get IP data",
+  "/purge - Delete old files",
+];
+
 if (!process.env.TELEGRAMBOT) {
   console.error("Error: TELEGRAMBOT environment variable is not set.");
   process.exit(1);
@@ -33,25 +46,12 @@ const handleAbout = (ctx) => {
 };
 
 const handleStart = (ctx) => {
-  const commands = [
-    "/about - About this bot",
-    "/start - Start this bot",
-    "/stats - Get global stats",
-    "/download <url> - Start a download",
-    "/ongoing - Get ongoing downloads",
-    "/status_<gid> - Get status of a download",
-    "/cancel_<gid> - Cancel a download",
-    "/server - Start/Stop http the server",
-    "/ip - Get IP data",
-    "/purge - Delete old files",
-  ];
-
   ctx.reply(
-    `Your user id is: ${ctx.chat.id}\n\n 
+    `Your user id is: ${ctx.chat.id}
     
-     TeleAria Version : ${version} \n\n
+     TeleAria Version : ${version}
 
-    \n\nAvailable commands:\n${commands.join("\n")}`
+     Available commands:\n${commands.join("\n")}`
   );
 };
 
