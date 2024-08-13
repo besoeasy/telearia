@@ -63,7 +63,7 @@ const handleStats = async (ctx) => {
 
     ctx.reply(
       `Download speed: ${bytesToSize(stats.downloadSpeed)}\n` +
-        `Upload speed: ${bytesToSize(stats.uploadSpeed)}\n` +
+        `Upload speed: ${bytesToSize(stats.uploadSpeed)}\n\n` +
         `Active downloads: ${stats.numActive}\n` +
         `Waiting downloads: ${stats.numWaiting}\n` +
         `Stopped downloads: ${stats.numStopped}\n\n` +
