@@ -28,18 +28,20 @@ const commands = [
   "/ongoing - Get ongoing downloads",
   "/status_<gid> - Get status of a download",
   "/cancel_<gid> - Cancel a download",
-  "/server - Start/Stop http the server",
   "/ip - Get IP data",
   "/purge - Delete old files",
 ];
+
+let bot_users = [];
 
 if (!process.env.TELEGRAMBOT) {
   console.error("Error: TELEGRAMBOT environment variable is not set.");
   process.exit(1);
 }
 
-// Initialize bot
 const bot = new Telegraf(process.env.TELEGRAMBOT);
+
+server.listen(6799, () => {});
 
 const handleAbout = (ctx) => {
   ctx.reply("https://github.com/besoeasy/telearia");
@@ -59,14 +61,14 @@ const handleStats = async (ctx) => {
   try {
     const { result: stats } = await getGlobalStats();
 
-    ctx.reply(`Download speed: ${bytesToSize(
-      stats.downloadSpeed
-    )}\nUpload speed: ${bytesToSize(stats.uploadSpeed)}\nActive downloads: ${
-      stats.numActive
-    }\nWaiting downloads: ${stats.numWaiting}\nStopped downloads: ${
-      stats.numStopped
-    }
-    `);
+    ctx.reply(
+      `Download speed: ${bytesToSize(stats.downloadSpeed)}\n` +
+        `Upload speed: ${bytesToSize(stats.uploadSpeed)}\n` +
+        `Active downloads: ${stats.numActive}\n` +
+        `Waiting downloads: ${stats.numWaiting}\n` +
+        `Stopped downloads: ${stats.numStopped}\n\n` +
+        `Total users: ${bot_users.length}`
+    );
   } catch (error) {
     console.error(error);
     ctx.reply("Failed to retrieve stats. Please try again later.");
@@ -185,32 +187,15 @@ const handleIpData = async (ctx) => {
   }
 };
 
-let servertoggle = true;
-
-const handleServer = async (ctx) => {
-  try {
-    if (servertoggle) {
-      server.listen(6799, () => {});
-      const localipdata = getLocalIP();
-
-      ctx.reply(
-        `Server started at port 6799 \n\nhttp://${localipdata}:6799 \n\nUse /server to stop the server`
-      );
-    } else {
-      server.close();
-      ctx.reply("Server stopped");
-    }
-
-    servertoggle = !servertoggle;
-  } catch (error) {
-    console.error(error);
-    ctx.reply("Failed to start server. Please try again later.");
-  }
-};
-
 // Handle messages
 bot.on("message", async (ctx) => {
   if (ctx.message.text) {
+    // Add user to bot_users array
+    if (bot_users.indexOf(ctx.chat.id) === -1) {
+      bot_users.push(ctx.chat.id);
+      console.log("New User Added: ", ctx.chat.id);
+    }
+
     try {
       const { text } = ctx.message;
       const [command, ...args] = text.split(" ");
@@ -249,10 +234,6 @@ bot.on("message", async (ctx) => {
 
         case "/ip":
           handleIpData(ctx);
-          break;
-
-        case "/server":
-          handleServer(ctx, server);
           break;
 
         case "/purge":

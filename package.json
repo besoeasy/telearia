@@ -10,18 +10,6 @@
     "type": "git",
     "url": "git+https://github.com/besoeasy/telearia.git"
   },
-  "keywords": [
-    "aria2",
-    "aria",
-    "downloader",
-    "telegram",
-    "aria2c",
-    "download manager",
-    "file downloader",
-    "torrent downloader",
-    "video downloader",
-    "remote downloads"
-  ],
   "author": "besoeasy",
   "license": "ISC",
   "bugs": {
