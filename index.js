@@ -53,7 +53,7 @@ const handleStart = (ctx) => {
     
      TeleAria Version : ${version}
 
-     Downloads : ${tunnelurl}/${user_id_hash}
+     Downloads : ${tunnelurl}/${user_id_hash}/
 
      Available commands:\n${commands.join("\n")}`
   );
