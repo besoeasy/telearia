@@ -13,23 +13,7 @@ TeleAria is a powerful download manager that seamlessly integrates [Aria2's](htt
 
 With TeleAria, downloading has never been easier or more efficient. Perfect for users who demand flexibility and performance in their download management.
 
-## Installation
-
-### Using NPM
-
-First, ensure you have [Git](https://git-scm.com/) installed on your system. Then, you can install TeleAria via npm with the following command:
-
-```bash
-npm install -g github:besoeasy/telearia
-```
-
-To start TeleAria, replace `Telegram-Bot-Token` with your actual Telegram bot token and run:
-
-```bash
-TELEGRAMBOT=Telegram-Bot-Token telearia
-```
-
-### Using Docker
+## Installation Using Docker
 
 You can also run TeleAria using Docker.
 
