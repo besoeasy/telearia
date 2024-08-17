@@ -48,14 +48,18 @@ const handleAbout = (ctx) => {
 const handleStart = (ctx) => {
   const user_id_hash = hashUser(ctx.chat.id);
 
+  const download_url = `${tunnelurl}/${user_id_hash}/`;
+
   ctx.reply(
-    `Your User id is: ${ctx.chat.id}
-    
+    `
      TeleAria Version : ${version}
 
-     Downloads : ${tunnelurl}/${user_id_hash}/
+     User Id : ${ctx.chat.id}
 
-     Available commands:\n${commands.join("\n")}`
+     Downloads : ${download_url}
+
+     Available commands:\n${commands.join("\n")}
+     `
   );
 };
 
