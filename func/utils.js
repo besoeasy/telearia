@@ -28,27 +28,15 @@ function deleteOldFiles(ctx, days = 30) {
   );
 }
 
-const os = require("os");
+const sha256 = require("crypto-js/sha256");
 
-function getLocalIP() {
-  const ifaces = os.networkInterfaces();
-
-  let ip = "";
-
-  Object.keys(ifaces).forEach((ifname) => {
-    ifaces[ifname].forEach((iface) => {
-      if (iface.family === "IPv4" && !iface.internal) {
-        ip = iface.address;
-      }
-    });
-  });
-
-  return ip;
+function hashUser(str) {
+  return sha256(String(str)).toString();
 }
 
 module.exports = {
   bytesToSize,
   saveDirectory,
   deleteOldFiles,
-  getLocalIP,
+  hashUser,
 };

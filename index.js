@@ -14,7 +14,12 @@ const {
 
 const { getIpData } = require("./func/ip.js");
 
-const { bytesToSize, deleteOldFiles, getLocalIP } = require("./func/utils.js");
+const {
+  bytesToSize,
+  deleteOldFiles,
+  getLocalIP,
+  hashUser,
+} = require("./func/utils.js");
 
 const { server } = require("./func/server.js");
 
@@ -41,6 +46,8 @@ if (!process.env.TELEGRAMBOT) {
 
 const bot = new Telegraf(process.env.TELEGRAMBOT);
 
+const tunnelurl = process.env.TUNNELURL || "http://localhost:6799";
+
 server.listen(6799, () => {});
 
 const handleAbout = (ctx) => {
@@ -48,10 +55,14 @@ const handleAbout = (ctx) => {
 };
 
 const handleStart = (ctx) => {
+  const user_id_hash = hashUser(ctx.chat.id);
+
   ctx.reply(
-    `Your user id is: ${ctx.chat.id}
+    `Your User id is: ${ctx.chat.id}
     
      TeleAria Version : ${version}
+
+     Downloads : ${tunnelurl}/${user_id_hash}
 
      Available commands:\n${commands.join("\n")}`
   );
@@ -77,9 +88,9 @@ const handleStats = async (ctx) => {
 
 const handleDownload = async (ctx, url) => {
   try {
-    const user_id = String(ctx.chat.id);
+    const user_id_hash = hashUser(ctx.chat.id);
 
-    const ddta = await downloadAria(user_id, url);
+    const ddta = await downloadAria(user_id_hash, url);
 
     const downloadId = ddta.result;
 
@@ -163,15 +174,7 @@ const handleIpData = async (ctx) => {
   try {
     const ipdata = await getIpData();
 
-    const localipdata = getLocalIP();
-
-    let msg_ipdata = "";
-
-    msg_ipdata = `
-
-
-    Local IP: ${localipdata}
-
+    const msg_ipdata = `
     IP: ${ipdata.query}
     
     Country: ${ipdata.country}
