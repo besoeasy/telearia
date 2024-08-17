@@ -14,14 +14,7 @@ const {
 
 const { getIpData } = require("./func/ip.js");
 
-const {
-  bytesToSize,
-  deleteOldFiles,
-  getLocalIP,
-  hashUser,
-} = require("./func/utils.js");
-
-const { server } = require("./func/server.js");
+const { bytesToSize, deleteOldFiles, hashUser } = require("./func/utils.js");
 
 const { Telegraf } = require("telegraf");
 

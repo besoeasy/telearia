@@ -8,14 +8,17 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-# Install aria2 and clean up
+# Install aria2, nginx, and clean up
 RUN apt-get update && \
-    apt-get install -y aria2 && \
+    apt-get install -y aria2 nginx && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy the rest of the application code and the startup script
 COPY . .
+
+# Copy the NGINX configuration file
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Expose the required ports for aria2c and the application
 EXPOSE 6799 6881-6888
@@ -23,5 +26,5 @@ EXPOSE 6799 6881-6888
 # Set environment variables (you can override these at runtime)
 ENV TELEGRAMBOT=Telegram-Bot-Token
 
-# Run the application
-CMD ["./docker.sh"]
+# Start NGINX and the application
+CMD ["sh", "-c", "nginx && ./docker.sh"]
