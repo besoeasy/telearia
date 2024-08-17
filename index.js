@@ -41,8 +41,6 @@ const bot = new Telegraf(process.env.TELEGRAMBOT);
 
 const tunnelurl = process.env.TUNNELURL || "http://localhost:6799";
 
-server.listen(6799, () => {});
-
 const handleAbout = (ctx) => {
   ctx.reply("https://github.com/besoeasy/telearia");
 };
