@@ -1,23 +1,21 @@
-# TeleAria: The Telegram-Controlled Cloud Downloader
+## TeleAria: Telegram-Controlled Cloud Downloader
 
-TeleAria is a powerful download manager that seamlessly integrates [Aria2's](https://aria2.github.io/) robust downloading capabilities with the convenience of [Telegram](https://telegram.org/) control. Whether you need to download files, torrents, or videos, TeleAria can handle it all with ease. Here are some of the key features:
+TeleAria is a powerful cloud downloader that integrates [Aria2](https://aria2.github.io/) with [Telegram](https://telegram.org/). Download files, torrents, and videos effortlessly.
 
-- **Comprehensive Download Support**: Download virtually anything, including files, torrents, and videos, with Aria2’s multi-protocol support.
-- **Telegram Integration**: Control your downloads directly from your Telegram app. Start, stop, and manage downloads remotely with simple commands.
-- **High-Speed Downloads**: Enjoy fast and efficient downloading with Aria2's advanced download acceleration.
-- **User-Friendly Interface**: Easy setup and intuitive commands make managing downloads a breeze.
-- **Real-Time Notifications**: Get instant updates on your download status, ensuring you’re always in the loop.
-- **Smart File Organization**: Automatically organize downloaded files into folders based on file type or category.
-- **Download Scheduling**: Schedule downloads to start and stop at specific times for optimal bandwidth usage.
-- **Bandwidth Limiting**: Set limits on download and upload speeds to prioritize network resources.
+### Key Features
 
-With TeleAria, downloading has never been easier or more efficient. Perfect for users who demand flexibility and performance in their download management.
+- **Versatile Downloading**: Supports files, torrents, and videos.
+- **Telegram Control**: Manage downloads via Telegram commands.
+- **Fast Performance**: Enjoy high-speed downloads with Aria2.
+- **User-Friendly**: Simple setup and intuitive interface.
+- **Real-Time Notifications**: Get instant updates on progress.
+- **Organized Files**: Automatically sort downloads by type.
+- **Scheduled Downloads**: Optimize bandwidth with scheduling.
+- **Bandwidth Control**: Manage download/upload speeds.
 
-## Installation Using Docker
+### Quick Installation with Docker
 
-You can also run TeleAria using Docker.
-
-Replace `Telegram-Bot-Token` with your actual Telegram bot token.
+Run TeleAria using Docker by replacing `Telegram-Bot-Token` with your actual token:
 
 ```bash
 docker run -d \
@@ -28,6 +26,8 @@ docker run -d \
   ghcr.io/besoeasy/telearia:main
 ```
 
-## Pairing with Cloudflare Tunnel
+### Cloudflare Tunnel Setup
 
-To set up your own self-hosted cloud download manager controlled via Telegram, you can pair TeleAria with a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/).
+Pair TeleAria with a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/) for enhanced self-hosting.
+
+This concise README highlights the essential features and setup instructions for TeleAria, making it SEO-friendly and easy to read.
