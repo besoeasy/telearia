@@ -29,5 +29,3 @@ docker run -d \
 ### Cloudflare Tunnel Setup
 
 Pair TeleAria with a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/) for enhanced self-hosting.
-
-This concise README highlights the essential features and setup instructions for TeleAria, making it SEO-friendly and easy to read.
