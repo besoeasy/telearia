@@ -28,15 +28,9 @@ function deleteOldFiles(ctx, days = 30) {
   );
 }
 
-const sha256 = require("crypto-js/sha256");
-
-function hashUser(str) {
-  return sha256(String(str)).toString();
-}
 
 module.exports = {
   bytesToSize,
   saveDirectory,
   deleteOldFiles,
-  hashUser,
-};
+ };

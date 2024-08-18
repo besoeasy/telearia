@@ -2,6 +2,8 @@
 
 require("dotenv").config();
 
+// Import required functions
+
 const { version } = require("./package.json");
 
 const {
@@ -14,9 +16,30 @@ const {
 
 const { getIpData } = require("./func/ip.js");
 
-const { bytesToSize, deleteOldFiles, hashUser } = require("./func/utils.js");
+const { bytesToSize, deleteOldFiles } = require("./func/utils.js");
 
 const { Telegraf } = require("telegraf");
+
+const sha256 = require("crypto-js/sha256");
+
+// Load environment variables
+
+if (!process.env.TELEGRAMBOT) {
+  console.error("Error: TELEGRAMBOT environment variable is not set.");
+  process.exit(1);
+}
+
+const bot = new Telegraf(process.env.TELEGRAMBOT);
+
+const tunnelurl = process.env.TUNNELURL || "http://localhost:6799";
+
+// Hash user id
+
+function hashUser(str) {
+  return sha256(String(str) + String(process.env.TELEGRAMBOT)).toString();
+}
+
+// Available commands
 
 const commands = [
   "/about - About this bot",
@@ -31,15 +54,6 @@ const commands = [
 ];
 
 let bot_users = [];
-
-if (!process.env.TELEGRAMBOT) {
-  console.error("Error: TELEGRAMBOT environment variable is not set.");
-  process.exit(1);
-}
-
-const bot = new Telegraf(process.env.TELEGRAMBOT);
-
-const tunnelurl = process.env.TUNNELURL || "http://localhost:6799";
 
 const handleAbout = (ctx) => {
   ctx.reply("https://github.com/besoeasy/telearia");
