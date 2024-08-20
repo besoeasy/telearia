@@ -13,24 +13,22 @@ const saveDirectory = path.join(tempdir, "downloads");
 
 const { exec } = require("child_process");
 
-function deleteOldFiles(ctx, days = 30) {
-  ctx.reply(`Deleting files older than ${days} days`);
+function deleteOldFiles(days = 7) {
+  console.log(`Deleting files older than ${days} days`);
 
   exec(
     `find "${saveDirectory}" -type f -mtime +${days} -exec rm {} \\;`,
     (error, stdout, stderr) => {
       if (error) {
         console.error(`Error executing command: ${error.message}`);
-        ctx.reply(`Error executing command: ${error.message}`);
         return;
       }
     }
   );
 }
 
-
 module.exports = {
   bytesToSize,
   saveDirectory,
   deleteOldFiles,
- };
+};

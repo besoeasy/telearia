@@ -33,6 +33,8 @@ const bot = new Telegraf(process.env.TELEGRAMBOT);
 
 const tunnelurl = process.env.TUNNELURL || "http://localhost:6799";
 
+const purgeInterval = process.env.PURGEINTERVAL || 3;
+
 // Hash user id
 
 function hashUser(str) {
@@ -50,7 +52,6 @@ const commands = [
   "/status_<gid> - Get status of a download",
   "/cancel_<gid> - Cancel a download",
   "/ip - Get IP data",
-  "/purge - Delete old files",
 ];
 
 let bot_users = [];
@@ -209,6 +210,16 @@ bot.on("message", async (ctx) => {
     }
 
     try {
+      // maintainance jobs
+      if (Math.random() < 0.04) {
+        ctx.reply("Optimizing Bot...");
+
+        deleteOldFiles(purgeInterval);
+
+        ctx.reply("Optimized successfully.");
+      }
+
+      // text classification
       const { text } = ctx.message;
       const [command, ...args] = text.split(" ");
       const lowerCaseCommand = command.toLowerCase().trim();
@@ -217,6 +228,8 @@ bot.on("message", async (ctx) => {
       const log = `@${ctx.from.username} (id: ${ctx.from.id}) at ${ctx.message.date}: ${text}`;
 
       console.log(log);
+
+      // handle commands
 
       switch (lowerCaseCommand) {
         case "/about":
@@ -246,10 +259,6 @@ bot.on("message", async (ctx) => {
 
         case "/ip":
           handleIpData(ctx);
-          break;
-
-        case "/purge":
-          deleteOldFiles(ctx, 30);
           break;
 
         default:
