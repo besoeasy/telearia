@@ -2,6 +2,8 @@
 
 TeleAria is a powerful cloud downloader that integrates [Aria2](https://aria2.github.io/) with [Telegram](https://telegram.org/). Download files, torrents, and videos effortlessly.
 
+![TeleAria](https://github.com/user-attachments/assets/8f1165c5-f880-4efb-96aa-af9cfb8a4a49)
+
 ### Key Features
 
 - **Versatile Downloading**: Supports files, torrents, and videos.
