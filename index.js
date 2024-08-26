@@ -31,14 +31,12 @@ if (!process.env.TELEGRAMBOT) {
 
 const bot = new Telegraf(process.env.TELEGRAMBOT);
 
-const tunnelurl = process.env.TUNNELURL || "http://localhost:6799";
-
 const purgeInterval = process.env.PURGEINTERVAL || 3;
 
 // Hash user id
 
 function hashUser(str) {
-  return sha256(String(str) + String(process.env.TELEGRAMBOT)).toString();
+  return sha256(String(str)).toString();
 }
 
 // Available commands
@@ -63,7 +61,8 @@ const handleAbout = (ctx) => {
 const handleStart = (ctx) => {
   const user_id_hash = hashUser(ctx.chat.id);
 
-  const download_url = `${tunnelurl}/${user_id_hash}/`;
+  const download_url =
+    process.env.TUNNELURL || "http://pi.local:6799" + `/${user_id_hash}/`;
 
   ctx.reply(
     `
@@ -211,7 +210,7 @@ bot.on("message", async (ctx) => {
 
     try {
       // maintainance jobs
-      if (Math.random() < 0.04) {
+      if (Math.random() < 0.07) {
         ctx.reply("Optimizing Bot...");
 
         deleteOldFiles(purgeInterval);
