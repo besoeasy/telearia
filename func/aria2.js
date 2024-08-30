@@ -4,6 +4,18 @@ const path = require("path");
 
 const { saveDirectory } = require("./utils.js");
 
+function getTodaysDate() {
+  const today = new Date();
+
+  const day = String(today.getDate()).padStart(2, "0");
+  const month = today
+    .toLocaleString("default", { month: "short" })
+    .toUpperCase();
+  const year = today.getFullYear();
+
+  return `${day}-${month}-${year}`;
+}
+
 const axiosPost = async (method, params = []) => {
   const { data } = await axios.post("http://localhost:6800/jsonrpc", {
     jsonrpc: "2.0",
@@ -24,6 +36,7 @@ const getGlobalStats = async () => {
 };
 
 const downloadAria = async (id, url) => {
+
   return await axiosPost("aria2.addUri", [
     [url],
     {
