@@ -50,8 +50,6 @@ const commands = [
   "/ip - Get IP data",
 ];
 
-let bot_users = [];
-
 const handleAbout = (ctx) => {
   ctx.reply("https://github.com/besoeasy/telearia");
 };
@@ -83,8 +81,7 @@ const handleStats = async (ctx) => {
         `Upload speed: ${bytesToSize(stats.uploadSpeed)}\n\n` +
         `Active downloads: ${stats.numActive}\n` +
         `Waiting downloads: ${stats.numWaiting}\n` +
-        `Stopped downloads: ${stats.numStopped}\n\n` +
-        `Total users: ${bot_users.length}`
+        `Stopped downloads: ${stats.numStopped}\n\n`
     );
   } catch (error) {
     console.error(error);
@@ -199,17 +196,11 @@ const handleIpData = async (ctx) => {
 // Handle messages
 bot.on("message", async (ctx) => {
   if (ctx.message.text) {
-    // Add user to bot_users array
-    if (bot_users.indexOf(ctx.chat.id) === -1) {
-      bot_users.push(ctx.chat.id);
-      console.log("New User Added: ", ctx.chat.id);
-    }
-
     try {
       // maintainance jobs
-      if (Math.random() < 0.03) {
+      if (Math.random() < 0.05) {
         deleteOldFiles(process.env.PURGEINTERVAL || 2);
-        ctx.reply("Optimized successfully.");
+        ctx.reply(".. .. ... ..");
       }
 
       // text classification
