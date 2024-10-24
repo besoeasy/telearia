@@ -24,7 +24,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 6799 6881-6888
 
 # Set PURGEINTERVAL to 7
-ENV PURGEINTERVAL=7
+ENV PURGEINTERVAL=3
 
 # Set Tunnel 
 ENV TUNNELURL=http://pi.local:6799
