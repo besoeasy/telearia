@@ -207,11 +207,8 @@ bot.on("message", async (ctx) => {
 
     try {
       // maintainance jobs
-      if (Math.random() < 0.07) {
-        ctx.reply("Optimizing Bot...");
-
-        deleteOldFiles(process.env.PURGEINTERVAL || 7);
-
+      if (Math.random() < 0.03) {
+        deleteOldFiles(process.env.PURGEINTERVAL || 2);
         ctx.reply("Optimized successfully.");
       }
 
