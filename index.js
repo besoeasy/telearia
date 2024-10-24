@@ -25,7 +25,7 @@ const sha256 = require("crypto-js/sha256");
 // Load environment variables
 
 if (!process.env.TELEGRAMBOT) {
-  console.error("Error: TELEGRAMBOT environment variable is not set.");
+  console.error("Error: TELEGRAMBOT Environment Variable is not set.");
   process.exit(1);
 }
 
@@ -33,8 +33,8 @@ const bot = new Telegraf(process.env.TELEGRAMBOT);
 
 // Hash user id
 
-function hashUser(str) {
-  return sha256(String(str)).toString();
+function cleanUser(str) {
+  return str.toString();
 }
 
 // Available commands
@@ -55,7 +55,7 @@ const handleAbout = (ctx) => {
 };
 
 const handleStart = (ctx) => {
-  const user_id_hash = hashUser(ctx.chat.id);
+  const user_id_hash = cleanUser(ctx.chat.id);
 
   const download_url = process.env.TUNNELURL || "http://pi.local:6799";
 
@@ -63,7 +63,7 @@ const handleStart = (ctx) => {
     `
      TeleAria Version : ${version}
 
-     User Id : ${ctx.chat.id}
+     User Id : ${user_id_hash}
 
      Downloads : ${download_url}/${user_id_hash}/
 
@@ -91,7 +91,7 @@ const handleStats = async (ctx) => {
 
 const handleDownload = async (ctx, url) => {
   try {
-    const user_id_hash = hashUser(ctx.chat.id);
+    const user_id_hash = cleanUser(ctx.chat.id);
 
     const ddta = await downloadAria(user_id_hash, url);
 
