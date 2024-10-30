@@ -20,6 +20,8 @@ TeleAria is a powerful cloud downloader that combines the capabilities of [Aria2
 Run TeleAria using Docker by replacing `Telegram-Bot-Token` with your actual token:
 
 ```bash
+docker pull ghcr.io/besoeasy/telearia:main
+
 docker run -d \
   --name telearia \
   --restart unless-stopped \
