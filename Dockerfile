@@ -20,12 +20,6 @@ COPY . .
 # Copy the NGINX configuration file
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Expose the required ports for aria2c and the application
-EXPOSE 6799 6881-6888
-
-# Set PURGEINTERVAL to 7
-ENV PURGEINTERVAL=3
-
 # Set Tunnel 
 ENV TUNNELURL=http://pi.local:6799
 
