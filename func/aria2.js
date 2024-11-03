@@ -1,7 +1,5 @@
 const axios = require("axios");
-
 const path = require("path");
-
 const { saveDirectory } = require("./utils.js");
 
 const axiosPost = async (method, params = []) => {
@@ -11,7 +9,6 @@ const axiosPost = async (method, params = []) => {
     id: 1,
     params,
   });
-
   return data;
 };
 
@@ -24,10 +21,17 @@ const getGlobalStats = async () => {
 };
 
 const downloadAria = async (id, url) => {
+  // Get current date in YYYYMMDD format
+  const currentDate = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+
+  // Construct directory path with saveDirectory/id/currentDate
+  const downloadDir = path.join(saveDirectory, id, currentDate);
+
+  // Call aria2.addUri with the constructed directory path
   return await axiosPost("aria2.addUri", [
     [url],
     {
-      dir: path.join(saveDirectory, id),
+      dir: downloadDir,
       enableDHT: true,
       enablePeerExchange: true,
     },
