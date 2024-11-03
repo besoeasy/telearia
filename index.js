@@ -199,7 +199,7 @@ bot.on("message", async (ctx) => {
     try {
       // maintainance jobs
       if (Math.random() < 0.05) {
-        deleteOldFiles(process.env.PURGEINTERVAL || 2);
+        deleteOldFiles(process.env.PURGEINTERVAL || 7);
         ctx.reply(".. .. ... ..");
       }
 
