@@ -39,39 +39,36 @@ const commands = [
 ];
 
 const handleAbout = (ctx) => {
-  ctx.reply("🔗 GitHub Repo: [TeleAria](https://github.com/besoeasy/telearia)");
+  ctx.reply("GitHub Repo: TeleAria (https://github.com/besoeasy/telearia)");
 };
 
 const handleStart = (ctx) => {
   const userIdHash = cleanUser(ctx.chat.id);
   const downloadUrl = process.env.TUNNELURL || "http://pi.local:6799";
-  ctx.replyWithMarkdown(`
-  **Welcome to TeleAria!** 🎉
-
-  🔹 **Version:** ${version}
-  🔹 **User ID:** ${userIdHash}
-  🔹 **Your Downloads:** [Manage here](${downloadUrl}/${userIdHash}/)
-
-  **Available Commands:**
-  ${commands.map((cmd) => `🔸 ${cmd}`).join("\n")}
-  `);
+  ctx.reply(
+    `Welcome to TeleAria! 🎉\n\n` +
+    `Version: ${version}\n` +
+    `User ID: ${userIdHash}\n` +
+    `Your Downloads: Manage here at ${downloadUrl}/${userIdHash}/\n\n` +
+    `Available Commands:\n` +
+    commands.map((cmd) => `- ${cmd}`).join("\n")
+  );
 };
 
 const handleStats = async (ctx) => {
   try {
     const { result: stats } = await getGlobalStats();
-    ctx.replyWithMarkdown(`
-    **📊 Global Stats:**
-
-    🔹 **Download Speed:** ${bytesToSize(stats.downloadSpeed)}
-    🔹 **Upload Speed:** ${bytesToSize(stats.uploadSpeed)}
-    🔹 **Active Downloads:** ${stats.numActive}
-    🔹 **Waiting Downloads:** ${stats.numWaiting}
-    🔹 **Stopped Downloads:** ${stats.numStopped}
-    `);
+    ctx.reply(
+      `Global Stats:\n\n` +
+      `Download Speed: ${bytesToSize(stats.downloadSpeed)}\n` +
+      `Upload Speed: ${bytesToSize(stats.uploadSpeed)}\n` +
+      `Active Downloads: ${stats.numActive}\n` +
+      `Waiting Downloads: ${stats.numWaiting}\n` +
+      `Stopped Downloads: ${stats.numStopped}`
+    );
   } catch (error) {
     console.error(error);
-    ctx.reply("⚠️ Failed to retrieve stats. Please try again later.");
+    ctx.reply("Failed to retrieve stats. Please try again later.");
   }
 };
 
@@ -86,7 +83,7 @@ const handleDownload = async (ctx, url) => {
     );
   } catch (error) {
     console.error(error);
-    ctx.reply("⚠️ Failed to start download. Please try again later.");
+    ctx.reply("Failed to start download. Please try again later.");
   }
 };
 
@@ -102,22 +99,23 @@ const handleStatus = async (ctx, downloadId) => {
       2
     );
 
-    let reply = `**🔍 Download Status:**\n\n**Status:** ${downloadData.result.status}\n**Progress:** ${completedSize} MB / ${totalSize} MB`;
+    let reply = `Download Status:\n\nStatus: ${downloadData.result.status}\n` +
+                `Progress: ${completedSize} MB / ${totalSize} MB`;
 
     if (downloadData.result.status === "active") {
-      reply += `\n🔸 **Cancel with** /cancel_${downloadId}`;
+      reply += `\nCancel with /cancel_${downloadId}`;
     } else if (downloadData.result.status === "complete") {
       const files = downloadData.result.files
         .map((file) => file.path)
         .join("\n");
-      reply += `\n🔹 **Downloaded Files:**\n${files}`;
+      reply += `\nDownloaded Files:\n${files}`;
     }
 
-    ctx.replyWithMarkdown(reply);
+    ctx.reply(reply);
   } catch (error) {
     console.error(error);
     ctx.reply(
-      `⚠️ Failed to retrieve status for download ID: ${downloadId}. Please try again later.`
+      `Failed to retrieve status for download ID: ${downloadId}. Please try again later.`
     );
   }
 };
@@ -125,11 +123,11 @@ const handleStatus = async (ctx, downloadId) => {
 const handleCancel = async (ctx, downloadId) => {
   try {
     await cancelDownload(downloadId);
-    ctx.reply(`✅ **Download with ID ${downloadId} canceled successfully.**`);
+    ctx.reply(`Download with ID ${downloadId} canceled successfully.`);
   } catch (error) {
     console.error(error);
     ctx.reply(
-      `⚠️ Failed to cancel download with ID: ${downloadId}. Please try again later.`
+      `Failed to cancel download with ID: ${downloadId}. Please try again later.`
     );
   }
 };
@@ -137,18 +135,17 @@ const handleCancel = async (ctx, downloadId) => {
 const handleIpData = async (ctx) => {
   try {
     const ipData = await getIpData();
-    ctx.replyWithMarkdown(`
-    **🌍 Server IP Information:**
-
-    🔹 **IP:** ${ipData.query}
-    🔹 **Country:** ${ipData.country}
-    🔹 **Region:** ${ipData.regionName}
-    🔹 **City:** ${ipData.city}
-    🔹 **ISP:** ${ipData.isp}
-    `);
+    ctx.reply(
+      `Server IP Information:\n\n` +
+      `IP: ${ipData.query}\n` +
+      `Country: ${ipData.country}\n` +
+      `Region: ${ipData.regionName}\n` +
+      `City: ${ipData.city}\n` +
+      `ISP: ${ipData.isp}`
+    );
   } catch (error) {
     console.error(error);
-    ctx.reply("⚠️ Failed to retrieve IP data. Please try again later.");
+    ctx.reply("Failed to retrieve IP data. Please try again later.");
   }
 };
 
@@ -157,7 +154,7 @@ const downloading = async (ctx) => {
     const { result: ongoingDownloads } = await getOngoingDownloads();
 
     if (ongoingDownloads.length > 0) {
-      let reply = "📥 **Ongoing Downloads** 📥\n\n";
+      let reply = "Ongoing Downloads:\n\n";
 
       for (const download of ongoingDownloads) {
         const { gid, completedLength, totalLength, status } = download;
@@ -166,20 +163,20 @@ const downloading = async (ctx) => {
         const totalSize = (totalLength / 1024 / 1024).toFixed(2);
         const progress = ((completedLength / totalLength) * 100).toFixed(2);
 
-        reply += `🆔 **ID**: /status_${gid}\n`;
-        reply += `📊 **Status**: ${status}\n`;
-        reply += `📈 **Progress**: ${downloadedSize} MB / ${totalSize} MB (${progress}%)\n`;
-        reply += `────────────────────────────\n\n`;
+        reply += `ID: /status_${gid}\n`;
+        reply += `Status: ${status}\n`;
+        reply += `Progress: ${downloadedSize} MB / ${totalSize} MB (${progress}%)\n`;
+        reply += `-----------------------------\n\n`;
       }
 
-      ctx.replyWithMarkdown(reply);
+      ctx.reply(reply);
     } else {
-      ctx.reply("✅ **No ongoing downloads.**");
+      ctx.reply("No ongoing downloads.");
     }
   } catch (error) {
     console.error(error);
     ctx.reply(
-      "⚠️ Failed to retrieve ongoing downloads. Please try again later."
+      "Failed to retrieve ongoing downloads. Please try again later."
     );
   }
 };
@@ -198,7 +195,7 @@ bot.on("message", async (ctx) => {
       switch (lowerCaseCommand) {
         case "/clean":
           deleteOldFiles(process.env.PURGEINTERVAL || 7);
-          ctx.reply("🧹 **Old files cleaned!**");
+          ctx.reply("Old files cleaned!");
           break;
         case "/about":
           handleAbout(ctx);
@@ -218,7 +215,7 @@ bot.on("message", async (ctx) => {
         case "/download":
         case "/dl":
           if (trimmedArgs.length > 0) handleDownload(ctx, trimmedArgs[0]);
-          else ctx.reply("⚠️ **Please provide a URL to download.**");
+          else ctx.reply("Please provide a URL to download.");
           break;
         default:
           if (lowerCaseCommand.startsWith("/status_"))
@@ -227,12 +224,12 @@ bot.on("message", async (ctx) => {
             handleCancel(ctx, lowerCaseCommand.split("_")[1]);
           else
             ctx.reply(
-              `❔ Unknown command: ${lowerCaseCommand}\n\nType /start to see available commands.`
+              `Unknown command: ${lowerCaseCommand}\n\nType /start to see available commands.`
             );
       }
     } catch (error) {
       console.error(error);
-      ctx.reply("⚠️ An error occurred. Please try again later.");
+      ctx.reply("An error occurred. Please try again later.");
     }
   }
 });
