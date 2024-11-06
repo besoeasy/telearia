@@ -197,12 +197,6 @@ const handleIpData = async (ctx) => {
 bot.on("message", async (ctx) => {
   if (ctx.message.text) {
     try {
-      // maintainance jobs
-      if (Math.random() < 0.05) {
-        deleteOldFiles(process.env.PURGEINTERVAL || 7);
-        ctx.reply(".. .. ... ..");
-      }
-
       // text classification
       const { text } = ctx.message;
       const [command, ...args] = text.split(" ");
@@ -216,6 +210,11 @@ bot.on("message", async (ctx) => {
       // handle commands
 
       switch (lowerCaseCommand) {
+        case "/clean":
+          deleteOldFiles(process.env.PURGEINTERVAL || 7);
+          ctx.reply("-- Cleaned --");
+          break;
+
         case "/about":
           handleAbout(ctx);
           break;
