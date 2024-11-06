@@ -106,24 +106,6 @@ const handleDownload = async (ctx, url) => {
   }
 };
 
-const handleOngoing = async (ctx) => {
-  try {
-    const { result: ongoingDownloads } = await getOngoingDownloads();
-    const gids = ongoingDownloads.map((download) => download.gid);
-
-    const formattedGids = gids.map((gid) => `/status_${gid}`).join("\n");
-
-    if (ongoingDownloads.length > 0) {
-      ctx.reply(`Ongoing Downloads GIDs:\n\n${formattedGids}`);
-    } else {
-      ctx.reply("No ongoing downloads.");
-    }
-  } catch (error) {
-    console.error(error);
-    ctx.reply("Failed to retrieve ongoing downloads. Please try again later.");
-  }
-};
-
 const handleStatus = async (ctx, downloadId) => {
   try {
     const ddta = await getDownloadStatus(downloadId);
@@ -193,6 +175,38 @@ const handleIpData = async (ctx) => {
   }
 };
 
+const downloading = async (ctx) => {
+  try {
+    const { result: ongoingDownloads } = await getOngoingDownloads();
+
+    if (ongoingDownloads.length > 0) {
+      let reply = "📥 **Ongoing Downloads** 📥\n\n";
+
+      for (const download of ongoingDownloads) {
+        const { gid, completedLength, totalLength, status } = download;
+
+        const downloadedSize = (completedLength / 1024 / 1024).toFixed(2); // Convert to MB
+        const totalSize = (totalLength / 1024 / 1024).toFixed(2); // Convert to MB
+        const progress = ((completedLength / totalLength) * 100).toFixed(2); // Calculate progress
+
+        reply += `🆔 **ID**: /status_${gid}\n`;
+        reply += `📊 **Status**: ${status}\n`;
+        reply += `📈 **Progress**: ${downloadedSize} MB / ${totalSize} MB (${progress}%)\n`;
+        reply += `────────────────────────────\n\n`;
+      }
+
+      ctx.replyWithMarkdown(reply);
+    } else {
+      ctx.reply("✅ No ongoing downloads.");
+    }
+  } catch (error) {
+    console.error(error);
+    ctx.reply(
+      "⚠️ Failed to retrieve ongoing downloads. Please try again later."
+    );
+  }
+};
+
 // Handle messages
 bot.on("message", async (ctx) => {
   if (ctx.message.text) {
@@ -227,6 +241,14 @@ bot.on("message", async (ctx) => {
           handleStats(ctx);
           break;
 
+        case "/downloading":
+          downloading(ctx);
+          break;
+
+        case "/ip":
+          handleIpData(ctx);
+          break;
+
         case "/download":
         case "/dl":
           if (trimmedArgs.length > 0) {
@@ -236,14 +258,6 @@ bot.on("message", async (ctx) => {
           }
           break;
 
-        case "/ongoing":
-          handleOngoing(ctx);
-          break;
-
-        case "/ip":
-          handleIpData(ctx);
-          break;
-
         default:
           if (lowerCaseCommand.startsWith("/status_")) {
             handleStatus(ctx, lowerCaseCommand.split("_")[1]);
@@ -251,9 +265,7 @@ bot.on("message", async (ctx) => {
             handleCancel(ctx, lowerCaseCommand.split("_")[1]);
           } else {
             ctx.reply(
-              `Unknown command: ${lowerCaseCommand}` +
-                "\n\n" +
-                "Type /start to see available commands"
+              `Unknown command: ${lowerCaseCommand}\n\nType /start to see available commands`
             );
           }
       }
