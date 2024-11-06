@@ -75,12 +75,10 @@ const handleDownload = async (ctx, url) => {
     const downloadData = await downloadAria(userIdHash, url);
     const downloadId = downloadData.result;
 
-    ctx.replyWithMarkdown(`
-    📥 **Download Started!**
-
-    🔹 **Download ID:** ${downloadId}
-    🔹 **Track progress with** /status_${downloadId} or view all downloads with /downloading
-    `);
+    ctx.replyWithMarkdown(
+      `📥 **Download Started!**\n\n🔹 **Download ID:** ${downloadId}\n🔹 **Track progress with** /status_${downloadId} or view all downloads with /downloading`,
+      { disable_web_page_preview: true }
+    );
   } catch (error) {
     console.error(error);
     ctx.reply("⚠️ Failed to start download. Please try again later.");
