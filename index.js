@@ -3,7 +3,13 @@
 require("dotenv").config();
 
 const { version } = require("./package.json");
-const { getGlobalStats, downloadAria, getDownloadStatus, getOngoingDownloads, cancelDownload } = require("./func/aria2.js");
+const {
+  getGlobalStats,
+  downloadAria,
+  getDownloadStatus,
+  getOngoingDownloads,
+  cancelDownload,
+} = require("./func/aria2.js");
 const { getIpData } = require("./func/ip.js");
 const { bytesToSize, deleteOldFiles } = require("./func/utils.js");
 const { Telegraf } = require("telegraf");
@@ -47,7 +53,7 @@ const handleStart = (ctx) => {
   🔹 **Your Downloads:** [Manage here](${downloadUrl}/${userIdHash}/)
 
   **Available Commands:**
-  ${commands.map(cmd => `🔸 ${cmd}`).join("\n")}
+  ${commands.map((cmd) => `🔸 ${cmd}`).join("\n")}
   `);
 };
 
@@ -75,9 +81,8 @@ const handleDownload = async (ctx, url) => {
     const downloadData = await downloadAria(userIdHash, url);
     const downloadId = downloadData.result;
 
-    ctx.replyWithMarkdown(
-      `📥 **Download Started!**\n\n🔹 **Download ID:** ${downloadId}\n🔹 **Track progress with** /status_${downloadId} or view all downloads with /downloading`,
-      { disable_web_page_preview: true }
+    ctx.reply(
+      `Track progress with /status_${downloadId} or view all downloads with /downloading`
     );
   } catch (error) {
     console.error(error);
@@ -88,22 +93,32 @@ const handleDownload = async (ctx, url) => {
 const handleStatus = async (ctx, downloadId) => {
   try {
     const downloadData = await getDownloadStatus(downloadId);
-    const completedSize = (downloadData.result.completedLength / 1024 / 1024).toFixed(2);
-    const totalSize = (downloadData.result.totalLength / 1024 / 1024).toFixed(2);
+    const completedSize = (
+      downloadData.result.completedLength /
+      1024 /
+      1024
+    ).toFixed(2);
+    const totalSize = (downloadData.result.totalLength / 1024 / 1024).toFixed(
+      2
+    );
 
     let reply = `**🔍 Download Status:**\n\n**Status:** ${downloadData.result.status}\n**Progress:** ${completedSize} MB / ${totalSize} MB`;
 
     if (downloadData.result.status === "active") {
       reply += `\n🔸 **Cancel with** /cancel_${downloadId}`;
     } else if (downloadData.result.status === "complete") {
-      const files = downloadData.result.files.map(file => file.path).join("\n");
+      const files = downloadData.result.files
+        .map((file) => file.path)
+        .join("\n");
       reply += `\n🔹 **Downloaded Files:**\n${files}`;
     }
 
     ctx.replyWithMarkdown(reply);
   } catch (error) {
     console.error(error);
-    ctx.reply(`⚠️ Failed to retrieve status for download ID: ${downloadId}. Please try again later.`);
+    ctx.reply(
+      `⚠️ Failed to retrieve status for download ID: ${downloadId}. Please try again later.`
+    );
   }
 };
 
@@ -113,7 +128,9 @@ const handleCancel = async (ctx, downloadId) => {
     ctx.reply(`✅ **Download with ID ${downloadId} canceled successfully.**`);
   } catch (error) {
     console.error(error);
-    ctx.reply(`⚠️ Failed to cancel download with ID: ${downloadId}. Please try again later.`);
+    ctx.reply(
+      `⚠️ Failed to cancel download with ID: ${downloadId}. Please try again later.`
+    );
   }
 };
 
@@ -161,7 +178,9 @@ const downloading = async (ctx) => {
     }
   } catch (error) {
     console.error(error);
-    ctx.reply("⚠️ Failed to retrieve ongoing downloads. Please try again later.");
+    ctx.reply(
+      "⚠️ Failed to retrieve ongoing downloads. Please try again later."
+    );
   }
 };
 
@@ -172,7 +191,7 @@ bot.on("message", async (ctx) => {
       const { text } = ctx.message;
       const [command, ...args] = text.split(" ");
       const lowerCaseCommand = command.toLowerCase().trim();
-      const trimmedArgs = args.map(arg => arg.trim());
+      const trimmedArgs = args.map((arg) => arg.trim());
 
       console.log(`@${ctx.from.username} (ID: ${ctx.from.id}): ${text}`);
 
@@ -202,9 +221,14 @@ bot.on("message", async (ctx) => {
           else ctx.reply("⚠️ **Please provide a URL to download.**");
           break;
         default:
-          if (lowerCaseCommand.startsWith("/status_")) handleStatus(ctx, lowerCaseCommand.split("_")[1]);
-          else if (lowerCaseCommand.startsWith("/cancel_")) handleCancel(ctx, lowerCaseCommand.split("_")[1]);
-          else ctx.reply(`❔ Unknown command: ${lowerCaseCommand}\n\nType /start to see available commands.`);
+          if (lowerCaseCommand.startsWith("/status_"))
+            handleStatus(ctx, lowerCaseCommand.split("_")[1]);
+          else if (lowerCaseCommand.startsWith("/cancel_"))
+            handleCancel(ctx, lowerCaseCommand.split("_")[1]);
+          else
+            ctx.reply(
+              `❔ Unknown command: ${lowerCaseCommand}\n\nType /start to see available commands.`
+            );
       }
     } catch (error) {
       console.error(error);
