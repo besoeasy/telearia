@@ -38,9 +38,10 @@ docker run -d \
   --name telearia \
   --restart unless-stopped \
   --network host \
-  -v /tmp/downloads:/home/$USER/downloads \
+  -v /home/$USER/downloads:/tmp/downloads \
   -e TELEGRAMBOT=Telegram-Bot-Token \
   ghcr.io/besoeasy/telearia:main
+
 ```
 
 
