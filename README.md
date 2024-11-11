@@ -30,6 +30,21 @@ docker run -d \
   ghcr.io/besoeasy/telearia:main
 ```
 
+
+```bash
+docker pull ghcr.io/besoeasy/telearia:main
+
+docker run -d \
+  --name telearia \
+  --restart unless-stopped \
+  --network host \
+  -v /tmp/downloads:/home/$USER/downloads \
+  -e TELEGRAMBOT=Telegram-Bot-Token \
+  ghcr.io/besoeasy/telearia:main
+```
+
+
+
 ###  Tunnel Setup
 
 Pair TeleAria with a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/) for enhanced self-hosting.
