@@ -29,7 +29,7 @@ docker run -d \
   -e TELEGRAMBOT=Telegram-Bot-Token \
   ghcr.io/besoeasy/telearia:main
 ```
-Run TeleAria Alongside JellyFin and make it automatic alternative to sonarr and other things
+OR 
 
 ```bash
 
@@ -37,18 +37,10 @@ docker run -d \
   --name telearia \
   --restart unless-stopped \
   --network host \
-  -v /home/$USER/downloads:/tmp/downloads \
+  -v /home/$USER/telearia:/tmp/downloads \
   -e TELEGRAMBOT=Telegram-Bot-Token \
   ghcr.io/besoeasy/telearia:main
 
-docker run -d \
-  --name jellyfin \
-  --restart unless-stopped \
-  --network host \
-  -v /srv/jellyfin/config:/config \
-  -v /srv/jellyfin/cache:/cache \
-  -v /home/$USER/downloads:/media \
-  jellyfin/jellyfin:latest
 
 
 ```
