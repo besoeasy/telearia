@@ -13,7 +13,6 @@ const {
 const { getIpData } = require("./func/ip.js");
 const { bytesToSize, deleteOldFiles } = require("./func/utils.js");
 const { Telegraf } = require("telegraf");
-const sha256 = require("crypto-js/sha256");
 
 if (!process.env.TELEGRAMBOT) {
   console.error("Error: TELEGRAMBOT Environment Variable is not set.");
@@ -26,16 +25,16 @@ function cleanUser(str) {
   return str.toString();
 }
 
-// Define commands with more user-friendly descriptions
 const commands = [
-  "/about - Info about this bot",
-  "/start - Get started with the bot",
-  "/stats - View global download/upload stats",
-  "/download <url> - Start a new download",
-  "/downloading - Check ongoing downloads",
-  "/status_<gid> - Get specific download status",
-  "/cancel_<gid> - Cancel a specific download",
-  "/ip - Display server IP info",
+  "/about - Learn more about this bot",
+  "/start - Get started and see available options",
+  "/stats - View global download and upload statistics",
+  "/download <url> - Start a new download with a specified URL",
+  "/downloading - Check the progress of ongoing downloads",
+  "/status_<gid> - Get the status of a specific download (use the GID)",
+  "/cancel_<gid> - Cancel a specific download (use the GID)",
+  "/ip - Display server IP information",
+  "/clean - Remove old downloaded files based on the set interval",
 ];
 
 const handleAbout = (ctx) => {
@@ -45,13 +44,45 @@ const handleAbout = (ctx) => {
 const handleStart = (ctx) => {
   const userIdHash = cleanUser(ctx.chat.id);
   const downloadUrl = process.env.TUNNELURL || "http://pi.local:6799";
+  const botName = ctx.botInfo.first_name || "TeleAria";
+
+  const welcomeMessage = `
+👋 Welcome to **${botName}**! 🎉
+
+I'm here to help you manage your downloads seamlessly using Aria2.
+
+### 🌟 Key Features:
+- 🚀 Start new downloads with a simple command.
+- 📊 Check global download statistics.
+- 📝 View the status of your ongoing downloads.
+- ❌ Cancel downloads easily if needed.
+- 🧹 Clean up old downloaded files to save space.
+
+### 🔗 Manage Your Downloads:
+You can manage your downloads through the web interface at:
+👉 [Manage Downloads](${downloadUrl}/${userIdHash}/)
+
+### 📋 Available Commands:
+${commands.map((cmd) => `- ${cmd}`).join("\n")}
+
+Feel free to explore and start using the bot. If you have any questions, type **/help** for assistance.
+  `;
+
+  ctx.replyWithMarkdownV2(welcomeMessage, {
+    disable_web_page_preview: true,
+  });
+};
+
+const handleStart2 = (ctx) => {
+  const userIdHash = cleanUser(ctx.chat.id);
+  const downloadUrl = process.env.TUNNELURL || "http://pi.local:6799";
   ctx.reply(
     `Welcome to TeleAria! 🎉\n\n` +
-    `Version: ${version}\n` +
-    `User ID: ${userIdHash}\n` +
-    `Your Downloads: Manage here at ${downloadUrl}/${userIdHash}/\n\n` +
-    `Available Commands:\n` +
-    commands.map((cmd) => `- ${cmd}`).join("\n")
+      `Version: ${version}\n` +
+      `User ID: ${userIdHash}\n` +
+      `Your Downloads: Manage here at ${downloadUrl}/${userIdHash}/\n\n` +
+      `Available Commands:\n` +
+      commands.map((cmd) => `- ${cmd}`).join("\n")
   );
 };
 
@@ -60,11 +91,11 @@ const handleStats = async (ctx) => {
     const { result: stats } = await getGlobalStats();
     ctx.reply(
       `Global Stats:\n\n` +
-      `Download Speed: ${bytesToSize(stats.downloadSpeed)}\n` +
-      `Upload Speed: ${bytesToSize(stats.uploadSpeed)}\n` +
-      `Active Downloads: ${stats.numActive}\n` +
-      `Waiting Downloads: ${stats.numWaiting}\n` +
-      `Stopped Downloads: ${stats.numStopped}`
+        `Download Speed: ${bytesToSize(stats.downloadSpeed)}\n` +
+        `Upload Speed: ${bytesToSize(stats.uploadSpeed)}\n` +
+        `Active Downloads: ${stats.numActive}\n` +
+        `Waiting Downloads: ${stats.numWaiting}\n` +
+        `Stopped Downloads: ${stats.numStopped}`
     );
   } catch (error) {
     console.error(error);
@@ -99,8 +130,9 @@ const handleStatus = async (ctx, downloadId) => {
       2
     );
 
-    let reply = `Download Status:\n\nStatus: ${downloadData.result.status}\n` +
-                `Progress: ${completedSize} MB / ${totalSize} MB`;
+    let reply =
+      `Download Status:\n\nStatus: ${downloadData.result.status}\n` +
+      `Progress: ${completedSize} MB / ${totalSize} MB`;
 
     if (downloadData.result.status === "active") {
       reply += `\nCancel with /cancel_${downloadId}`;
@@ -137,11 +169,11 @@ const handleIpData = async (ctx) => {
     const ipData = await getIpData();
     ctx.reply(
       `Server IP Information:\n\n` +
-      `IP: ${ipData.query}\n` +
-      `Country: ${ipData.country}\n` +
-      `Region: ${ipData.regionName}\n` +
-      `City: ${ipData.city}\n` +
-      `ISP: ${ipData.isp}`
+        `IP: ${ipData.query}\n` +
+        `Country: ${ipData.country}\n` +
+        `Region: ${ipData.regionName}\n` +
+        `City: ${ipData.city}\n` +
+        `ISP: ${ipData.isp}`
     );
   } catch (error) {
     console.error(error);
@@ -175,9 +207,20 @@ const downloading = async (ctx) => {
     }
   } catch (error) {
     console.error(error);
+    ctx.reply("Failed to retrieve ongoing downloads. Please try again later.");
+  }
+};
+
+const handleClean = (ctx) => {
+  try {
+    const purgeInterval = parseInt(process.env.PURGEINTERVAL) || 7;
+    deleteOldFiles(purgeInterval);
     ctx.reply(
-      "Failed to retrieve ongoing downloads. Please try again later."
+      `Old files older than ${purgeInterval} days have been cleaned up! 🧹`
     );
+  } catch (error) {
+    console.error("Error during file cleanup:", error);
+    ctx.reply("Failed to clean old files. Please try again later.");
   }
 };
 
@@ -194,8 +237,7 @@ bot.on("message", async (ctx) => {
 
       switch (lowerCaseCommand) {
         case "/clean":
-          deleteOldFiles(process.env.PURGEINTERVAL || 7);
-          ctx.reply("Old files cleaned!");
+          handleClean(ctx);
           break;
         case "/about":
           handleAbout(ctx);
