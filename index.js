@@ -41,39 +41,8 @@ const handleAbout = (ctx) => {
   ctx.reply("GitHub Repo: TeleAria (https://github.com/besoeasy/telearia)");
 };
 
+
 const handleStart = (ctx) => {
-  const userIdHash = cleanUser(ctx.chat.id);
-  const downloadUrl = process.env.TUNNELURL || "http://pi.local:6799";
-  const botName = ctx.botInfo.first_name || "TeleAria";
-
-  const welcomeMessage = `
-👋 Welcome to **${botName}**! 🎉
-
-I'm here to help you manage your downloads seamlessly using Aria2.
-
-### 🌟 Key Features:
-- 🚀 Start new downloads with a simple command.
-- 📊 Check global download statistics.
-- 📝 View the status of your ongoing downloads.
-- ❌ Cancel downloads easily if needed.
-- 🧹 Clean up old downloaded files to save space.
-
-### 🔗 Manage Your Downloads:
-You can manage your downloads through the web interface at:
-👉 [Manage Downloads](${downloadUrl}/${userIdHash}/)
-
-### 📋 Available Commands:
-${commands.map((cmd) => `- ${cmd}`).join("\n")}
-
-Feel free to explore and start using the bot. If you have any questions, type **/help** for assistance.
-  `;
-
-  ctx.replyWithMarkdownV2(welcomeMessage, {
-    disable_web_page_preview: true,
-  });
-};
-
-const handleStart2 = (ctx) => {
   const userIdHash = cleanUser(ctx.chat.id);
   const downloadUrl = process.env.TUNNELURL || "http://pi.local:6799";
   ctx.reply(
