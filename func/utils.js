@@ -2,7 +2,15 @@ const fs = require("fs");
 const path = require("path");
 const tempdir = require("os").tmpdir();
 
+const teleariaPort = 6799;
+
 const saveDirectory = path.join(tempdir, "downloads");
+
+const crypto = require("crypto");
+
+function generateSHA256Hash(inputString) {
+  return crypto.createHash("sha256").update(inputString).digest("hex");
+}
 
 function bytesToSize(bytes) {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
@@ -118,10 +126,16 @@ function getVideoFiles() {
 
   return videoFiles;
 }
+function cleanUser(str) {
+  return str.toString();
+}
 
 module.exports = {
   bytesToSize,
   saveDirectory,
   deleteOldFiles,
   getVideoFiles,
+  generateSHA256Hash,
+  cleanUser,
+  teleariaPort,
 };
