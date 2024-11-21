@@ -19,12 +19,10 @@ const {
   deleteOldFiles,
   cleanUser,
   teleariaPort,
+  teleariaURL,
 } = require("./func/utils.js");
 
 const { Telegraf } = require("telegraf");
-
-// can be changed by user
-let downloadUrl = "http://localhost:" + teleariaPort;
 
 if (!process.env.TELEGRAMBOT) {
   console.error("Error: TELEGRAMBOT Environment Variable is not set.");
@@ -55,9 +53,9 @@ const handleStart = (ctx) => {
   const userIdHash = cleanUser(ctx.chat.id);
   ctx.reply(
     `Welcome to TeleAria! 🎉\n\n` +
-      `Version: ${version}\n` +
+      `Version: ${version} on Port : ${teleariaPort}\n` +
       `User ID: ${userIdHash}\n` +
-      `Your Downloads: Manage here at ${downloadUrl}/${userIdHash}/\n\n` +
+      `Your Downloads: Manage here at ${teleariaURL}/${userIdHash}/\n\n` +
       `Available Commands:\n` +
       commands.map((cmd) => `- ${cmd}`).join("\n")
   );

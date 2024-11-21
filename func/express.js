@@ -8,6 +8,7 @@ const {
   getVideoFiles,
   generateSHA256Hash,
   teleariaPort,
+  teleariaURL,
 } = require("./utils.js");
 
 const app = express();
@@ -117,7 +118,7 @@ app.get("/meta/:type/:id.json", (req, res) => {
           streams: [
             {
               name: "TeleAria",
-              url: `http://localhost:${teleariaPort}/${matchedVideo}`,
+              url: `${teleariaURL}/${matchedVideo}`,
             },
           ],
         },
