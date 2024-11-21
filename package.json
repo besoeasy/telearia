@@ -21,6 +21,7 @@
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.5",
     "serve-handler": "^6.1.5",
-    "telegraf": "^4.16.3"
+    "telegraf": "^4.16.3",
+    "stremio-addon-sdk": "latest"
   }
 }
