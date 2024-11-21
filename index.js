@@ -2,6 +2,12 @@
 
 require("dotenv").config();
 
+const crypto = require("crypto");
+
+// Helpers
+function generateSHA256Hash(inputString) {
+  return crypto.createHash("sha256").update(inputString).digest("hex");
+}
 const { version } = require("./package.json");
 const {
   getGlobalStats,
@@ -262,14 +268,9 @@ process.once("SIGINT", () => {
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
-const crypto = require("crypto");
 
 const app = express();
 
-// Helpers
-function generateSHA256Hash(inputString) {
-  return crypto.createHash("sha256").update(inputString).digest("hex");
-}
 
 // Middleware
 app.use(cors());
