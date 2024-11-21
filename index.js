@@ -34,7 +34,7 @@ const commands = [
   "/status_<gid> - Get the status of a specific download (use the GID)",
   "/cancel_<gid> - Cancel a specific download (use the GID)",
   "/ip - Display server IP information",
-  "/clean - Remove old downloaded files based on the set interval",
+  "/clean - Remove oldest downloaded file",
 ];
 
 const handleAbout = (ctx) => {
@@ -181,11 +181,9 @@ const downloading = async (ctx) => {
 
 const handleClean = (ctx) => {
   try {
-    deleteOldFiles();
-    ctx.reply(`Old files have been cleaned up! 🧹`);
+    deleteOldFiles(ctx);
   } catch (error) {
     console.error("Error during file cleanup:", error);
-    ctx.reply("Failed to clean old files. Please try again later.");
   }
 };
 

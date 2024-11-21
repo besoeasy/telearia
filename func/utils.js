@@ -11,7 +11,7 @@ function bytesToSize(bytes) {
   return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
 }
 
-function deleteOldFiles() {
+function deleteOldFiles(ctx) {
   function getFilesRecursively(dir) {
     let fileList = [];
     const files = fs.readdirSync(dir);
@@ -31,22 +31,45 @@ function deleteOldFiles() {
     return fileList;
   }
 
+  function removeEmptyFoldersRecursively(folder) {
+    const files = fs.readdirSync(folder);
+    if (files.length > 0) {
+      files.forEach((file) => {
+        const fullPath = path.join(folder, file);
+        if (fs.statSync(fullPath).isDirectory()) {
+          removeEmptyFoldersRecursively(fullPath);
+        }
+      });
+    }
+
+    // If the folder is empty after processing, delete it
+    if (fs.readdirSync(folder).length === 0) {
+      fs.rmdirSync(folder);
+      console.log(`Deleted empty folder: ${folder}`);
+      ctx.reply(`Deleted empty folder: ${folder}`);
+    }
+  }
+
   try {
     const files = getFilesRecursively(saveDirectory);
 
     if (files.length === 0) {
       console.log("No files to delete.");
+      ctx.reply("No files to delete.");
       return;
     }
 
-    // Find the oldest file
-    const oldestFile = files.reduce((oldest, current) =>
-      current.time < oldest.time ? current : oldest
-    );
+    // Sort files by modification time (oldest first)
+    files.sort((a, b) => a.time - b.time);
 
     // Delete the oldest file
+    const oldestFile = files[0];
     fs.unlinkSync(oldestFile.fullPath);
     console.log(`Deleted oldest file: ${oldestFile.fullPath}`);
+    ctx.reply(`Deleted oldest file: ${oldestFile.fullPath}`);
+
+    // Remove any empty folders in the directory tree
+    removeEmptyFoldersRecursively(saveDirectory);
   } catch (err) {
     console.error(`Error processing files: ${err.message}`);
   }
