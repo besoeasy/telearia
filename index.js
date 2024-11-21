@@ -15,23 +15,6 @@ const { getIpData } = require("./func/ip.js");
 
 const { bytesToSize, deleteOldFiles } = require("./func/utils.js");
 
-const createStremioAddon = require("./func/stremio.js");
-
-const http = require("http");
-
-const builder = createStremioAddon();
-
-const addonInterface = builder.getInterface();
-
-// Run the add-on server
-http
-  .createServer((req, res) => {
-    addonInterface(req, res);
-  })
-  .listen(6798, () => {
-    console.log(`Stremio Addon running at: http://pi.local:6798/manifest.json`);
-  });
-
 const { Telegraf } = require("telegraf");
 
 if (!process.env.TELEGRAMBOT) {
