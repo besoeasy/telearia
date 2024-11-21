@@ -13,9 +13,15 @@ const {
 
 const { getIpData } = require("./func/ip.js");
 
-const { bytesToSize, deleteOldFiles } = require("./func/utils.js");
+const {
+  bytesToSize,
+  deleteOldFiles,
+  getVideoFiles,
+} = require("./func/utils.js");
 
 const { Telegraf } = require("telegraf");
+
+const downloadUrl = process.env.TUNNELURL || "http://pi.local:6799";
 
 if (!process.env.TELEGRAMBOT) {
   console.error("Error: TELEGRAMBOT Environment Variable is not set.");
@@ -46,7 +52,6 @@ const handleAbout = (ctx) => {
 
 const handleStart = (ctx) => {
   const userIdHash = cleanUser(ctx.chat.id);
-  const downloadUrl = process.env.TUNNELURL || "http://pi.local:6799";
   ctx.reply(
     `Welcome to TeleAria! 🎉\n\n` +
       `Version: ${version}\n` +
@@ -252,4 +257,135 @@ process.once("SIGINT", () => {
   console.log("SIGINT received. Exiting...");
   bot.stop("SIGINT");
   process.exit();
+});
+
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+const crypto = require("crypto");
+
+const app = express();
+
+// Helpers
+function generateSHA256Hash(inputString) {
+  return crypto.createHash("sha256").update(inputString).digest("hex");
+}
+
+// Middleware
+app.use(cors());
+app.use((req, res, next) => {
+  console.log(`Request received: ${req.method} ${req.path}`);
+  next();
+});
+
+// Manifest Endpoint
+app.get("/manifest.json", (req, res) => {
+  res.json({
+    id: "com.besoeasy.telearia",
+    version: "1.1.0",
+    name: "TeleAria",
+    description: "A Stremio add-on for browsing and playing downloaded videos",
+    catalogs: [
+      {
+        type: "movie",
+        id: "telearia-downloads",
+        name: "TeleAria Downloads",
+      },
+    ],
+    resources: [
+      {
+        name: "stream",
+        types: ["movie", "series", "anime"],
+      },
+      {
+        name: "catalog",
+        types: ["movie", "series", "anime"],
+      },
+      {
+        name: "meta",
+        types: ["movie", "series", "anime"],
+        idPrefixes: ["telearia_"],
+      },
+    ],
+    types: ["movie", "series", "anime"],
+    background: "https://i.ibb.co/VtSfFP9/t8wVwcg.jpg",
+    logo: "https://i.ibb.co/w4BnkC9/GwxAcDV.png",
+  });
+});
+
+// Catalog Endpoint
+app.get("/catalog/:type/:id.json", (req, res) => {
+  const { type, id } = req.params;
+
+  if (id !== "telearia-downloads") {
+    return res.status(404).json({ error: "Catalog not found" });
+  }
+
+  try {
+    const videos = getVideoFiles(); // Fetch list of video files
+    const metas = videos.map((video) => ({
+      id: "telearia_" + generateSHA256Hash(video), // Unique ID
+      type: type,
+      name: path.basename(video, path.extname(video)), // Video name without extension
+      poster: "https://i.ibb.co/w4BnkC9/GwxAcDV.png", // Default poster
+      background: "https://i.ibb.co/VtSfFP9/t8wVwcg.jpg", // Background image
+      description: `Stream your video with TeleAria.`,
+    }));
+
+    res.json({ metas });
+  } catch (error) {
+    console.error("Error generating catalog:", error);
+    res.status(500).json({ error: "Failed to generate catalog" });
+  }
+});
+
+// Meta Endpoint
+app.get("/meta/:type/:id.json", (req, res) => {
+  const { type, id } = req.params;
+
+  if (!id.startsWith("telearia")) {
+    return res.status(404).json({ error: "Meta not found" });
+  }
+
+  try {
+    const videos = getVideoFiles(); // Fetch video files
+    const matchedVideo = videos.find(
+      (video) => "telearia_" + generateSHA256Hash(video) === id
+    );
+
+    if (!matchedVideo) {
+      return res.status(404).json({ error: "Meta not found" });
+    }
+
+    const meta = {
+      id: id,
+      type: type,
+      name: path.basename(matchedVideo, path.extname(matchedVideo)), // Video name without extension
+      poster: "https://i.ibb.co/w4BnkC9/GwxAcDV.png", // Default poster
+      background: "https://i.ibb.co/VtSfFP9/t8wVwcg.jpg", // Background image
+      description: `Stream your video with TeleAria.`,
+      videos: [
+        {
+          id: id,
+          title: "Watch Now",
+          released: new Date().toISOString(),
+          streams: [
+            {
+              name: "TeleAria",
+              url: `http://pi.local:6799/${matchedVideo}`,
+            },
+          ],
+        },
+      ],
+    };
+
+    res.json({ meta });
+  } catch (error) {
+    console.error("Error generating meta:", error);
+    res.status(500).json({ error: "Failed to generate meta" });
+  }
+});
+
+app.listen(6798, () => {
+  console.log("Server is running on port 6798");
 });

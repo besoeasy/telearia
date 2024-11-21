@@ -75,8 +75,53 @@ function deleteOldFiles(ctx) {
   }
 }
 
+// List of video file extensions to look for
+const videoExtensions = [
+  ".mp4",
+  ".mkv",
+  ".avi",
+  ".mov",
+  ".flv",
+  ".wmv",
+  ".webm",
+];
+
+function getVideoFiles() {
+  const videoFiles = [];
+
+  function searchDirectory(currentDir) {
+    const entries = fs.readdirSync(currentDir, { withFileTypes: true });
+
+    for (const entry of entries) {
+      const entryPath = path.join(currentDir, entry.name);
+
+      if (entry.isDirectory()) {
+        // Recursively search in subdirectories
+        searchDirectory(entryPath);
+      } else if (entry.isFile()) {
+        // Check if the file has a valid video extension
+        const fileExtension = path.extname(entry.name).toLowerCase();
+        if (videoExtensions.includes(fileExtension)) {
+          // Get the relative path (exclude /tmp/downloads/)
+          const relativePath = path.relative(saveDirectory, entryPath);
+          videoFiles.push(relativePath);
+        }
+      }
+    }
+  }
+
+  try {
+    searchDirectory(saveDirectory);
+  } catch (error) {
+    console.error("Error reading directory:", error.message);
+  }
+
+  return videoFiles;
+}
+
 module.exports = {
   bytesToSize,
   saveDirectory,
   deleteOldFiles,
+  getVideoFiles,
 };
