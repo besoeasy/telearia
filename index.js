@@ -11,7 +11,7 @@ const {
   cancelDownload,
 } = require("./func/aria2.js");
 const { getIpData } = require("./func/ip.js");
-const { bytesToSize, deleteOldestFile } = require("./func/utils.js");
+const { bytesToSize, deleteOldFiles } = require("./func/utils.js");
 const { Telegraf } = require("telegraf");
 
 if (!process.env.TELEGRAMBOT) {
@@ -181,7 +181,7 @@ const downloading = async (ctx) => {
 
 const handleClean = (ctx) => {
   try {
-    deleteOldestFile();
+    deleteOldFiles();
     ctx.reply(`Old files have been cleaned up! 🧹`);
   } catch (error) {
     console.error("Error during file cleanup:", error);
