@@ -4,11 +4,12 @@ require("dotenv").config();
 
 const crypto = require("crypto");
 
-// Helpers
 function generateSHA256Hash(inputString) {
   return crypto.createHash("sha256").update(inputString).digest("hex");
 }
+
 const { version } = require("./package.json");
+
 const {
   getGlobalStats,
   downloadAria,
@@ -27,7 +28,7 @@ const {
 
 const { Telegraf } = require("telegraf");
 
-const downloadUrl = process.env.TUNNELURL || "http://pi.local:6799";
+let downloadUrl = "http://localhost:3000";
 
 if (!process.env.TELEGRAMBOT) {
   console.error("Error: TELEGRAMBOT Environment Variable is not set.");
@@ -271,15 +272,13 @@ const path = require("path");
 
 const app = express();
 
-
-// Middleware
 app.use(cors());
+
 app.use((req, res, next) => {
   console.log(`Request received: ${req.method} ${req.path}`);
   next();
 });
 
-// Manifest Endpoint
 app.get("/manifest.json", (req, res) => {
   res.json({
     id: "com.besoeasy.telearia",
@@ -314,7 +313,6 @@ app.get("/manifest.json", (req, res) => {
   });
 });
 
-// Catalog Endpoint
 app.get("/catalog/:type/:id.json", (req, res) => {
   const { type, id } = req.params;
 
@@ -330,7 +328,7 @@ app.get("/catalog/:type/:id.json", (req, res) => {
       name: path.basename(video, path.extname(video)), // Video name without extension
       poster: "https://i.ibb.co/w4BnkC9/GwxAcDV.png", // Default poster
       background: "https://i.ibb.co/VtSfFP9/t8wVwcg.jpg", // Background image
-      description: `Stream your video with TeleAria.`,
+      description: `Stream your video with TeleAria`,
     }));
 
     res.json({ metas });
@@ -340,7 +338,6 @@ app.get("/catalog/:type/:id.json", (req, res) => {
   }
 });
 
-// Meta Endpoint
 app.get("/meta/:type/:id.json", (req, res) => {
   const { type, id } = req.params;
 
@@ -349,7 +346,7 @@ app.get("/meta/:type/:id.json", (req, res) => {
   }
 
   try {
-    const videos = getVideoFiles(); // Fetch video files
+    const videos = getVideoFiles();
     const matchedVideo = videos.find(
       (video) => "telearia_" + generateSHA256Hash(video) === id
     );
@@ -361,9 +358,9 @@ app.get("/meta/:type/:id.json", (req, res) => {
     const meta = {
       id: id,
       type: type,
-      name: path.basename(matchedVideo, path.extname(matchedVideo)), // Video name without extension
-      poster: "https://i.ibb.co/w4BnkC9/GwxAcDV.png", // Default poster
-      background: "https://i.ibb.co/VtSfFP9/t8wVwcg.jpg", // Background image
+      name: path.basename(matchedVideo, path.extname(matchedVideo)),
+      poster: "https://i.ibb.co/w4BnkC9/GwxAcDV.png",
+      background: "https://i.ibb.co/VtSfFP9/t8wVwcg.jpg",
       description: `Stream your video with TeleAria.`,
       videos: [
         {
@@ -373,7 +370,7 @@ app.get("/meta/:type/:id.json", (req, res) => {
           streams: [
             {
               name: "TeleAria",
-              url: `http://pi.local:6799/${matchedVideo}`,
+              url: `${downloadUrl}/${matchedVideo}`,
             },
           ],
         },
