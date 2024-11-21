@@ -23,6 +23,7 @@ const {
 
 const { Telegraf } = require("telegraf");
 
+// can be changed by user
 let downloadUrl = "http://localhost:" + teleariaPort;
 
 if (!process.env.TELEGRAMBOT) {
