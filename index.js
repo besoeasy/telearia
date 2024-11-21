@@ -11,7 +11,7 @@ const {
   cancelDownload,
 } = require("./func/aria2.js");
 const { getIpData } = require("./func/ip.js");
-const { bytesToSize, deleteOldFiles } = require("./func/utils.js");
+const { bytesToSize, deleteOldestFile } = require("./func/utils.js");
 const { Telegraf } = require("telegraf");
 
 if (!process.env.TELEGRAMBOT) {
@@ -40,7 +40,6 @@ const commands = [
 const handleAbout = (ctx) => {
   ctx.reply("GitHub Repo: TeleAria (https://github.com/besoeasy/telearia)");
 };
-
 
 const handleStart = (ctx) => {
   const userIdHash = cleanUser(ctx.chat.id);
@@ -182,11 +181,8 @@ const downloading = async (ctx) => {
 
 const handleClean = (ctx) => {
   try {
-    const purgeInterval = parseInt(process.env.PURGEINTERVAL) || 7;
-    deleteOldFiles(purgeInterval);
-    ctx.reply(
-      `Old files older than ${purgeInterval} days have been cleaned up! 🧹`
-    );
+    deleteOldestFile();
+    ctx.reply(`Old files have been cleaned up! 🧹`);
   } catch (error) {
     console.error("Error during file cleanup:", error);
     ctx.reply("Failed to clean old files. Please try again later.");
