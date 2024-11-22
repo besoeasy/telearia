@@ -1,4 +1,4 @@
-## TeleAria: Telegram-Controlled Cloud Downloader Manageer 
+## TeleAria: Telegram-Controlled Cloud Downloader Manageer
 
 TeleAria is a powerful cloud downloader that combines the capabilities of [Aria2](https://aria2.github.io/) with [Telegram](https://telegram.org/). This tool allows you to effortlessly download files, torrents, and videos. TeleAria is designed to be compact and lightweight, while also providing a customizable environment that you can adjust to your liking. Additionally, it can be integrated with media management solutions like [Plex](https://www.plex.tv/) or [Jellyfin](https://jellyfin.org/), enhancing your home media management experience.
 
@@ -15,11 +15,15 @@ TeleAria is a powerful cloud downloader that combines the capabilities of [Aria2
 - **Scheduled Downloads**: Optimize bandwidth with scheduling.
 - **Bandwidth Control**: Manage download/upload speeds.
 
-
 ### Stremio Support
 
-![image](https://github.com/user-attachments/assets/bc5c7c05-4823-4643-9e5e-e51b711d416e)
+TeleAria now supports Stremia, See all of your downloaded media directly on your stremio account.
 
+```bash
+http://localhost:6799/manifest.json
+```
+
+![image](https://github.com/user-attachments/assets/bc5c7c05-4823-4643-9e5e-e51b711d416e)
 
 ### Quick Installation with Docker
 
@@ -33,7 +37,8 @@ docker run -d \
   -e TELEGRAMBOT=Telegram-Bot-Token \
   ghcr.io/besoeasy/telearia:main
 ```
-OR 
+
+OR
 
 ```bash
 docker run -d \
@@ -45,9 +50,7 @@ docker run -d \
   ghcr.io/besoeasy/telearia:main
 ```
 
-
-
-###  Tunnel Setup
+### Tunnel Setup
 
 Pair TeleAria with a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/) for enhanced self-hosting.
 
