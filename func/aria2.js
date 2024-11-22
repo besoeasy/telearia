@@ -5,7 +5,7 @@ const path = require("path");
 const { saveDirectory } = require("./utils.js");
 
 const axiosPost = async (method, params = []) => {
-  const { data } = await axios.post("http://localhost:6800/jsonrpc", {
+  const { data } = await axios.post("http://localhost:6798/jsonrpc", {
     jsonrpc: "2.0",
     method,
     id: 1,
