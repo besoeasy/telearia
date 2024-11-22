@@ -96,13 +96,11 @@ const handleStatus = async (ctx, downloadId) => {
       `Progress: ${completedSize} MB / ${totalSize} MB`;
 
     if (downloadData.result.status === "active") {
-      reply += `\nCancel with /cancel_${downloadId}`;
-    } else if (downloadData.result.status === "complete") {
-      const files = downloadData.result.files
-        .map((file) => file.path)
-        .join("\n");
-      reply += `\nDownloaded Files:\n${files}`;
+      reply += `\nCancel with /cancel_${downloadId}\n\n`;
     }
+
+    const files = downloadData.result.files.map((file) => file.path).join("\n");
+    reply += `\nDownloaded Files:\n${files}`;
 
     ctx.reply(reply);
   } catch (error) {
