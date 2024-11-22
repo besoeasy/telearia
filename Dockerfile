@@ -10,16 +10,20 @@ COPY package*.json ./
 RUN npm install
 
 # Install aria2, and clean up
-RUN apt-get update && apt-get install -y aria2 
+RUN apt-get update && apt-get install -y aria2 && rm -rf /var/lib/apt/lists/*
 
 # Copy the rest of the application code
 COPY . .
 
-# Expose Ports
-EXPOSE 6798-6888
+# Expose necessary ports
+EXPOSE 6798
 
-# Set environment variables (you can override these at runtime)
-ENV TELEGRAMBOT=Telegram-Bot-Token
+# Set environment variables
+ENV TELEGRAMBOT="Telegram-Bot-Token"
 
-# Start aria2c, then the Node.js application
-CMD sh -c "aria2c --enable-rpc --rpc-listen-all --rpc-listen-port=6798 --enable-dht --dht-listen-port=6881-6888 --seed-time=9 --bt-tracker='udp://tracker.opentrackr.org:1337,udp://opentracker.io:80/announce,udp://opentracker.io:6969/announce,udp://tracker.openbittorrent.com:80,udp://explodie.org:6969' & exec node index.js"
+# Add and set permissions for startup script
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
+# Start the application
+CMD ["sh", "/app/start.sh"]
