@@ -15,13 +15,26 @@ TeleAria is a powerful cloud downloader that combines the capabilities of [Aria2
 - **Scheduled Downloads**: Optimize bandwidth with scheduling.
 - **Bandwidth Control**: Manage download/upload speeds.
 
-### Stremio Support
 
-TeleAria now supports Stremia, See all of your downloaded media directly on your stremio account.
+### **Plex & Jellyfin Integration**
 
-```bash
-http://localhost:6799/manifest.json
-```
+TeleAria supports seamless media library management. Simply mount your download folder, and point Plex or Jellyfin to this directory:
+
+1. **Mount Download Folder**: Add the `-v` flag during setup to specify the download directory.
+   ```bash
+   -v /path/to/downloads:/tmp/downloads
+   ```
+2. **Point Plex or Jellyfin**: 
+   - In Plex or Jellyfin, set `/tmp/downloads` as the media folder to automatically access all downloaded content.
+
+### **Stremio Integration**
+
+TeleAria now supports [Stremio](https://www.strem.io/), enabling you to view downloaded content in your Stremio library.
+
+- Manifest URL:
+  ```bash
+  http://localhost:6799/manifest.json
+  ```
 
 ![image](https://github.com/user-attachments/assets/bc5c7c05-4823-4643-9e5e-e51b711d416e)
 
