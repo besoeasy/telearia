@@ -15,6 +15,12 @@ TeleAria is a powerful cloud downloader that combines the capabilities of [Aria2
 - **Scheduled Downloads**: Optimize bandwidth with scheduling.
 - **Bandwidth Control**: Manage download/upload speeds.
 
+
+### Stremio Support
+
+![image](https://github.com/user-attachments/assets/bc5c7c05-4823-4643-9e5e-e51b711d416e)
+
+
 ### Quick Installation with Docker
 
 Run TeleAria using Docker by replacing `Telegram-Bot-Token` with your actual token:
