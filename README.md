@@ -38,16 +38,13 @@ docker run -d \
   ghcr.io/besoeasy/telearia:main
 ```
 
-OR
 
 ```bash
-docker run -d \
-  --name telearia \
-  --restart unless-stopped \
-  --network host \
+  // You can also mount download folder 
   -v /home/$USER/telearia:/tmp/downloads \
-  -e TELEGRAMBOT=Telegram-Bot-Token \
-  ghcr.io/besoeasy/telearia:main
+
+  // You can also set custom url for telearia
+  -e TUNNELURL=http://localhost:6799 \
 ```
 
 ### Tunnel Setup
