@@ -4,10 +4,8 @@ const tempdir = require("os").tmpdir();
 
 const saveDirectory = path.join(tempdir, "downloads");
 
-
 let teleariaPort = 6799;
-let teleariaURL = "http://localhost:6799"
-
+let teleariaURL = "http://localhost:6799";
 
 const crypto = require("crypto");
 
@@ -141,5 +139,5 @@ module.exports = {
   generateSHA256Hash,
   cleanUser,
   teleariaPort,
-  teleariaURL
+  teleariaURL,
 };
