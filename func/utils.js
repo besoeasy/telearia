@@ -2,10 +2,12 @@ const fs = require("fs");
 const path = require("path");
 const tempdir = require("os").tmpdir();
 
+const saveDirectory = path.join(tempdir, "downloads");
+
+
 let teleariaPort = 6799;
 let teleariaURL = "http://localhost:6799"
 
-const saveDirectory = path.join(tempdir, "downloads");
 
 const crypto = require("crypto");
 

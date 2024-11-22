@@ -10,10 +10,7 @@ COPY package*.json ./
 RUN npm install
 
 # Install aria2, and clean up
-RUN apt-get update && \
-    apt-get install -y aria2 && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y aria2 
 
 # Copy the rest of the application code
 COPY . .

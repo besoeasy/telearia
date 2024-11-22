@@ -22,6 +22,8 @@ const {
   teleariaURL,
 } = require("./func/utils.js");
 
+const startServer = require("./func/express.js");
+
 const { Telegraf } = require("telegraf");
 
 if (!process.env.TELEGRAMBOT) {
@@ -30,8 +32,6 @@ if (!process.env.TELEGRAMBOT) {
 }
 
 const bot = new Telegraf(process.env.TELEGRAMBOT);
-
-const startServer = require("./func/express.js");
 
 const commands = [
   "/about - Learn more about this bot",
