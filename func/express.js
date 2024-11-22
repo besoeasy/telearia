@@ -123,8 +123,12 @@ app.get("/meta/:type/:id.json", (req, res) => {
           released: new Date().toISOString(),
           streams: [
             {
-              name: "TeleAria",
+              name: "Thru Internet",
               url: `${teleariaURL}/${matchedVideo}`,
+            },
+            {
+              name: "Thru Local (LAN)",
+              url: `http://192.168.1.32:6799/${matchedVideo}`,
             },
           ],
         },
