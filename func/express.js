@@ -55,8 +55,9 @@ app.get("/manifest.json", (req, res) => {
       },
     ],
     types: ["movie", "series", "anime"],
-    background: "https://i.ibb.co/VtSfFP9/t8wVwcg.jpg",
-    logo: "https://i.ibb.co/w4BnkC9/GwxAcDV.png",
+    background:
+      "https://ipfs.io/ipfs/QmPPCUJei6hWybisHTvfQL4F1pA3U2PtKaeF2JLRzUXhwB",
+    logo: "https://ipfs.io/ipfs/QmXjdndgYNyMqm42nagYRNK2QGTfyRtR7ZSHj1H9Jy1JiK",
   });
 });
 
@@ -68,13 +69,16 @@ app.get("/catalog/:type/:id.json", (req, res) => {
   }
 
   try {
-    const videos = getVideoFiles(); // Fetch list of video files
+    const videos = getVideoFiles();
     const metas = videos.map((video) => ({
-      id: "telearia_" + generateSHA256Hash(video), // Unique ID
+      id: "telearia_" + generateSHA256Hash(video),
       type: type,
-      name: path.basename(video, path.extname(video)), // Video name without extension
-      poster: "https://i.ibb.co/w4BnkC9/GwxAcDV.png", // Default poster
-      background: "https://i.ibb.co/VtSfFP9/t8wVwcg.jpg", // Background image
+      name: path.basename(video, path.extname(video)),
+      poster:
+        "https://image.pollinations.ai/prompt/" +
+        path.basename(video, path.extname(video)),
+      background:
+        "https://ipfs.io/ipfs/QmRKtCSKBxHodc2GMyqkYqZNbsXETpuKRtmsiP7MryX7Zr",
       description: `Stream your video with TeleAria`,
     }));
 
@@ -106,9 +110,12 @@ app.get("/meta/:type/:id.json", (req, res) => {
       id: id,
       type: type,
       name: path.basename(matchedVideo, path.extname(matchedVideo)),
-      poster: "https://i.ibb.co/w4BnkC9/GwxAcDV.png",
-      background: "https://i.ibb.co/VtSfFP9/t8wVwcg.jpg",
-      description: `Stream your video with TeleAria.`,
+      poster:
+        "https://image.pollinations.ai/prompt/" +
+        path.basename(matchedVideo, path.extname(matchedVideo)),
+      background:
+        "https://ipfs.io/ipfs/QmRKtCSKBxHodc2GMyqkYqZNbsXETpuKRtmsiP7MryX7Zr",
+      description: path.basename(matchedVideo, path.extname(matchedVideo)),
       videos: [
         {
           id: id,
