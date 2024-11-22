@@ -194,6 +194,18 @@ const handleClean = (ctx) => {
   }
 };
 
+const handleSetURL = (ctx, newURL) => {
+  if (!newURL || !newURL.startsWith("http")) {
+    ctx.reply(
+      "Invalid URL. Please provide a valid URL starting with http or https."
+    );
+    return;
+  }
+
+  teleariaURL = newURL; // Update the URL
+  ctx.reply(`TeleAria URL has been updated to: ${teleariaURL}`);
+};
+
 // Message handler
 bot.on("message", async (ctx) => {
   if (ctx.message.text) {
@@ -206,6 +218,10 @@ bot.on("message", async (ctx) => {
       console.log(`@${ctx.from.username} (ID: ${ctx.from.id}): ${text}`);
 
       switch (lowerCaseCommand) {
+        case "/seturl":
+          if (trimmedArgs.length > 0) handleSetURL(ctx, trimmedArgs[0]);
+          else ctx.reply("Please provide a new URL.");
+          break;
         case "/clean":
           handleClean(ctx);
           break;
