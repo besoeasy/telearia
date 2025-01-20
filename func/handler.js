@@ -39,7 +39,7 @@ const handleStart = (ctx) => {
   ctx.reply(
     `Welcome to TeleAria! 🎉\n\n` +
       `Version: ${version} on Port : ${teleariaPort}\n` +
-      `User ID: ${userIdHash}\n` +
+      `User ID: ${userIdHash}\n\n` +
       `Downloads URL: ${teleariaURL}/${userIdHash}/\n\n` +
       `Stremio Addon: ${teleariaURL}/manifest.json\n\n` +
       `Available Commands:\n` +
