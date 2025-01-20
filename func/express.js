@@ -128,7 +128,7 @@ app.get("/meta/:type/:id.json", (req, res) => {
             },
             {
               name: "Thru Local (LAN)",
-              url: `http://192.168.1.32:6799/${matchedVideo}`,
+              url: `http://pi.local:6799/${matchedVideo}`,
             },
           ],
         },
