@@ -7,7 +7,7 @@ const startServer = require("./func/express.js");
 const { Telegraf } = require("telegraf");
 
 if (!process.env.TELEGRAMBOT) {
-  console.error("Error: TELEGRAMBOT Environment Variable is not set.");
+  console.error("TELEGRAMBOT Environment Variable is not set !");
   process.exit(1);
 }
 
