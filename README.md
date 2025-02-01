@@ -4,6 +4,8 @@ TeleAria is a powerful cloud downloader that combines the capabilities of [Aria2
 
 ![TeleAria](https://github.com/user-attachments/assets/8f1165c5-f880-4efb-96aa-af9cfb8a4a49)
 
+
+
 ### Key Features
 
 - **Versatile Downloading**: Supports files, torrents, and videos.
@@ -17,6 +19,9 @@ TeleAria is a powerful cloud downloader that combines the capabilities of [Aria2
 
 
 ### **Plex & Jellyfin Integration**
+
+![image](https://github.com/user-attachments/assets/3c8dc81f-7333-4465-9720-bdb7c6ae4bfc)
+
 
 TeleAria supports seamless media library management. Simply mount your download folder, and point Plex or Jellyfin to this directory:
 
