@@ -80,12 +80,18 @@ bot.catch((err, ctx) => {
   console.error(`Error for ${ctx.updateType}`, err);
 });
 
-bot.launch();
-
-process.once("SIGINT", () => {
-  console.log("SIGINT received. Exiting...");
-  bot.stop("SIGINT");
-  process.exit();
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err);
 });
 
-startServer();
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection at:", promise, "reason:", reason);
+});
+
+ try {
+    bot.launch();
+    console.log("Bot started successfully.");
+    startServer();
+  } catch (error) {
+    console.error("Error launching bot:", error);
+  }
