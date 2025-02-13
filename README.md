@@ -59,7 +59,7 @@ docker run -d \
 If you want only authorized Telegram accounts to have access to content, replace `WHITELISTUSER` with your actual token:
 ```bash
   # Single user is like 12345, and multiple users must use the separator character: ,
-  -e WHITE_LIST_USER="123456,654321" 
+  -e WHITE_LIST_USER=123456,654321
 ```
 
 ```bash
