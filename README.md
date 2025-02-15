@@ -56,12 +56,17 @@ docker run -d \
   ghcr.io/besoeasy/telearia:main
 ```
 
+If you want only authorized Telegram accounts to have access to content, replace `WHITELISTUSER` with your actual uuserId(s):
+```bash
+  # Single user is like 12345, and multiple users must use the separator character: ,
+  -e WHITE_LIST_USER=123456,654321
+```
 
 ```bash
-  // You can also mount download folder 
+  # You can also mount download folder 
   -v /home/$USER/telearia:/tmp/downloads \
 
-  // You can also set custom url for telearia
+  # You can also set custom url for telearia
   -e TUNNELURL=http://localhost:6799 \
 ```
 

@@ -11,6 +11,15 @@ if (!process.env.TELEGRAMBOT) {
   process.exit(1);
 }
 
+// Only whitelisted users are permitted
+const whiteListSet = new Set();
+if (!process.env.WHITE_LIST_USER) {
+  console.error("WHITE_LIST_USER Environment Variable is not set !All User can use this bot!!!");
+} else {
+  const userIds = process.env.WHITE_LIST_USER.split(',');
+  userIds.map(id => whiteListSet.add(id));
+}
+
 const bot = new Telegraf(process.env.TELEGRAMBOT);
 
 const {
@@ -32,6 +41,12 @@ bot.on("message", async (ctx) => {
       const [command, ...args] = text.split(" ");
       const lowerCaseCommand = command.toLowerCase().trim();
       const trimmedArgs = args.map((arg) => arg.trim());
+
+      // Only whitelisted users are permitted
+      if (!whiteListSet.has(ctx.from.id + '')) {
+        ctx.reply(`@${ctx.from.username} (ID: ${ctx.from.id}): is not available!`);
+        return;
+      }
 
       console.log(`@${ctx.from.username} (ID: ${ctx.from.id}): ${text}`);
 
