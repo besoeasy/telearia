@@ -1,143 +1,160 @@
-const fs = require("fs");
+const fs = require("fs").promises; // Use promises for async operations
 const path = require("path");
-const tempdir = require("os").tmpdir();
-
-const saveDirectory = path.join(tempdir, "downloads");
-
-let teleariaPort = 6799;
-let teleariaURL = process.env.TUNNELURL || "http://localhost:6799";
-
+const os = require("os");
 const crypto = require("crypto");
 
-function generateSHA256Hash(inputString) {
-  return crypto.createHash("sha256").update(inputString).digest("hex");
+// Constants
+const SAVE_DIR = path.join(os.tmpdir(), "downloads");
+const VIDEO_EXTENSIONS = [".mp4", ".mkv", ".avi", ".mov", ".flv", ".wmv", ".webm"];
+const TELEARIA_PORT = 6799;
+const TELEARIA_URL = process.env.TUNNELURL || `http://localhost:${TELEARIA_PORT}`;
+
+// Ensure save directory exists
+async function ensureSaveDir() {
+  try {
+    await fs.mkdir(SAVE_DIR, { recursive: true });
+  } catch (error) {
+    console.error("Failed to create save directory:", error.message);
+  }
 }
 
+/**
+ * Converts bytes to human-readable size
+ * @param {number} bytes - Size in bytes
+ * @returns {string} Formatted size (e.g., "1.23 MB")
+ */
 function bytesToSize(bytes) {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-  if (bytes == 0) return "0 Byte";
-  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-  return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
+  if (bytes === 0) return "0 Bytes";
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  return `${(bytes / 1024 ** i).toFixed(2)} ${sizes[i]}`;
 }
 
-function deleteOldFiles(ctx) {
-  function getFilesRecursively(dir) {
-    let fileList = [];
-    const files = fs.readdirSync(dir);
+/**
+ * Generates SHA256 hash of a string
+ * @param {string} input - Input string to hash
+ * @returns {string} Hexadecimal hash
+ */
+function generateSHA256Hash(input) {
+  return crypto.createHash("sha256").update(input).digest("hex");
+}
 
-    for (const file of files) {
-      const fullPath = path.join(dir, file);
-      const stats = fs.statSync(fullPath);
-
-      if (stats.isDirectory()) {
-        // Recursively get files from subdirectories
-        fileList = fileList.concat(getFilesRecursively(fullPath));
-      } else {
-        // Add file with its metadata
-        fileList.push({ fullPath, time: stats.mtime.getTime() });
-      }
-    }
-    return fileList;
-  }
-
-  function removeEmptyFoldersRecursively(folder) {
-    const files = fs.readdirSync(folder);
-    if (files.length > 0) {
-      files.forEach((file) => {
-        const fullPath = path.join(folder, file);
-        if (fs.statSync(fullPath).isDirectory()) {
-          removeEmptyFoldersRecursively(fullPath);
-        }
-      });
-    }
-
-    // If the folder is empty after processing, delete it
-    if (fs.readdirSync(folder).length === 0) {
-      fs.rmdirSync(folder);
-      console.log(`Deleted empty folder: ${folder}`);
-      ctx.reply(`Deleted empty folder: ${folder}`);
-    }
-  }
-
+/**
+ * Deletes the oldest file and empty folders in save directory
+ * @param {Object} ctx - Telegram context for replies
+ */
+async function deleteOldFiles(ctx) {
   try {
-    const files = getFilesRecursively(saveDirectory);
-
-    if (files.length === 0) {
+    const files = await getFilesRecursively(SAVE_DIR);
+    if (!files.length) {
       console.log("No files to delete.");
-      ctx.reply("No files to delete.");
-      return;
+      return ctx.reply("No files to delete.");
     }
 
-    // Sort files by modification time (oldest first)
-    files.sort((a, b) => a.time - b.time);
-
-    // Delete the oldest file
+    // Sort by modification time (oldest first)
+    files.sort((a, b) => a.mtime - b.mtime);
     const oldestFile = files[0];
-    fs.unlinkSync(oldestFile.fullPath);
-    console.log(`Deleted oldest file: ${oldestFile.fullPath}`);
-    ctx.reply(`Deleted oldest file: ${oldestFile.fullPath}`);
 
-    // Remove any empty folders in the directory tree
-    removeEmptyFoldersRecursively(saveDirectory);
-  } catch (err) {
-    console.error(`Error processing files: ${err.message}`);
+    await fs.unlink(oldestFile.path);
+    console.log(`Deleted: ${oldestFile.path}`);
+    ctx.reply(`Deleted: ${path.basename(oldestFile.path)}`);
+
+    await removeEmptyFolders(SAVE_DIR);
+  } catch (error) {
+    console.error("Error deleting files:", error.message);
+    ctx.reply("Failed to delete files.");
   }
 }
 
-// List of video file extensions to look for
-const videoExtensions = [
-  ".mp4",
-  ".mkv",
-  ".avi",
-  ".mov",
-  ".flv",
-  ".wmv",
-  ".webm",
-];
+/**
+ * Recursively gets files with modification times
+ * @param {string} dir - Directory to scan
+ * @returns {Array} List of { path, mtime } objects
+ */
+async function getFilesRecursively(dir) {
+  const files = [];
+  const entries = await fs.readdir(dir, { withFileTypes: true });
 
-function getVideoFiles() {
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...(await getFilesRecursively(fullPath)));
+    } else if (entry.isFile()) {
+      const { mtimeMs } = await fs.stat(fullPath);
+      files.push({ path: fullPath, mtime: mtimeMs });
+    }
+  }
+  return files;
+}
+
+/**
+ * Recursively removes empty directories
+ * @param {string} dir - Directory to clean
+ */
+async function removeEmptyFolders(dir) {
+  const entries = await fs.readdir(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) await removeEmptyFolders(fullPath);
+  }
+
+  const isEmpty = (await fs.readdir(dir)).length === 0;
+  if (isEmpty) {
+    await fs.rmdir(dir);
+    console.log(`Removed empty folder: ${dir}`);
+  }
+}
+
+/**
+ * Retrieves video files from save directory
+ * @returns {string[]} Array of relative video file paths
+ */
+async function getVideoFiles() {
   const videoFiles = [];
 
-  function searchDirectory(currentDir) {
-    const entries = fs.readdirSync(currentDir, { withFileTypes: true });
-
+  async function scanDir(currentDir) {
+    const entries = await fs.readdir(currentDir, { withFileTypes: true });
     for (const entry of entries) {
-      const entryPath = path.join(currentDir, entry.name);
-
+      const fullPath = path.join(currentDir, entry.name);
       if (entry.isDirectory()) {
-        // Recursively search in subdirectories
-        searchDirectory(entryPath);
+        await scanDir(fullPath);
       } else if (entry.isFile()) {
-        // Check if the file has a valid video extension
-        const fileExtension = path.extname(entry.name).toLowerCase();
-        if (videoExtensions.includes(fileExtension)) {
-          // Get the relative path (exclude /tmp/downloads/)
-          const relativePath = path.relative(saveDirectory, entryPath);
-          videoFiles.push(relativePath);
+        const ext = path.extname(entry.name).toLowerCase();
+        if (VIDEO_EXTENSIONS.includes(ext)) {
+          videoFiles.push(path.relative(SAVE_DIR, fullPath));
         }
       }
     }
   }
 
   try {
-    searchDirectory(saveDirectory);
+    await ensureSaveDir(); // Ensure directory exists before scanning
+    await scanDir(SAVE_DIR);
   } catch (error) {
-    console.error("Error reading directory:", error.message);
+    console.error("Error scanning videos:", error.message);
   }
-
   return videoFiles;
 }
-function cleanUser(str) {
-  return str.toString();
+
+/**
+ * Sanitizes user ID to string
+ * @param {any} input - User ID input
+ * @returns {string} Cleaned string
+ */
+function cleanUser(input) {
+  return String(input);
 }
+
+// Initialize save directory on module load
+ensureSaveDir();
 
 module.exports = {
   bytesToSize,
-  saveDirectory,
+  saveDirectory: SAVE_DIR,
   deleteOldFiles,
   getVideoFiles,
   generateSHA256Hash,
   cleanUser,
-  teleariaPort,
-  teleariaURL,
+  teleariaPort: TELEARIA_PORT,
+  teleariaURL: TELEARIA_URL,
 };
