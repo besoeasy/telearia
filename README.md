@@ -26,9 +26,7 @@ docker run -d \
 
 ## Media Integration
 - **Plex/Jellyfin**: Set `/tmp/downloads` as your media folder  
-  ![Integration](https://github.com/user-attachments/assets/3c8dc81f-7333-4465-9720-bdb7c6ae4bfc)
 - **Stremio**: Use `http://localhost:6799/manifest.json`  
-  ![Stremio](https://github.com/user-attachments/assets/bc5c7c05-4823-4643-9e5e-e51b711d416e)
 
 ## Tunnel (Optional)
 Enhance self-hosting with [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/) or Serveo:
