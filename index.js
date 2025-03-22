@@ -3,7 +3,6 @@
 require("dotenv").config();
 
 const startServer = require("./func/express.js");
-
 const { Telegraf } = require("telegraf");
 
 if (!process.env.TELEGRAMBOT) {
@@ -11,13 +10,16 @@ if (!process.env.TELEGRAMBOT) {
   process.exit(1);
 }
 
-// Only whitelisted users are permitted
+// Initialize whitelist set
 const whiteListSet = new Set();
-if (!process.env.WHITE_LIST_USER) {
-  console.error("WHITE_LIST_USER Environment Variable is not set !All User can use this bot!!!");
-} else {
+const isWhitelistEnabled = !!process.env.WHITE_LIST_USER;
+
+if (isWhitelistEnabled) {
   const userIds = process.env.WHITE_LIST_USER.split(',');
   userIds.map(id => whiteListSet.add(id));
+  console.log("Whitelist enabled with users:", [...whiteListSet]);
+} else {
+  console.log("Whitelist disabled - Bot available to all users");
 }
 
 const bot = new Telegraf(process.env.TELEGRAMBOT);
@@ -42,8 +44,8 @@ bot.on("message", async (ctx) => {
       const lowerCaseCommand = command.toLowerCase().trim();
       const trimmedArgs = args.map((arg) => arg.trim());
 
-      // Only whitelisted users are permitted
-      if (!whiteListSet.has(ctx.from.id + '')) {
+      // Only check whitelist if it's enabled
+      if (isWhitelistEnabled && !whiteListSet.has(ctx.from.id + '')) {
         ctx.reply(`@${ctx.from.username} (ID: ${ctx.from.id}): is not available!`);
         return;
       }
@@ -103,10 +105,10 @@ process.on("unhandledRejection", (reason, promise) => {
   console.error("Unhandled Rejection at:", promise, "reason:", reason);
 });
 
- try {
-    bot.launch();
-    console.log("Bot started successfully.");
-    startServer();
-  } catch (error) {
-    console.error("Error launching bot:", error);
-  }
+try {
+  bot.launch();
+  console.log("Bot started successfully.");
+  startServer();
+} catch (error) {
+  console.error("Error launching bot:", error);
+}
