@@ -1,6 +1,6 @@
 {
   "name": "telearia",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "TeleAria is a powerful download manager that seamlessly integrates Aria2's robust downloading capabilities with the convenience of Telegram control.",
   "main": "app.js",
   "repository": {

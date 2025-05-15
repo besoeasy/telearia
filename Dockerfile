@@ -9,14 +9,15 @@ COPY package*.json ./
 
 RUN npm install
 
-# Install aria2, and clean up
-RUN apt-get update && apt-get install -y aria2 && rm -rf /var/lib/apt/lists/*
+# Install aria2 and samba, then clean up
+RUN apt-get update && apt-get install -y aria2 samba && rm -rf /var/lib/apt/lists/*
 
 # Copy the rest of the application code
 COPY . .
 
 # Expose necessary ports
-EXPOSE 6798
+EXPOSE 445
+EXPOSE 6799
 
 # Set environment variables
 ENV TELEGRAMBOT="Telegram-Bot-Token"
