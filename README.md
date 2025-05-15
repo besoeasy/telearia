@@ -2,7 +2,7 @@
 
 **Telegram-Controlled Cloud Downloader**
 
-TeleAria combines [Aria2](https://aria2.github.io/) with [Telegram](https://telegram.org/) for effortless downloading of files, torrents, and videos. Lightweight and customizable, it integrates seamlessly with [Plex](https://www.plex.tv/), [Jellyfin](https://jellyfin.org/), or [Stremio](https://www.strem.io/) to enhance your media setup.
+TeleAria combines [Aria2](https://aria2.github.io/) with [Telegram](https://telegram.org/) for effortless downloading of files, torrents, and videos. Lightweight and customizable.
 
 ![TeleAria](https://github.com/user-attachments/assets/8f1165c5-f880-4efb-96aa-af9cfb8a4a49)
 
