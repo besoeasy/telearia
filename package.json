@@ -1,6 +1,6 @@
 {
   "name": "telearia",
-  "version": "1.1.6",
+  "version": "1.2.0",
   "description": "TeleAria is a powerful download manager that seamlessly integrates Aria2's robust downloading capabilities with the convenience of Telegram control.",
   "main": "app.js",
   "repository": {
@@ -15,12 +15,10 @@
   "homepage": "https://github.com/besoeasy/telearia#readme",
   "dependencies": {
     "axios": "^1.7.2",
-    "cors": "^2.8.5",
-    "crypto-js": "^4.2.0",
     "dotenv": "^16.4.5",
-    "express": "^4.21.1",
-    "serve-handler": "^6.1.5",
-    "serve-index": "^1.9.1",
     "telegraf": "^4.16.3"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
   }
 }

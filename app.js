@@ -2,7 +2,6 @@
 
 require("dotenv").config();
 
-const express = require("express");
 const path = require("path");
 const fs = require("fs").promises;
 const os = require("os");
@@ -13,16 +12,6 @@ const { version } = require("./package.json");
 
 const SAVE_DIR = path.join(os.tmpdir(), "downloads");
 const TELEARIA_PORT = 6799;
-const TELEARIA_URL =
-  process.env.TUNNELURL || `http://localhost:${TELEARIA_PORT}`;
-
-async function ensureSaveDir() {
-  try {
-    await fs.mkdir(SAVE_DIR, { recursive: true });
-  } catch (error) {
-    console.error("Failed to create save directory:", error.message);
-  }
-}
 
 function bytesToSize(bytes) {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
@@ -82,14 +71,9 @@ function cleanUser(input) {
   return String(input);
 }
 
-const apiClient = axios.create({
-  baseURL: "http://ip-api.com",
-  timeout: 5000,
-});
-
 async function getIpData() {
   try {
-    const { data } = await apiClient.get("/json/");
+    const { data } = await axios.get("http://ip-api.com/json/");
 
     if (data.status === "fail") {
       throw new Error(data.message || "IP API request failed");
@@ -150,10 +134,6 @@ const cancelDownload = async (gid) => {
   return await axiosPost("aria2.remove", [gid]);
 };
 
-const app = express();
-
-app.use(express.static(SAVE_DIR));
-
 const commands = [
   "/about - Learn more about TeleAria",
   "/start - Begin your download journey",
@@ -180,7 +160,6 @@ const handleStart = (ctx) => {
       `Bot Version: ${version}\n` +
       `Server Port: ${TELEARIA_PORT}\n` +
       `Your User ID: ${userIdHash}\n` +
-      `Download Folder: ${TELEARIA_URL}/${userIdHash}/\n\n` +
       "How to use:\n" +
       "/download <url> - Start a download\n" +
       "/downloading - Show active downloads\n" +
@@ -409,10 +388,6 @@ process.on("unhandledRejection", (reason, promise) => {
 
 try {
   bot.launch();
-  app.listen(TELEARIA_PORT, () => {
-    console.log(`Server is running on port ${TELEARIA_PORT}`);
-  });
-  ensureSaveDir();
 } catch (error) {
   console.error("Error launching bot:", error);
 }

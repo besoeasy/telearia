@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+
 aria2c \
   --enable-rpc \
   --rpc-listen-all \
@@ -7,4 +8,16 @@ aria2c \
   --bt-enable-lpd \
   --enable-peer-exchange \
   --seed-time=100 &
-exec node app.js
+
+# Ensure SAVE_DIR exists
+SAVE_DIR=$(node -e "console.log(require('os').tmpdir() + '/downloads')")
+mkdir -p "$SAVE_DIR"
+
+echo "Starting TeleAria bot..."
+node app.js &
+
+# Wait a bit to ensure bot is up (optional, adjust as needed)
+sleep 2
+
+echo "Serving downloads directory at http://localhost:6799/"
+npx serve "$SAVE_DIR" -l 6799
