@@ -152,6 +152,8 @@ const cancelDownload = async (gid) => {
 
 const app = express();
 
+app.use(express.static(SAVE_DIR));
+
 const commands = [
   "/about - Learn more about TeleAria",
   "/start - Begin your download journey",
