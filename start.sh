@@ -13,7 +13,7 @@ aria2c \
 SAVE_DIR=$(node -e "console.log(require('os').tmpdir() + '/telearia')")
 mkdir -p "$SAVE_DIR"
 
- echo "Download directory: $SAVE_DIR"
+echo "Download directory: $SAVE_DIR"
 
 echo "Starting TeleAria bot..."
 node app.js &
