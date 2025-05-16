@@ -10,7 +10,7 @@ const axios = require("axios");
 const { Telegraf } = require("telegraf");
 const { version } = require("./package.json");
 
-const SAVE_DIR = path.join(os.tmpdir(), "downloads");
+const SAVE_DIR = path.join(os.tmpdir(), "telearia");
 const TELEARIA_PORT = 6799;
 
 function bytesToSize(bytes) {
