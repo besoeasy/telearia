@@ -21,7 +21,7 @@ docker run -d \
   --name telearia \
   --restart unless-stopped \
   -p 6799:6799 \
-  -p 445:445 \
+  -p 6800:6800 \
   -e TELEGRAMBOT=Your-Telegram-Bot-Token \
   ghcr.io/besoeasy/telearia:main
 ```
@@ -29,7 +29,7 @@ docker run -d \
 - Restrict access: `-e WHITE_LIST_USER=123456,654321`
 - Mount downloads: `-v /path/to/downloads:/tmp/downloads`
 - Access downloads via HTTP: `http://<host>:6799/`
-- Access downloads via SMB/Samba: `smb://<host>/downloads` (guest access)
+- Access downloads via FTP: `ftp://<host>:6800/` (anonymous, no login required)
 
 ## Tunnel (Optional)
 
