@@ -30,7 +30,7 @@ docker run -d \
 - Access downloads via HTTP: `http://<host>:6799/`
 
 
-# Share Downloads as Samba
+### Share Downloads as Samba
 ```bash
 
 sudo smbpasswd -a -n guest && sudo bash -c 'echo "[telearia]\npath = /tmp/telearia\nwritable = yes\nbrowsable = yes\nguest ok = yes" >> /etc/samba/smb.conf' && sudo systemctl restart smbd
