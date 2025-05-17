@@ -2,7 +2,7 @@
 
 **Telegram-Controlled Cloud Downloader**
 
-TeleAria combines [Aria2](https://aria2.github.io/) with [Telegram](https://telegram.org/) for effortless downloading of files, torrents, and videos. Lightweight and customizable.
+TeleAria combines [Aria2](https://aria2.github.io/) with [Telegram](https://telegram.org/) for effortless downloading of files, torrents, and videos. Lightweight and customizable. Download remotely and watch on your laptop, mobile, smart tv - supports SMB share.
 
 ![TeleAria](https://github.com/user-attachments/assets/8f1165c5-f880-4efb-96aa-af9cfb8a4a49)
 
