@@ -6,8 +6,6 @@ const path = require("path");
 const fs = require("fs").promises;
 const os = require("os");
 const axios = require("axios");
-const Fastify = require("fastify");
-const fastifyStatic = require("@fastify/static");
 
 const { Telegraf } = require("telegraf");
 const { version } = require("./package.json");
@@ -298,17 +296,6 @@ const downloading = async (ctx) => {
     ctx.reply("Failed to fetch downloads. Try again later.");
   }
 };
-
-// Start Fastify static file server for downloads directory
-const fastify = Fastify();
-fastify.register(fastifyStatic, {
-  root: SAVE_DIR,
-  prefix: "/",
-  list: true, // Enable directory listing
-  decorateReply: false,
-});
-
-fastify.listen(TELEARIA_PORT);
 
 // Main Bot Logic
 if (!process.env.TELEGRAMBOT) {

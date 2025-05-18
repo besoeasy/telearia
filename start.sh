@@ -16,4 +16,8 @@ mkdir -p "$SAVE_DIR"
 
 echo "Download directory: $SAVE_DIR"
 
-node app.js &
+# Start Nginx
+nginx -g 'daemon off;' &
+
+# Start the bot (no static server)
+node app.js

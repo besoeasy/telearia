@@ -1,19 +1,25 @@
-FROM node:slim
+FROM node:20-slim
 
+# Install aria2 and nginx
+RUN apt-get update && \
+    apt-get install -y aria2 nginx && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set workdir
 WORKDIR /app
 
-COPY package*.json ./
+# Copy package files and install dependencies
+COPY package.json ./
+RUN npm install --production
 
-RUN npm install
-
-RUN apt-get update && apt-get install -y aria2
-
+# Copy app source
 COPY . .
 
-EXPOSE 6799
- 
-ENV TELEGRAMBOT="Telegram-Bot-Token"
+# Copy Nginx config
+COPY nginx.conf /etc/nginx/conf.d/telearia.conf
 
-COPY start.sh /app/start.sh
-RUN chmod +x /app/start.sh
-CMD ["sh", "/app/start.sh"]
+# Expose port for nginx
+EXPOSE 6799
+
+# Start script
+CMD ["bash", "start.sh"]
