@@ -308,13 +308,7 @@ fastify.register(fastifyStatic, {
   decorateReply: false,
 });
 
-fastify.listen({ port: TELEARIA_PORT, host: "0.0.0.0" }, (err, address) => {
-  if (err) {
-    console.error("Fastify failed to start:", err);
-  } else {
-    console.log(`Serving downloads directory at ${address}/`);
-  }
-});
+fastify.listen(TELEARIA_PORT);
 
 // Main Bot Logic
 if (!process.env.TELEGRAMBOT) {
