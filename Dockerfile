@@ -20,6 +20,8 @@ COPY nginx.conf /etc/nginx/conf.d/telearia.conf
 
 # Expose port for nginx
 EXPOSE 6799
+# Expose bittorrent port
+EXPOSE 6881
 
 # Start script
 CMD ["bash", "start.sh"]
