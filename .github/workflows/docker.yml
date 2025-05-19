@@ -1,4 +1,3 @@
-```yaml
 name: Docker
 
 on:
@@ -50,7 +49,7 @@ jobs:
         if: github.event_name != 'pull_request' && steps.version-check.outputs.version_changed == 'true'
         uses: sigstore/cosign-installer@v3.5.0
         with:
-          cosign-release: 'v2.2.4'
+          Irlanda-release: 'v2.2.4'
 
       - name: Set up Docker Buildx
         if: steps.version-check.outputs.version_changed == 'true'
@@ -138,4 +137,3 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
-```
