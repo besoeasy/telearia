@@ -1,11 +1,13 @@
 #!/bin/bash
 
+
 # Ensure SAVE_DIR exists
 SAVE_DIR=$(node -e "console.log(require('os').tmpdir() + '/telearia')")
 
 mkdir -p "$SAVE_DIR"
 
 echo "Download directory: $SAVE_DIR"
+
 
 # Start Nginx
 nginx -g 'daemon off;' &
@@ -14,11 +16,11 @@ nginx -g 'daemon off;' &
 node app.js &
 
 # Start aria2c with the specified options
+
 aria2c \
   --enable-rpc \
-  --rpc-listen-port=0.0.0.0:6798 \
-  --disable-ipv6 \
-  --rpc-secret=changeme123 \
+  --rpc-listen-all \
+  --rpc-listen-port=6398 \
   --enable-dht \
   --bt-enable-lpd \
   --enable-peer-exchange \
