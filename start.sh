@@ -5,10 +5,7 @@ aria2c \
   --rpc-listen-all \
   --rpc-listen-port=6398 \
   --enable-dht \
-  --bt-enable-lpd \
-  --enable-peer-exchange \
-  --dht-listen-port=50000-50008 \
-  --listen-port=50010-50020 \
+  --enable-peer-exchange=true \
   --bt-tracker='udp://tracker.opentrackr.org:1337/announce,udp://opentracker.io:80/announce,udp://tracker.torrent.eu.org:451/announce,udp://tracker.internetwarriors.net:1337/announce,udp://tracker.leechers-paradise.org:6969/announce,udp://tracker.coppersurfer.tk:6969/announce,udp://tracker.cyberia.is:6969/announce,udp://exodus.desync.com:6969/announce,udp://explodie.org:6969/announce,udp://open.stealth.si:80/announce,udp://tracker.moeking.me:6969/announce,udp://tracker.openbittorrent.com:80/announce' \
   --seed-time=100 &
 
