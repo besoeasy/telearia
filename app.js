@@ -155,20 +155,12 @@ const handleAbout = (ctx) => {
 const handleStart = (ctx) => {
   const userIdHash = cleanUser(ctx.chat.id);
   ctx.reply(
-    "Welcome to TeleAria\n" +
-      "Your Telegram cloud downloader powered by Aria2\n\n" +
+      "TeleAria\n\n" +
       `Bot Version: ${version}\n` +
       `Server Port: ${TELEARIA_PORT}\n` +
-      `Your User ID: ${userIdHash}\n` +
-      "How to use:\n" +
-      "/download <url> - Start a download\n" +
-      "/downloading - Show active downloads\n" +
-      "/status_<gid> - Show status for a download\n" +
-      "/cancel_<gid> - Cancel a download\n" +
-      "/clean - Remove oldest downloaded file\n\n" +
-      "Other commands:\n" +
-      commands.join("\n") +
-      "\nTip: /about for info, /ip for server IP"
+      `Your User ID: ${userIdHash}\n\n` +
+      "Commands:\n" +
+      commands.join("\n")
   );
 };
 
