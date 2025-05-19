@@ -91,12 +91,17 @@ async function getIpData() {
   }
 }
 
+const ARIA2_RPC_SECRET = "changeme123";
+
 const axiosPost = async (method, params = []) => {
+  const rpcParams = ARIA2_RPC_SECRET
+    ? ["token:" + ARIA2_RPC_SECRET, ...params]
+    : params;
   const { data } = await axios.post("http://localhost:6798/jsonrpc", {
     jsonrpc: "2.0",
     method,
     id: 1,
-    params,
+    params: rpcParams,
   });
   return data;
 };
