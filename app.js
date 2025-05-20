@@ -101,10 +101,6 @@ const axiosPost = async (method, params = []) => {
   return data;
 };
 
-const getVersion = async () => {
-  return await axiosPost("aria2.getVersion");
-};
-
 const getGlobalStats = async () => {
   return await axiosPost("aria2.getGlobalStat");
 };
@@ -154,8 +150,9 @@ const handleAbout = (ctx) => {
 
 const handleStart = (ctx) => {
   const userIdHash = cleanUser(ctx.chat.id);
+
   ctx.reply(
-      "TeleAria\n\n" +
+    "TeleAria\n\n" +
       `Bot Version: ${version}\n` +
       `Server Port: ${TELEARIA_PORT}\n` +
       `Your User ID: ${userIdHash}\n\n` +
@@ -274,10 +271,10 @@ const downloading = async (ctx) => {
         const downloadedSize = (completedLength / 1024 / 1024).toFixed(2);
         const totalSize = (totalLength / 1024 / 1024).toFixed(2);
         const progress = ((completedLength / totalLength) * 100).toFixed(1);
+
         reply += `ID: /status_${gid}\n`;
         reply += `Status: ${status}\n`;
-        reply += `Progress: ${downloadedSize} MB / ${totalSize} MB (${progress}%)\n`;
-        reply += `------------------------\n`;
+        reply += `Progress: ${downloadedSize} MB / ${totalSize} MB (${progress}%)\n\n\n`;
       }
       ctx.reply(reply);
     } else {
@@ -368,14 +365,6 @@ bot.on("message", async (ctx) => {
 
 bot.catch((err, ctx) => {
   console.error(`Error for ${ctx.updateType}`, err);
-});
-
-process.on("uncaughtException", (err) => {
-  console.error("Uncaught Exception:", err);
-});
-
-process.on("unhandledRejection", (reason, promise) => {
-  console.error("Unhandled Rejection at:", promise, "reason:", reason);
 });
 
 try {
