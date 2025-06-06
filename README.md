@@ -28,6 +28,33 @@ docker run -d \
 - Access downloads via HTTP: `http://<host>:6799/`
 
 
+## Recommended Setup
+
+```bash
+
+mkdir -p $HOME/downloads
+chmod -R 775 $HOME/downloads
+
+docker run -d --name samba-docklite \
+  -e GUEST=true \
+  -e NAME="TeleAria" \
+  -p 445:445 \
+  -v $HOME/downloads:/storage \
+  --restart unless-stopped \
+  dockurr/samba
+
+
+docker run -d \
+  --name telearia \
+  --restart unless-stopped \
+  -p 6799:6799 \
+  -v $HOME/downloads:/tmp/telearia \
+  -e TELEGRAMBOT=Your-Telegram-Bot-Token \
+  ghcr.io/besoeasy/telearia:main
+```
+
+
+
 ## Tunnel (Optional)
 
 Enhance self-hosting with [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/) or Serveo:
