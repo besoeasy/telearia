@@ -2,9 +2,7 @@
 
 TeleAria is a lightweight, self-hosted solution that combines the power of [Aria2](https://aria2.github.io/) and [Telegram](https://telegram.org/) to enable remote downloading of files, torrents, and videos. With real-time updates, bandwidth controls, and seamless sharing via HTTP and Samba (SMB), TeleAria makes it easy to manage and access your downloads from any device.
 
- ![TeleAria](https://github.com/user-attachments/assets/d5a1ce42-d9e6-41a3-a48a-e926f0d384ca)
-
----
+![TeleAria](https://github.com/user-attachments/assets/d5a1ce42-d9e6-41a3-a48a-e926f0d384ca)
 
 ## Features
 
@@ -14,8 +12,6 @@ TeleAria is a lightweight, self-hosted solution that combines the power of [Aria
 - Auto-sorted downloads for easy organization
 - Bandwidth and scheduling controls
 - Downloads shared via HTTP and Samba (SMB)
-
----
 
 ## Quick Start (Docker)
 
@@ -42,14 +38,6 @@ docker run -d \
   - Connect to the SMB share from VLC, NOVA Video Player (Android TV), Linux, Windows, or iOS file managers.
   - Network path: `smb://<host>/telearia` (adjust as needed for your setup)
 
----
-
-## User Access Control
-
-- Restrict Telegram bot access to specific users with the `WHITE_LIST_USER` environment variable (comma-separated Telegram user IDs).
-
----
-
 ## Optional: Tunneling
 
 Expose your TeleAria instance securely over the internet using Cloudflare Tunnel or Serveo:
@@ -59,21 +47,3 @@ Expose your TeleAria instance securely over the internet using Cloudflare Tunnel
   ```bash
   ssh -R 80:localhost:6799 serveo.net
   ```
-
----
-
-## Environment Variables
-
-- `TELEGRAMBOT`: **(Required)** Your Telegram bot token
-- `WHITE_LIST_USER`: Comma-separated list of allowed Telegram user IDs
-- Other variables as needed for advanced configuration
-
----
-
-## Support
-
-For questions, issues, or feature requests, please open an issue on the [GitHub repository](https://github.com/besoeasy/telearia).
-
----
-
-Enjoy effortless, remote-controlled downloading with TeleAria!
