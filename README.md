@@ -2,9 +2,7 @@
 
 TeleAria is a lightweight, self-hosted solution that combines the power of [Aria2](https://aria2.github.io/) and [Telegram](https://telegram.org/) to enable remote downloading of files, torrents, and videos. With real-time updates, bandwidth controls, and seamless sharing via HTTP and Samba (SMB), TeleAria makes it easy to manage and access your downloads from any device.
 
-![Screenshot From 2025-06-06 22-46-17](https://github.com/user-attachments/assets/6553a9ed-1a15-4084-b908-39bfccdde43a)
-![IMG_2667](https://github.com/user-attachments/assets/9649c212-8e58-49b9-91a0-589dcaab79f5)
-
+ ![TeleAria](https://github.com/user-attachments/assets/d5a1ce42-d9e6-41a3-a48a-e926f0d384ca)
 
 ---
 
