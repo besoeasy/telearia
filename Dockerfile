@@ -2,7 +2,7 @@ FROM node:20-slim
 
 # Install aria2 and nginx
 RUN apt-get update && \
-    apt-get install -y aria2 nginx && \
+    apt-get install -y aria2 nginx samba && \
     rm -rf /var/lib/apt/lists/*
 
 # Set workdir
@@ -18,8 +18,8 @@ COPY . .
 # Copy Nginx config
 COPY nginx.conf /etc/nginx/conf.d/telearia.conf
 
-# Expose port for nginx
-EXPOSE 6799
+# Expose port  
+EXPOSE 6799 445
 
 # Start script
 CMD ["bash", "start.sh"]

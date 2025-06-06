@@ -19,6 +19,7 @@ docker run -d \
   --name telearia \
   --restart unless-stopped \
   -p 6799:6799 \
+  -p 445:445 \
   -e TELEGRAMBOT=Your-Telegram-Bot-Token \
   ghcr.io/besoeasy/telearia:main
 ```
@@ -26,34 +27,6 @@ docker run -d \
 - Restrict access: `-e WHITE_LIST_USER=123456,654321`
 - Mount downloads: `-v /tmp/telearia:/tmp/telearia`
 - Access downloads via HTTP: `http://<host>:6799/`
-
-
-## Recommended Setup
-
-```bash
-
-mkdir -p $HOME/downloads
-chmod -R 775 $HOME/downloads
-
-docker run -d --name samba-docklite \
-  -e GUEST=true \
-  -e NAME="TeleAria" \
-  -p 445:445 \
-  -v $HOME/downloads:/storage \
-  --restart unless-stopped \
-  dockurr/samba
-
-
-docker run -d \
-  --name telearia \
-  --restart unless-stopped \
-  -p 6799:6799 \
-  -v $HOME/downloads:/tmp/telearia \
-  -e TELEGRAMBOT=Your-Telegram-Bot-Token \
-  ghcr.io/besoeasy/telearia:main
-```
-
-
 
 ## Tunnel (Optional)
 
