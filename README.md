@@ -27,7 +27,6 @@ docker run -d \
 
 - **Restrict access:** `-e WHITE_LIST_USER=123456,654321`
 - **Mount downloads:** `-v /tmp/telearia:/tmp/telearia`
-- **Access via HTTP:** `http://<host>:6799/`
 
 ## Accessing Downloads
 
