@@ -29,8 +29,6 @@ docker run -d \
 - **Mount downloads:** `-v /tmp/telearia:/tmp/telearia`
 - **Access via HTTP:** `http://<host>:6799/`
 
----
-
 ## Accessing Downloads
 
 - **HTTP:** Open `http://<host>:6799/` in your browser to browse and download files.
