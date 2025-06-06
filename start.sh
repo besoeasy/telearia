@@ -9,11 +9,6 @@ echo "Download directory: $SAVE_DIR"
 
 sleep 2
 
-# Install Samba if not already installed
-if ! command -v smbd &> /dev/null; then
-  apt-get update && apt-get install -y samba
-fi
-
 # Create minimal smb.conf for guest access
 cat >/etc/samba/smb.conf <<EOL
 [global]
