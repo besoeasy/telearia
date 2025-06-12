@@ -28,6 +28,18 @@ docker run -d \
 - **Restrict access:** `-e WHITE_LIST_USER=123456,654321`
 - **Mount downloads:** `-v /tmp/telearia:/tmp/telearia`
 
+## Testing Version
+```bash
+podman run -d \
+  --name telearia \
+  --restart unless-stopped \
+  -p 6799:6799 \
+  -p 445:445 \
+  -e TELEGRAMBOT=Your-Telegram-Bot-Token \
+  ghcr.io/besoeasy/telearia:test
+```
+
+
 ## Accessing Downloads
 
 - **HTTP:** Open `http://<host>:6799/` in your browser to browse and download files.
