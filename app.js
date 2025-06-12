@@ -142,6 +142,35 @@ const commands = [
   "/clean - Remove oldest downloaded file",
 ];
 
+function getImdbId(url) {
+  const match = url.match(/(tt\d{7,8})/);
+  return match ? match[1] : null;
+}
+
+async function fetchTorrent(contentid) {
+  const urltype = contentid.includes(":") ? "series" : "movie";
+  const response = await axios.get(
+    "https://torrentio.strem.fun/sort=seeders" +
+      "/stream/" +
+      urltype +
+      "/" +
+      contentid +
+      ".json",
+    { timeout: 2000 }
+  );
+  const torrentdatafinal = response.data.streams;
+  const torrents = [];
+  for (let i = 0; i < torrentdatafinal.length; i++) {
+    torrents.push({
+      title: torrentdatafinal[i].title,
+      magnet: "magnet:?xt=urn:btih:" + torrentdatafinal[i].infoHash,
+      fileIdx: torrentdatafinal[i].fileIdx || 0,
+    });
+  }
+  return torrents;
+}
+
+// Command handlers
 const handleAbout = (ctx) => {
   ctx.reply(
     "TeleAria - Telegram-controlled cloud downloader\nGitHub: https://github.com/besoeasy/telearia"
@@ -261,6 +290,30 @@ const handleClean = (ctx) => {
   }
 };
 
+const handleFind = async (ctx, imdbInput) => {
+  try {
+    const imdbId = getImdbId(imdbInput);
+    if (!imdbId) {
+      ctx.reply("Please provide a valid IMDb URL or IMDb ID (e.g. tt1234567)");
+      return;
+    }
+    ctx.reply("Searching torrents for " + imdbId + "...");
+    const torrents = await fetchTorrent(imdbId);
+    if (!torrents.length) {
+      ctx.reply("No torrents found for this IMDb ID.");
+      return;
+    }
+    let reply = `Found ${torrents.length} torrents for ${imdbId}:\n\n`;
+    torrents.slice(0, 10).forEach((t, i) => {
+      reply += `${i + 1}. ${t.title}\n${t.magnet}\n\n`;
+    });
+    ctx.reply(reply);
+  } catch (error) {
+    console.error(error);
+    ctx.reply("Failed to fetch torrents. Try again later.");
+  }
+};
+
 const downloading = async (ctx) => {
   try {
     const { result: ongoingDownloads } = await getOngoingDownloads();
@@ -345,6 +398,10 @@ bot.on("message", async (ctx) => {
         case "/dl":
           if (trimmedArgs.length > 0) handleDownload(ctx, trimmedArgs[0]);
           else ctx.reply("Please provide a URL to download.");
+          break;
+        case "/find":
+          if (trimmedArgs.length > 0) handleFind(ctx, trimmedArgs[0]);
+          else ctx.reply("Please provide an IMDb URL or IMDb ID.");
           break;
         default:
           if (lowerCaseCommand.startsWith("/status_"))
