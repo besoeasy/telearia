@@ -1,9 +1,8 @@
-FROM node:20-slim
+FROM node:lts
 
 # Install aria2 and nginx
 RUN apt-get update && \
-    apt-get install -y aria2 nginx samba && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y aria2 nginx samba
 
 # Set workdir
 WORKDIR /app
