@@ -30,13 +30,16 @@ docker run -d \
 
 ## Testing Version
 ```bash
-podman run -d \
+docker volume create telearia-data && \
+docker run -d \
   --name telearia \
   --restart unless-stopped \
   -p 6799:6799 \
   -p 6800:445 \
   -e TELEGRAMBOT=Your-Telegram-Bot-Token \
+  -v telearia-data:/tmp/telearia \
   ghcr.io/besoeasy/telearia:test
+
 ```
 
 
