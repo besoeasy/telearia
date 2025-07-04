@@ -304,11 +304,9 @@ const handleFind = async (ctx, imdbInput) => {
       ctx.reply("No torrents found for this IMDb ID.");
       return;
     }
-    let reply = `Found ${torrents.length} torrents for ${imdbId}:\n\n`;
-    torrents.slice(0, 10).forEach((t, i) => {
-      reply += `${i + 1}. ${t.title}\n${t.magnet}\n\n`;
+    torrents.slice(0, 20).forEach((t, i) => {
+      ctx.reply(`${t.title}\n\n${t.magnet}`);
     });
-    ctx.reply(reply);
   } catch (error) {
     console.error(error);
     ctx.reply("Failed to fetch torrents. Try again later.");
