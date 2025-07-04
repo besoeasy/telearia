@@ -35,7 +35,7 @@ docker run -d \
   --name telearia \
   --restart unless-stopped \
   -p 6799:6799 \
-  -p 6800:445 \
+  -p 445:445 \
   -e TELEGRAMBOT=Your-Telegram-Bot-Token \
   -v telearia-data:/tmp/telearia \
   ghcr.io/besoeasy/telearia:test
