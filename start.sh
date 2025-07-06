@@ -40,9 +40,9 @@ aria2c \
   --enable-rpc \
   --rpc-listen-all \
   --rpc-listen-port=6398 \
-  --max-connection-per-server=16 \
-  --max-concurrent-downloads=10 \
-  --seed-time=100 &
+  --seed-time=100 \
+  --enable-dht=true \
+  --enable-peer-exchange=true &
 
 sleep 2
 

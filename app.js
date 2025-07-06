@@ -105,35 +105,13 @@ const getGlobalStats = async () => {
   return await axiosPost("aria2.getGlobalStat");
 };
 
-// Fetch a list of public BitTorrent trackers from a popular online source
-async function fetchTrackers() {
-  try {
-    const { data } = await axios.get(
-      "https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt"
-    );
-    // The file is a list of trackers separated by newlines, sometimes with empty lines
-    const trackers = data
-      .split("\n")
-      .map((line) => line.trim())
-      .filter((line) => line.length > 0);
-    return trackers;
-  } catch (error) {
-    console.error("Failed to fetch trackers:", error.message);
-    return [];
-  }
-}
-
 const downloadAria = async (id, url) => {
   const currentDate = new Date().toISOString().slice(0, 10).replace(/-/g, "");
   const downloadDir = path.join(SAVE_DIR, id, currentDate);
-  const trackers = await fetchTrackers();
   return await axiosPost("aria2.addUri", [
     [url],
     {
       dir: downloadDir,
-      enableDHT: true,
-      enablePeerExchange: true,
-      ...(trackers.length > 0 ? { "bt-tracker": trackers.join(",") } : {}),
     },
   ]);
 };
