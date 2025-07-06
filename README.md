@@ -32,12 +32,7 @@ docker run -d \
 - **Mount downloads:** `-v /tmp/telearia:/tmp/telearia`
 
 ## Testing Version
-docker run -d \
-  --name telearia \
-  --restart unless-stopped \
-  -p 6799:6799 \
-  -p 445:445 \
-  -e TELEGRAMBOT=Your-Telegram-Bot-Token \
+
 ```bash
 docker volume create telearia-data && \
 docker run -d \
@@ -51,7 +46,7 @@ docker run -d \
   -v telearia-data:/tmp/telearia \
   ghcr.io/besoeasy/telearia:test
 ```
-```
+
 
 
 ## Accessing Downloads
