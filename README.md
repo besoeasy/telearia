@@ -37,10 +37,7 @@ docker volume create telearia-data && \
 docker run -d \
   --name telearia \
   --restart unless-stopped \
-  -p 6799:6799 \
-  -p 445:445 \
-  -p 6881-6999:6881-6999/tcp \
-  -p 6881-6999:6881-6999/udp \
+  --network host \
   -e TELEGRAMBOT=Your-Telegram-Bot-Token \
   -v telearia-data:/tmp/telearia \
   ghcr.io/besoeasy/telearia:test
