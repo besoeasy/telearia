@@ -35,7 +35,7 @@ smbd --foreground --no-process-group &
 
 sleep 2
 
-# Start Aria2c
+# Start Aria2c with famous public trackers
 aria2c \
   --enable-rpc \
   --rpc-listen-all \
@@ -44,7 +44,8 @@ aria2c \
   --listen-port=51413 \
   --dht-listen-port=51413 \
   --enable-dht=true \
-  --enable-peer-exchange=true &
+  --enable-peer-exchange=true \
+  --bt-tracker="udp://tracker.openbittorrent.com:80,udp://tracker.opentrackr.org:1337,udp://tracker.coppersurfer.tk:6969,udp://tracker.leechers-paradise.org:6969,udp://tracker.internetwarriors.net:1337,udp://exodus.desync.com:6969,udp://tracker.torrent.eu.org:451,udp://tracker.moeking.me:6969" &
 
 sleep 2
 
