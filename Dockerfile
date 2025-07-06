@@ -18,7 +18,7 @@ COPY . .
 COPY nginx.conf /etc/nginx/conf.d/telearia.conf
 
 # Expose port  
-EXPOSE 6799 445
+EXPOSE 6799 445 51413 51413/udp
 
 # Start script
 CMD ["bash", "start.sh"]

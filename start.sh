@@ -41,8 +41,8 @@ aria2c \
   --rpc-listen-all \
   --rpc-listen-port=6398 \
   --seed-time=100 \
-  --listen-port=6881 \
-  --dht-listen-port=6881 \
+  --listen-port=51413 \
+  --dht-listen-port=51413 \
   --enable-dht=true \
   --enable-peer-exchange=true &
 

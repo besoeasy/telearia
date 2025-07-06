@@ -22,8 +22,8 @@ docker run -d \
   --restart unless-stopped \
   -p 6799:6799 \
   -p 445:445 \
-  -p 6881:6881 \
-  -p 6881:6881/udp \
+  -p 51413:51413 \
+  -p 51413:51413/udp \
   -e TELEGRAMBOT=Your-Telegram-Bot-Token \
   ghcr.io/besoeasy/telearia:main
 ```
@@ -40,14 +40,12 @@ docker run -d \
   --restart unless-stopped \
   -p 6799:6799 \
   -p 445:445 \
-  -p 6881:6881 \
-  -p 6881:6881/udp \
+  -p 51413:51413 \
+  -p 51413:51413/udp \
   -e TELEGRAMBOT=Your-Telegram-Bot-Token \
   -v telearia-data:/tmp/telearia \
   ghcr.io/besoeasy/telearia:test
 ```
-
-
 
 ## Accessing Downloads
 
