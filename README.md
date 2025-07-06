@@ -15,15 +15,14 @@ TeleAria is a lightweight, self-hosted solution that combines the power of [Aria
 
 ## Quick Start (Docker)
 
-
 ```bash
 docker run -d \
   --name telearia \
   --restart unless-stopped \
   -p 6799:6799 \
   -p 445:445 \
-  -p 51413:51413 \
-  -p 51413:51413/udp \
+  -p 6881-6999:6881-6999/tcp \
+  -p 6881-6999:6881-6999/udp \
   -e TELEGRAMBOT=Your-Telegram-Bot-Token \
   ghcr.io/besoeasy/telearia:main
 ```
@@ -40,8 +39,8 @@ docker run -d \
   --restart unless-stopped \
   -p 6799:6799 \
   -p 445:445 \
-  -p 51413:51413 \
-  -p 51413:51413/udp \
+  -p 6881-6999:6881-6999/tcp \
+  -p 6881-6999:6881-6999/udp \
   -e TELEGRAMBOT=Your-Telegram-Bot-Token \
   -v telearia-data:/tmp/telearia \
   ghcr.io/besoeasy/telearia:test

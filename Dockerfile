@@ -17,8 +17,11 @@ COPY . .
 # Copy Nginx config
 COPY nginx.conf /etc/nginx/conf.d/telearia.conf
 
-# Expose port  
-EXPOSE 6799 445 51413 51413/udp
+# Expose ports for SMB, aria2c RPC, and BitTorrent peer connections
+EXPOSE 445
+EXPOSE 6799
+EXPOSE 6881-6999/tcp
+EXPOSE 6881-6999/udp
 
 # Start script
 CMD ["bash", "start.sh"]
