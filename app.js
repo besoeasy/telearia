@@ -206,16 +206,45 @@ const handleStats = async (ctx) => {
   }
 };
 
-const handleDownload = async (ctx, url) => {
+const handleDownload = async (ctx, input) => {
   try {
     const userIdHash = cleanUser(ctx.chat.id);
-    const downloadData = await downloadAria(userIdHash, url);
-    const downloadId = downloadData.result;
-    ctx.reply(
-      "Download started\n" +
-        `Track: /status_${downloadId}\n` +
-        "See all: /downloading"
-    );
+    let magnet = null;
+    let url = null;
+
+    // Magnet link detection
+    if (typeof input === "string") {
+      const magnetMatch = input.match(/magnet:\?xt=urn:btih:[a-zA-Z0-9]+[^"]*/);
+      if (magnetMatch) {
+        magnet = magnetMatch[0];
+      } else {
+        // URL detection (http/https)
+        const urlMatch = input.match(/https?:\/\/[\w\-\.\/?#&=:%]+/);
+        if (urlMatch) {
+          url = urlMatch[0];
+        }
+      }
+    }
+
+    if (magnet) {
+      const downloadData = await downloadAria(userIdHash, magnet);
+      const downloadId = downloadData.result;
+      ctx.reply(
+        "Magnet download started\n" +
+          `Track: /status_${downloadId}\n` +
+          "See all: /downloading"
+      );
+    } else if (url) {
+      const downloadData = await downloadAria(userIdHash, url);
+      const downloadId = downloadData.result;
+      ctx.reply(
+        "URL download started\n" +
+          `Track: /status_${downloadId}\n` +
+          "See all: /downloading"
+      );
+    } else {
+      ctx.reply("No valid magnet link or URL found in your input.");
+    }
   } catch (error) {
     console.error(error);
     ctx.reply("Failed to start download. Try again.");
