@@ -20,8 +20,8 @@ COPY nginx.conf /etc/nginx/conf.d/telearia.conf
 # Expose ports for SMB, aria2c RPC, and BitTorrent peer connections
 EXPOSE 445
 EXPOSE 6799
-EXPOSE 6881-6999/tcp
-EXPOSE 6881-6999/udp
+EXPOSE 6888/tcp
+EXPOSE 6888/udp
 
 # Start script
 CMD ["bash", "start.sh"]
