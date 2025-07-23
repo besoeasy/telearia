@@ -13,7 +13,7 @@ TeleAria is a lightweight, self-hosted solution that combines the power of [Aria
 - Bandwidth and scheduling controls
 - Downloads shared via HTTP and Samba (SMB)
 
-## Quick Start (Docker)
+## Quick Start (Docker CLI)
 
 ```bash
 docker volume create telearia-data && \
@@ -27,6 +27,28 @@ docker run -d \
   -v telearia-data:/tmp/telearia \
   -e TELEGRAMBOT=Your-Telegram-Bot-Token \
   ghcr.io/besoeasy/telearia:main
+```
+
+
+## Quick Start (Dockge)
+```bash
+services:
+  telearia:
+    image: ghcr.io/besoeasy/telearia:main
+    container_name: telearia
+    restart: unless-stopped
+    ports:
+      - "6799:6799"
+      - "445:445"
+      - "6881-6999:6881-6999/tcp"
+      - "6881-6999:6881-6999/udp"
+    volumes:
+      - telearia-data:/tmp/telearia
+    environment:
+      - TELEGRAMBOT=Your-Telegram-Bot-Token
+
+volumes:
+  telearia-data:
 ```
 
 - **Restrict access:** `-e WHITE_LIST_USER=123456,654321`
