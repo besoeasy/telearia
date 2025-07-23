@@ -29,28 +29,6 @@ docker run -d \
   ghcr.io/besoeasy/telearia:main
 ```
 
-
-## Quick Start (Dockge)
-```bash
-services:
-  telearia:
-    image: ghcr.io/besoeasy/telearia:main
-    container_name: telearia
-    restart: unless-stopped
-    ports:
-      - "6799:6799"
-      - "445:445"
-      - "6881-6999:6881-6999/tcp"
-      - "6881-6999:6881-6999/udp"
-    volumes:
-      - telearia-data:/tmp/telearia
-    environment:
-      - TELEGRAMBOT=Your-Telegram-Bot-Token
-
-volumes:
-  telearia-data:
-```
-
 - **Restrict access:** `-e WHITE_LIST_USER=123456,654321`
 
 ## Developer Version
