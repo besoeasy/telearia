@@ -41,15 +41,8 @@ aria2c \
   --rpc-listen-all \
   --rpc-listen-port=6398 \
   --listen-port=6888 \
-  --seed-time=100 \
   --enable-dht=true \
-  --enable-peer-exchange=true \
-  --bt-max-peers=50 \
-  --bt-request-peer-speed-limit=100K \
-  --max-connection-per-server=10 \
-  --max-concurrent-downloads=5 \
-  --split=10 \
-  --min-split-size=1M &
+  --enable-peer-exchange=true &
 
 sleep 2
 
