@@ -7,6 +7,20 @@ mkdir -p "$SAVE_DIR"
 
 echo "Download directory: $SAVE_DIR"
 
+# Generate random SMB credentials
+SMB_USER="user$(shuf -i 1000-9999 -n 1)"
+SMB_PASS=$(openssl rand -base64 12 | tr -d "=+/" | cut -c1-10)
+
+# Create SMB user and set password
+useradd -M -s /bin/false "$SMB_USER"
+echo "$SMB_USER:$SMB_PASS" | chpasswd
+(echo "$SMB_PASS"; echo "$SMB_PASS") | smbpasswd -a "$SMB_USER"
+
+# Save credentials for the bot to display (outside web-accessible directory)
+echo "$SMB_USER:$SMB_PASS" > /var/run/smb_credentials.txt
+
+echo "SMB Credentials: $SMB_USER / $SMB_PASS"
+
 sleep 2
 
 # Create minimal smb.conf for guest access
@@ -19,15 +33,31 @@ cat >/etc/samba/smb.conf <<EOL
    smb ports = 445
 
 [telearia]
+   comment = Read-only downloads
    path = $SAVE_DIR
    read only = yes
    guest ok = yes
    force user = nobody
    browseable = yes
+
+[telearia-rw]
+   comment = Full access downloads
+   path = $SAVE_DIR
+   read only = no
+   valid users = $SMB_USER
+   force user = $SMB_USER
+   force group = users
+   browseable = yes
+   create mask = 0664
+   directory mask = 0775
 EOL
 
 # Ensure permissions for guest access
 chown -R nobody:nogroup "$SAVE_DIR"
+chmod -R 0775 "$SAVE_DIR"
+
+# Also set permissions for the authenticated user
+chown -R "$SMB_USER":users "$SAVE_DIR"
 chmod -R 0775 "$SAVE_DIR"
 
 # Start Samba (SMB) server

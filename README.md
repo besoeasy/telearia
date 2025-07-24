@@ -9,6 +9,7 @@ TeleAria is a lightweight, self-hosted solution that combines the power of [Aria
 - Download files, torrents, and videos via Telegram bot commands
 - High-speed, concurrent downloads powered by Aria2
 - Real-time progress and status updates in Telegram
+- Integrated IMDB & Torrentino
 - Auto-sorted downloads for easy organization
 - Bandwidth and scheduling controls
 - Downloads shared via HTTP and Samba (SMB)

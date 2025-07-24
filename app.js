@@ -269,6 +269,7 @@ const commands = [
   "/cancel_<gid> - Stop a specific download",
   "/ip - Show server IP details",
   "/clean - Remove oldest downloaded file",
+  "/smb - Show SMB credentials",
 ];
 
 function getImdbId(url) {
@@ -306,17 +307,37 @@ const handleAbout = (ctx) => {
   );
 };
 
-const handleStart = (ctx) => {
-  const userIdHash = cleanUser(ctx.chat.id);
+async function getSmbCredentials() {
+  try {
+    const credentials = await fs.readFile('/var/run/smb_credentials.txt', 'utf8');
+    const [username, password] = credentials.trim().split(':');
+    return { username, password };
+  } catch (error) {
+    console.error('Failed to read SMB credentials:', error.message);
+    return null;
+  }
+}
 
-  ctx.reply(
-    "TeleAria\n\n" +
-      `Bot Version: ${version}\n` +
-      `Server Port: ${TELEARIA_PORT}\n` +
-      `Your User ID: ${userIdHash}\n\n` +
-      "Commands:\n" +
-      commands.join("\n")
-  );
+const handleStart = async (ctx) => {
+  const userIdHash = cleanUser(ctx.chat.id);
+  const smbCreds = await getSmbCredentials();
+
+  let message = "TeleAria\n\n" +
+    `Bot Version: ${version}\n` +
+    `Server Port: ${TELEARIA_PORT}\n` +
+    `Your User ID: ${userIdHash}\n\n`;
+
+  if (smbCreds) {
+    message += `📁 SMB Access:\n` +
+      `• Read-only: smb://server/telearia (no login)\n` +
+      `• Full access: smb://server/telearia-rw\n` +
+      `  Username: ${smbCreds.username}\n` +
+      `  Password: ${smbCreds.password}\n\n`;
+  }
+
+  message += "Commands:\n" + commands.join("\n");
+  
+  ctx.reply(message);
 };
 
 const handleStats = async (ctx) => {
@@ -448,6 +469,29 @@ const handleClean = (ctx) => {
   }
 };
 
+const handleSmb = async (ctx) => {
+  try {
+    const smbCreds = await getSmbCredentials();
+    if (smbCreds) {
+      ctx.reply(
+        `📁 SMB File Access\n\n` +
+        `Read-only share (no login):\n` +
+        `smb://your-server/telearia\n\n` +
+        `Full access share:\n` +
+        `smb://your-server/telearia-rw\n` +
+        `Username: ${smbCreds.username}\n` +
+        `Password: ${smbCreds.password}\n\n` +
+        `💡 Use with VLC, file managers, or any SMB client`
+      );
+    } else {
+      ctx.reply("SMB credentials not available. Try restarting the container.");
+    }
+  } catch (error) {
+    console.error("Error getting SMB credentials:", error);
+    ctx.reply("Failed to get SMB credentials. Try again later.");
+  }
+};
+
 const handleFind = async (ctx, imdbInput) => {
   try {
     const imdbId = getImdbId(imdbInput);
@@ -534,6 +578,9 @@ bot.on("message", async (ctx) => {
       switch (lowerCaseCommand) {
         case "/clean":
           handleClean(ctx);
+          break;
+        case "/smb":
+          handleSmb(ctx);
           break;
         case "/about":
           handleAbout(ctx);
