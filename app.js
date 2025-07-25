@@ -246,7 +246,6 @@ const commands = [
   "/cancel_<gid> - Stop a specific download",
   "/ip - Show server IP details",
   "/clean - Remove oldest downloaded file",
-  "/smb - Show SMB credentials",
 ];
 
 function getImdbId(url) {
@@ -450,29 +449,6 @@ const handleClean = (ctx) => {
   }
 };
 
-const handleSmb = async (ctx) => {
-  try {
-    const smbCreds = await getSmbCredentials();
-    if (smbCreds) {
-      ctx.reply(
-        `📁 SMB File Access\n\n` +
-        `Read-only share (no login):\n` +
-        `smb://your-server/telearia\n\n` +
-        `Full access share:\n` +
-        `smb://your-server/telearia-rw\n` +
-        `Username: ${smbCreds.username}\n` +
-        `Password: ${smbCreds.password}\n\n` +
-        `💡 Use with VLC, file managers, or any SMB client`
-      );
-    } else {
-      ctx.reply("SMB credentials not available. Try restarting the container.");
-    }
-  } catch (error) {
-    console.error("Error getting SMB credentials:", error);
-    ctx.reply("Failed to get SMB credentials. Try again later.");
-  }
-};
-
 const handleFind = async (ctx, imdbInput) => {
   try {
     const imdbId = getImdbId(imdbInput);
@@ -559,9 +535,6 @@ bot.on("message", async (ctx) => {
       switch (lowerCaseCommand) {
         case "/clean":
           handleClean(ctx);
-          break;
-        case "/smb":
-          handleSmb(ctx);
           break;
         case "/about":
           handleAbout(ctx);
