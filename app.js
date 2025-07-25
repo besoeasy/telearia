@@ -71,6 +71,27 @@ function cleanUser(input) {
   return String(input);
 }
 
+async function getDirectorySize(directory) {
+  try {
+    const entries = await fs.readdir(directory, { withFileTypes: true });
+    const sizes = await Promise.all(
+      entries.map((entry) => {
+        const fullPath = path.join(directory, entry.name);
+        if (entry.isDirectory()) {
+          return getDirectorySize(fullPath);
+        }
+        return fs.stat(fullPath).then((stat) => stat.size);
+      })
+    );
+    return sizes.reduce((acc, size) => acc + size, 0);
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      return 0; // Directory does not exist
+    }
+    throw error;
+  }
+}
+
 async function getIpData() {
   try {
     const { data } = await axios.get("http://ip-api.com/json/");
@@ -321,14 +342,18 @@ async function getSmbCredentials() {
 const handleStart = async (ctx) => {
   const userIdHash = cleanUser(ctx.chat.id);
   const smbCreds = await getSmbCredentials();
+  const saveDirSize = await getDirectorySize(SAVE_DIR).catch(() => 0);
 
-  let message = "TeleAria\n\n" +
+  let message =
+    "TeleAria\n\n" +
     `Bot Version: ${version}\n` +
     `Server Port: ${TELEARIA_PORT}\n` +
-    `Your User ID: ${userIdHash}\n\n`;
+    `Your User ID: ${userIdHash}\n` +
+    `Used Space: ${bytesToSize(saveDirSize)}\n\n`;
 
   if (smbCreds) {
-    message += `📁 SMB Access:\n` +
+    message +=
+      `📁 SMB Access:\n` +
       `• Read-only: smb://server/telearia (no login)\n` +
       `• Full access: smb://server/telearia-rw\n` +
       `  Username: ${smbCreds.username}\n` +
