@@ -8,7 +8,7 @@ mkdir -p "$SAVE_DIR"
 echo "Download directory: $SAVE_DIR"
 
 # Generate random SMB credentials
-SMB_USER="user$(shuf -i 1000-9999 -n 1)"
+SMB_USER="x$(shuf -i 1000-9999 -n 1)"
 SMB_PASS=$(openssl rand -base64 12 | tr -d "=+/" | cut -c1-10)
 
 # Create SMB user and set password
