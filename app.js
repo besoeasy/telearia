@@ -133,9 +133,9 @@ const TRACKER_CACHE_DURATION = 4 * 60 * 60 * 1000; // 4 hours
 
 async function fetchLatestTrackers() {
   const now = Date.now();
-  
+
   // Return cached trackers if still valid
-  if (cachedTrackers && (now - lastTrackerFetch) < TRACKER_CACHE_DURATION) {
+  if (cachedTrackers && now - lastTrackerFetch < TRACKER_CACHE_DURATION) {
     console.log("Using cached trackers");
     return cachedTrackers;
   }
@@ -144,29 +144,38 @@ async function fetchLatestTrackers() {
     "https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_best.txt",
     "https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt",
     "https://newtrackon.com/api/stable",
-    "https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/best.txt"
+    "https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/best.txt",
   ];
 
   console.log("Fetching latest tracker lists...");
-  
+
   for (const source of trackerSources) {
     try {
-      const response = await axios.get(source, { 
+      const response = await axios.get(source, {
         timeout: 5000,
         headers: {
-          'User-Agent': 'TeleAria/1.0'
-        }
+          "User-Agent": "TeleAria/1.0",
+        },
       });
-      
+
       if (response.data) {
         const trackers = response.data
-          .split('\n')
-          .map(line => line.trim())
-          .filter(line => line && !line.startsWith('#') && (line.startsWith('udp://') || line.startsWith('http://') || line.startsWith('https://')))
+          .split("\n")
+          .map((line) => line.trim())
+          .filter(
+            (line) =>
+              line &&
+              !line.startsWith("#") &&
+              (line.startsWith("udp://") ||
+                line.startsWith("http://") ||
+                line.startsWith("https://"))
+          )
           .slice(0, 50); // Limit to first 50 trackers for performance
-        
+
         if (trackers.length > 0) {
-          console.log(`Successfully fetched ${trackers.length} trackers from ${source}`);
+          console.log(
+            `Successfully fetched ${trackers.length} trackers from ${source}`
+          );
           cachedTrackers = trackers;
           lastTrackerFetch = now;
           return trackers;
@@ -177,7 +186,7 @@ async function fetchLatestTrackers() {
       continue;
     }
   }
-  
+
   console.log("All tracker sources failed, using default trackers");
   cachedTrackers = DEFAULT_TRACKERS;
   lastTrackerFetch = now;
@@ -201,26 +210,26 @@ const getGlobalStats = async () => {
 const downloadAria = async (id, url) => {
   const currentDate = new Date().toISOString().slice(0, 10).replace(/-/g, "");
   const downloadDir = path.join(SAVE_DIR, id, currentDate);
-  
+
   const options = {
     dir: downloadDir,
   };
-  
+
   // Add dynamic trackers for magnet links and torrents
-  if (url.startsWith('magnet:') || url.endsWith('.torrent')) {
+  if (url.startsWith("magnet:") || url.endsWith(".torrent")) {
     try {
       const trackers = await fetchLatestTrackers();
-      options['bt-tracker'] = trackers.join(',');
+      options["bt-tracker"] = trackers.join(",");
       console.log(`Using ${trackers.length} trackers for download`);
     } catch (error) {
-      console.error('Failed to fetch trackers, proceeding without custom trackers:', error.message);
+      console.error(
+        "Failed to fetch trackers, proceeding without custom trackers:",
+        error.message
+      );
     }
   }
-  
-  return await axiosPost("aria2.addUri", [
-    [url],
-    options,
-  ]);
+
+  return await axiosPost("aria2.addUri", [[url], options]);
 };
 
 const getDownloadStatus = async (gid) => {
@@ -285,11 +294,14 @@ const handleAbout = (ctx) => {
 
 async function getSmbCredentials() {
   try {
-    const credentials = await fs.readFile('/var/run/smb_credentials.txt', 'utf8');
-    const [username, password] = credentials.trim().split(':');
+    const credentials = await fs.readFile(
+      "/var/run/smb_credentials.txt",
+      "utf8"
+    );
+    const [username, password] = credentials.trim().split(":");
     return { username, password };
   } catch (error) {
-    console.error('Failed to read SMB credentials:', error.message);
+    console.error("Failed to read SMB credentials:", error.message);
     return null;
   }
 }
@@ -306,6 +318,8 @@ const handleStart = async (ctx) => {
     `Your User ID: ${userIdHash}\n` +
     `Used Space: ${bytesToSize(saveDirSize)}\n\n`;
 
+  message += `🌐 HTTP Access:\n` + `http://pi.local:${TELEARIA_PORT}\n\n`;
+
   if (smbCreds) {
     message +=
       `📁 SMB Access:\n` +
@@ -316,7 +330,7 @@ const handleStart = async (ctx) => {
   }
 
   message += "Commands:\n" + commands.join("\n");
-  
+
   ctx.reply(message);
 };
 
