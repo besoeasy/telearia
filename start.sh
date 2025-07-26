@@ -72,7 +72,9 @@ aria2c \
   --rpc-listen-port=6398 \
   --listen-port=6888 \
   --enable-dht=true \
-  --enable-peer-exchange=true &
+  --enable-peer-exchange=true \
+  --seed-time=6000 \
+  --max-upload-limit=0 &
 
 sleep 2
 
