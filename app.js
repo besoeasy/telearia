@@ -39,6 +39,51 @@ async function deleteOldFiles(ctx) {
   }
 }
 
+async function autoCleanOldFiles(ctx) {
+  try {
+    const files = await getFilesRecursively(SAVE_DIR);
+    if (!files.length) {
+      console.log("No files to auto-clean.");
+      return ctx.reply("No files found to auto-clean.");
+    }
+
+    const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+    const oldFiles = files.filter(file => file.mtime < thirtyDaysAgo);
+
+    if (!oldFiles.length) {
+      console.log("No files older than 30 days found.");
+      return ctx.reply("No files older than 30 days found.");
+    }
+
+    let deletedCount = 0;
+    let totalSize = 0;
+
+    for (const file of oldFiles) {
+      try {
+        const stats = await fs.stat(file.path);
+        totalSize += stats.size;
+        await fs.unlink(file.path);
+        deletedCount++;
+        console.log(`Auto-deleted: ${file.path}`);
+      } catch (error) {
+        console.error(`Failed to delete ${file.path}:`, error.message);
+      }
+    }
+
+    await removeEmptyFolders(SAVE_DIR);
+
+    const message = `Auto-clean completed!\n` +
+      `Deleted ${deletedCount} files older than 30 days\n` +
+      `Freed up ${bytesToSize(totalSize)} of space`;
+    
+    ctx.reply(message);
+    console.log(`Auto-clean: Deleted ${deletedCount} files, freed ${bytesToSize(totalSize)}`);
+  } catch (error) {
+    console.error("Error during auto-clean:", error.message);
+    ctx.reply("Auto-clean failed. Try again later.");
+  }
+}
+
 async function getFilesRecursively(dir) {
   const files = [];
   const entries = await fs.readdir(dir, { withFileTypes: true });
@@ -255,6 +300,7 @@ const commands = [
   "/cancel_<gid> - Stop a specific download",
   "/ip - Show server IP details",
   "/clean - Remove oldest downloaded file",
+  "/autoclean - Remove all files older than 30 days",
 ];
 
 function getImdbId(url) {
@@ -463,6 +509,16 @@ const handleClean = (ctx) => {
   }
 };
 
+const handleAutoClean = (ctx) => {
+  try {
+    autoCleanOldFiles(ctx);
+    ctx.reply("Auto-cleaning files older than 30 days...");
+  } catch (error) {
+    console.error("Error during auto-cleanup:", error);
+    ctx.reply("Auto-cleanup failed. Try again later.");
+  }
+};
+
 const handleFind = async (ctx, imdbInput) => {
   try {
     const imdbId = getImdbId(imdbInput);
@@ -549,6 +605,9 @@ bot.on("message", async (ctx) => {
       switch (lowerCaseCommand) {
         case "/clean":
           handleClean(ctx);
+          break;
+        case "/autoclean":
+          handleAutoClean(ctx);
           break;
         case "/about":
           handleAbout(ctx);
