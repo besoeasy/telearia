@@ -294,6 +294,7 @@ const commands = [
   "/start - Begin your download journey",
   "/stats - Check global download stats",
   "/download <url> - Start downloading a file",
+  "/dl <url> - Alias for /download",
   "/downloading - View active downloads",
   "/find <imdb_url_or_id> - Search torrents by IMDb ID or URL",
   "/status_<gid> - Check a specific download",
