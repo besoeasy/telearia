@@ -17,7 +17,6 @@ TeleAria is a lightweight, self-hosted solution that combines the power of [Aria
 ## Quick Start (Docker CLI)
 
 ```bash
-docker volume create telearia-data && \
 docker run -d \
   --name telearia \
   --restart unless-stopped \
