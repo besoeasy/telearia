@@ -2,9 +2,6 @@
   "name": "telearia",
   "version": "1.0.7",
   "main": "app.js",
-  "scripts": {
-    "build": "podman build -t telearia ."
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/besoeasy/telearia.git"
