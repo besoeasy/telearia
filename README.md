@@ -31,7 +31,7 @@ docker run -d \
 
 - **Restrict access:** `-e WHITE_LIST_USER=123456,654321`
 
-## Developer Version
+## Developer Verision ( Recommended ) 
 
 ```bash
 docker run -d \
