@@ -35,9 +35,10 @@ docker run -d \
 
 ```bash
 docker run -d \
+  --name telearia \
   --restart unless-stopped \
   --network host \
-  -e TELEGRAMBOT=Your-Telegram-Bot-Token \
+  -e TELEGRAMBOT=telegram-bot-token \
   ghcr.io/besoeasy/telearia:test
 ```
 
