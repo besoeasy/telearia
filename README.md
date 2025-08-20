@@ -14,7 +14,18 @@ TeleAria is a lightweight, self-hosted solution that combines the power of [Aria
 - Bandwidth and scheduling controls
 - Downloads shared via HTTP and Samba (SMB)
 
-## Quick Start (Docker CLI)
+## Full Version (Recommended)
+
+```bash
+docker run -d \
+  --name telearia \
+  --restart unless-stopped \
+  --network host \
+  -e TELEGRAMBOT=telegram-bot-token \
+  ghcr.io/besoeasy/telearia:main
+```
+
+## Port Mapped Version
 
 ```bash
 docker run -d \
@@ -24,27 +35,16 @@ docker run -d \
   -p 445:445 \
   -p 6888:6888/tcp \
   -p 6888:6888/udp \
-  -v telearia-data:/tmp/telearia \
-  -e TELEGRAMBOT=Your-Telegram-Bot-Token \
+  -e TELEGRAMBOT=your-telegram-bot-token \
   ghcr.io/besoeasy/telearia:main
 ```
 
 - **Restrict access:** `-e WHITE_LIST_USER=123456,654321`
-
-## Developer Verision ( Recommended ) 
-
-```bash
-docker run -d \
-  --name telearia \
-  --restart unless-stopped \
-  --network host \
-  -e TELEGRAMBOT=telegram-bot-token \
-  ghcr.io/besoeasy/telearia:test
-```
+- **Persistence on Reboot:** `-v telearia-data:/tmp/telearia`
 
 ## Accessing Downloads
 
 - **HTTP:** Open `http://<host>:6799/` in your browser to browse and download files.
 - **Samba (SMB) Share:**
   - Connect to the SMB share from VLC, NOVA Video Player (Android TV), Linux, Windows, or iOS file managers.
-  - Network path: `smb://<host>/telearia` (adjust as needed for your setup)
+  - Network path: `smb://<host>/telearia` (adjust as needed for your setup).
