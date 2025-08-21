@@ -47,8 +47,8 @@ async function autoCleanOldFiles(ctx) {
       return ctx.reply("No files found to auto-clean.");
     }
 
-    const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
-    const oldFiles = files.filter(file => file.mtime < thirtyDaysAgo);
+    const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+    const oldFiles = files.filter((file) => file.mtime < thirtyDaysAgo);
 
     if (!oldFiles.length) {
       console.log("No files older than 30 days found.");
@@ -72,12 +72,17 @@ async function autoCleanOldFiles(ctx) {
 
     await removeEmptyFolders(SAVE_DIR);
 
-    const message = `Auto-clean completed!\n` +
+    const message =
+      `Auto-clean completed!\n` +
       `Deleted ${deletedCount} files older than 30 days\n` +
       `Freed up ${bytesToSize(totalSize)} of space`;
-    
+
     ctx.reply(message);
-    console.log(`Auto-clean: Deleted ${deletedCount} files, freed ${bytesToSize(totalSize)}`);
+    console.log(
+      `Auto-clean: Deleted ${deletedCount} files, freed ${bytesToSize(
+        totalSize
+      )}`
+    );
   } catch (error) {
     console.error("Error during auto-clean:", error.message);
     ctx.reply("Auto-clean failed. Try again later.");
@@ -157,86 +162,28 @@ async function getIpData() {
   }
 }
 
-// Default fallback trackers (your current list)
 const DEFAULT_TRACKERS = [
   "udp://tracker.opentrackr.org:1337/announce",
   "udp://open.demonii.com:1337/announce",
   "udp://open.stealth.si:80/announce",
   "udp://exodus.desync.com:6969/announce",
-  "udp://tracker.torrent.eu.org:451/announce",
-  "udp://tracker.openbittorrent.com:6969/announce",
-  "udp://tracker.publicbt.com:80/announce",
-  "udp://tracker.internetwarriors.net:1337/announce",
-  "udp://tracker.leechers-paradise.org:6969/announce",
-  "udp://tracker.coppersurfer.tk:6969/announce",
+  "udp://explodie.org:6969/announce",
+  "udp://wepzone.net:6969/announce",
+  "udp://ttk2.nbaonlineservice.com:6969/announce",
+  "udp://tracker.zupix.online:6969/announce",
+  "udp://tracker.wepzone.net:6969/announce",
+  "udp://tracker.tryhackx.org:6969/announce",
+  "udp://tracker.srv00.com:6969/announce",
+  "udp://tracker.skillindia.site:6969/announce",
+  "udp://tracker.ololosh.space:6969/announce",
+  "udp://tracker.hifitechindia.com:6969/announce",
+  "udp://tracker.gmi.gd:6969/announce",
+  "udp://tracker.gigantino.net:6969/announce",
+  "udp://tracker.fnix.net:6969/announce",
+  "udp://tracker.filemail.com:6969/announce",
+  "udp://tracker.dler.org:6969/announce",
+  "udp://tracker.bittor.pw:1337/announce",
 ];
-
-// Cache for fetched trackers
-let cachedTrackers = null;
-let lastTrackerFetch = 0;
-const TRACKER_CACHE_DURATION = 4 * 60 * 60 * 1000; // 4 hours
-
-async function fetchLatestTrackers() {
-  const now = Date.now();
-
-  // Return cached trackers if still valid
-  if (cachedTrackers && now - lastTrackerFetch < TRACKER_CACHE_DURATION) {
-    console.log("Using cached trackers");
-    return cachedTrackers;
-  }
-
-  const trackerSources = [
-    "https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_best.txt",
-    "https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt",
-    "https://newtrackon.com/api/stable",
-    "https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/best.txt",
-  ];
-
-  console.log("Fetching latest tracker lists...");
-
-  for (const source of trackerSources) {
-    try {
-      const response = await axios.get(source, {
-        timeout: 5000,
-        headers: {
-          "User-Agent": "TeleAria/1.0",
-        },
-      });
-
-      if (response.data) {
-        const trackers = response.data
-          .split("\n")
-          .map((line) => line.trim())
-          .filter(
-            (line) =>
-              line &&
-              !line.startsWith("#") &&
-              (line.startsWith("udp://") ||
-                line.startsWith("http://") ||
-                line.startsWith("https://"))
-          )
-          .slice(0, 50); // Limit to first 50 trackers for performance
-
-        if (trackers.length > 0) {
-          console.log(
-            `Successfully fetched ${trackers.length} trackers from ${source}`
-          );
-          cachedTrackers = trackers;
-          lastTrackerFetch = now;
-          return trackers;
-        }
-      }
-    } catch (error) {
-      console.log(`Failed to fetch trackers from ${source}:`, error.message);
-      continue;
-    }
-  }
-
-  console.log("All tracker sources failed, using default trackers");
-  cachedTrackers = DEFAULT_TRACKERS;
-  lastTrackerFetch = now;
-  return DEFAULT_TRACKERS;
-}
 
 const axiosPost = async (method, params = []) => {
   const { data } = await axios.post("http://localhost:6398/jsonrpc", {
@@ -260,18 +207,9 @@ const downloadAria = async (id, url) => {
     dir: downloadDir,
   };
 
-  // Add dynamic trackers for magnet links and torrents
+  // Always use static trackers for magnet links and torrents
   if (url.startsWith("magnet:") || url.endsWith(".torrent")) {
-    try {
-      const trackers = await fetchLatestTrackers();
-      options["bt-tracker"] = trackers.join(",");
-      console.log(`Using ${trackers.length} trackers for download`);
-    } catch (error) {
-      console.error(
-        "Failed to fetch trackers, proceeding without custom trackers:",
-        error.message
-      );
-    }
+    options["bt-tracker"] = DEFAULT_TRACKERS.join(",");
   }
 
   return await axiosPost("aria2.addUri", [[url], options]);
