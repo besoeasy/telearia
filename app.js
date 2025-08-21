@@ -207,7 +207,6 @@ const downloadAria = async (id, url) => {
     dir: downloadDir,
   };
 
-  // Always use static trackers for magnet links and torrents
   if (url.startsWith("magnet:") || url.endsWith(".torrent")) {
     options["bt-tracker"] = DEFAULT_TRACKERS.join(",");
   }
