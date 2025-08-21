@@ -183,6 +183,7 @@ const DEFAULT_TRACKERS = [
   "udp://tracker.filemail.com:6969/announce",
   "udp://tracker.dler.org:6969/announce",
   "udp://tracker.bittor.pw:1337/announce",
+  "udp://tracker.beeimg.com:6969/announce",
 ];
 
 const axiosPost = async (method, params = []) => {
