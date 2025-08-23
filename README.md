@@ -21,7 +21,7 @@ docker run -d \
   --name telearia \
   --restart unless-stopped \
   --network host \
-  -v telearia-data:/tmp/telearia
+  -v telearia-data:/tmp/telearia \
   -e TELEGRAMBOT=telegram-bot-token \
   ghcr.io/besoeasy/telearia:main
 ```
@@ -36,7 +36,7 @@ docker run -d \
   -p 445:445 \
   -p 6888:6888/tcp \
   -p 6888:6888/udp \
-  -v telearia-data:/tmp/telearia
+  -v telearia-data:/tmp/telearia \
   -e TELEGRAMBOT=your-telegram-bot-token \
   ghcr.io/besoeasy/telearia:main
 ```
