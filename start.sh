@@ -83,5 +83,8 @@ nginx -g 'daemon off;' &
 
 sleep 2
 
-# Start the bot (no static server)
-node app.js
+while true; do
+   node app.js
+   echo "Bot crashed with exit code $? - restarting in 5 seconds..."
+   sleep 7
+done
