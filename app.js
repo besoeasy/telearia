@@ -598,3 +598,16 @@ try {
 } catch (error) {
   console.error("Error launching bot:", error);
 }
+
+const http = require("http");
+const serveHandler = require("serve-handler");
+
+http
+  .createServer((request, response) => {
+    return serveHandler(request, response, {
+      public: SAVE_DIR,
+      directoryListing: true,
+      cleanUrls: false,
+    });
+  })
+  .listen(TELEARIA_PORT, () => {});

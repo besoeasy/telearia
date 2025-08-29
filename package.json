@@ -15,7 +15,8 @@
   "dependencies": {
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
+    "serve": "^14.2.4",
+    "serve-handler": "^6.1.6",
     "telegraf": "^4.16.3"
-  },
-  "devDependencies": {}
+  }
 }

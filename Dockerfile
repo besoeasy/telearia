@@ -2,7 +2,7 @@ FROM node:lts
 
 # Install aria2 and nginx
 RUN apt-get update && \
-    apt-get install -y aria2 nginx samba
+    apt-get install -y aria2 samba
 
 # Set workdir
 WORKDIR /app
@@ -13,9 +13,6 @@ RUN npm install --production
 
 # Copy app source
 COPY . .
-
-# Copy Nginx config
-COPY nginx.conf /etc/nginx/conf.d/telearia.conf
 
 # Expose ports for SMB, aria2c RPC, and BitTorrent peer connections
 EXPOSE 445
