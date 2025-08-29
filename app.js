@@ -593,11 +593,7 @@ bot.catch((err, ctx) => {
   console.error(`Error for ${ctx.updateType}`, err);
 });
 
-try {
-  bot.launch();
-} catch (error) {
-  console.error("Error launching bot:", error);
-}
+bot.launch();
 
 const http = require("http");
 const serveHandler = require("serve-handler");
