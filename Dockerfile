@@ -1,15 +1,14 @@
 FROM node:lts-slim
 
-# Install only needed tools
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-      aria2 samba \
+      aria2 samba python3 make g++ \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-COPY package.json ./
-RUN npm ci
+COPY package.json package-lock.json* ./
+RUN  npm install --production
 
 COPY . .
 
