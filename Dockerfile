@@ -1,24 +1,18 @@
-FROM node:lts
+FROM node:lts-slim
 
-# Install aria2 and nginx
+# Install only needed tools
 RUN apt-get update && \
-    apt-get install -y aria2 samba
+    apt-get install -y --no-install-recommends \
+      aria2 samba \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set workdir
 WORKDIR /app
 
-# Copy package files and install dependencies
 COPY package.json ./
-RUN npm install --production
+RUN npm ci --only=production
 
-# Copy app source
 COPY . .
 
-# Expose ports for SMB, aria2c RPC, and BitTorrent peer connections
-EXPOSE 445
-EXPOSE 6799
-EXPOSE 6888/tcp
-EXPOSE 6888/udp
+EXPOSE 445 6799 6888/tcp 6888/udp
 
-# Start script
 CMD ["bash", "start.sh"]
