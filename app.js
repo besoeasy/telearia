@@ -201,8 +201,7 @@ const getGlobalStats = async () => {
 };
 
 const downloadAria = async (id, url) => {
-  const currentDate = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-  const downloadDir = path.join(SAVE_DIR, id, currentDate);
+  const downloadDir = path.join(SAVE_DIR, id);
 
   const options = {
     dir: downloadDir,
