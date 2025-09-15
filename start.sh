@@ -65,21 +65,9 @@ smbd --foreground --no-process-group &
 
 sleep 2
 
-# Start Aria2c with basic configuration (trackers will be added per download)
-aria2c \
-  --enable-rpc \
-  --rpc-listen-all \
-  --rpc-listen-port=6398 \
-  --listen-port=6888 \
-  --enable-dht=true \
-  --enable-peer-exchange=true \
-  --seed-time=100 \
-  --max-upload-limit=0 &
-
-sleep 2
-
-# Start Nginx
-nginx -g 'daemon off;' &
+aria2c --enable-rpc --rpc-listen-all --rpc-listen-port=6398 --listen-port=6888 \
+  --enable-dht=true --enable-peer-exchange=true --seed-time=100 \
+  --bt-tracker="udp://tracker.opentrackr.org:1337/announce,udp://open.demonii.com:1337/announce,udp://open.stealth.si:80/announce,udp://exodus.desync.com:6969/announce" &
 
 sleep 2
 
