@@ -162,29 +162,7 @@ async function getIpData() {
   }
 }
 
-const DEFAULT_TRACKERS = [
-  "udp://tracker.opentrackr.org:1337/announce",
-  "udp://open.demonii.com:1337/announce",
-  "udp://open.stealth.si:80/announce",
-  "udp://exodus.desync.com:6969/announce",
-  "udp://explodie.org:6969/announce",
-  "udp://wepzone.net:6969/announce",
-  "udp://ttk2.nbaonlineservice.com:6969/announce",
-  "udp://tracker.zupix.online:6969/announce",
-  "udp://tracker.wepzone.net:6969/announce",
-  "udp://tracker.tryhackx.org:6969/announce",
-  "udp://tracker.srv00.com:6969/announce",
-  "udp://tracker.skillindia.site:6969/announce",
-  "udp://tracker.ololosh.space:6969/announce",
-  "udp://tracker.hifitechindia.com:6969/announce",
-  "udp://tracker.gmi.gd:6969/announce",
-  "udp://tracker.gigantino.net:6969/announce",
-  "udp://tracker.fnix.net:6969/announce",
-  "udp://tracker.filemail.com:6969/announce",
-  "udp://tracker.dler.org:6969/announce",
-  "udp://tracker.bittor.pw:1337/announce",
-  "udp://tracker.beeimg.com:6969/announce",
-];
+
 
 const axiosPost = async (method, params = []) => {
   const { data } = await axios.post("http://localhost:6398/jsonrpc", {
@@ -206,10 +184,6 @@ const downloadAria = async (id, url) => {
   const options = {
     dir: downloadDir,
   };
-
-  if (url.startsWith("magnet:") || url.endsWith(".torrent")) {
-    options["bt-tracker"] = DEFAULT_TRACKERS.join(",");
-  }
 
   return await axiosPost("aria2.addUri", [[url], options]);
 };
