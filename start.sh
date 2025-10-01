@@ -9,9 +9,7 @@ echo "Download directory: $SAVE_DIR"
 
 # Generate random SMB credentials
 SMB_USER="x$(shuf -i 1000-9999 -n 1)"
-LEN=$(shuf -i 8-16 -n 1)
-SMB_PASS=$(openssl rand -base64 $LEN | tr -d "=+/" | cut -c1-$LEN)
-echo "Generated SMB credentials: $SMB_USER / $SMB_PASS"
+SMB_PASS=$(openssl rand -base64 12 | tr -d "=+/" | cut -c1-10)
 
 # Create SMB user and set password
 useradd -M -s /bin/false "$SMB_USER"
