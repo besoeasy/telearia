@@ -72,17 +72,10 @@ async function autoCleanOldFiles(ctx) {
 
     await removeEmptyFolders(SAVE_DIR);
 
-    const message =
-      `Auto-clean completed!\n` +
-      `Deleted ${deletedCount} files older than 30 days\n` +
-      `Freed up ${bytesToSize(totalSize)} of space`;
+    const message = `Auto-clean completed!\n` + `Deleted ${deletedCount} files older than 30 days\n` + `Freed up ${bytesToSize(totalSize)} of space`;
 
     ctx.reply(message);
-    console.log(
-      `Auto-clean: Deleted ${deletedCount} files, freed ${bytesToSize(
-        totalSize
-      )}`
-    );
+    console.log(`Auto-clean: Deleted ${deletedCount} files, freed ${bytesToSize(totalSize)}`);
   } catch (error) {
     console.error("Error during auto-clean:", error.message);
     ctx.reply("Auto-clean failed. Try again later.");
@@ -162,8 +155,6 @@ async function getIpData() {
   }
 }
 
-
-
 const axiosPost = async (method, params = []) => {
   const { data } = await axios.post("http://localhost:6398/jsonrpc", {
     jsonrpc: "2.0",
@@ -222,15 +213,7 @@ function getImdbId(url) {
 
 async function fetchTorrent(contentid) {
   const urltype = contentid.includes(":") ? "series" : "movie";
-  const response = await axios.get(
-    "https://torrentio.strem.fun/sort=seeders" +
-      "/stream/" +
-      urltype +
-      "/" +
-      contentid +
-      ".json",
-    { timeout: 2000 }
-  );
+  const response = await axios.get("https://torrentio.strem.fun/sort=seeders" + "/stream/" + urltype + "/" + contentid + ".json", { timeout: 2000 });
   const torrentdatafinal = response.data.streams;
   const torrents = [];
   for (let i = 0; i < torrentdatafinal.length; i++) {
@@ -245,17 +228,12 @@ async function fetchTorrent(contentid) {
 
 // Command handlers
 const handleAbout = (ctx) => {
-  ctx.reply(
-    "TeleAria - Telegram-controlled cloud downloader\nGitHub: https://github.com/besoeasy/telearia"
-  );
+  ctx.reply("TeleAria - Telegram-controlled cloud downloader\nGitHub: https://github.com/besoeasy/telearia");
 };
 
 async function getSmbCredentials() {
   try {
-    const credentials = await fs.readFile(
-      "/var/run/smb_credentials.txt",
-      "utf8"
-    );
+    const credentials = await fs.readFile("/var/run/smb_credentials.txt", "utf8");
     const [username, password] = credentials.trim().split(":");
     return { username, password };
   } catch (error) {
@@ -332,19 +310,11 @@ const handleDownload = async (ctx, input) => {
     if (magnet) {
       const downloadData = await downloadAria(userIdHash, magnet);
       const downloadId = downloadData.result;
-      ctx.reply(
-        "Magnet download started\n" +
-          `Track: /status_${downloadId}\n` +
-          "See all: /downloading"
-      );
+      ctx.reply("Magnet download started\n" + `Track: /status_${downloadId}\n` + "See all: /downloading");
     } else if (url) {
       const downloadData = await downloadAria(userIdHash, url);
       const downloadId = downloadData.result;
-      ctx.reply(
-        "URL download started\n" +
-          `Track: /status_${downloadId}\n` +
-          "See all: /downloading"
-      );
+      ctx.reply("URL download started\n" + `Track: /status_${downloadId}\n` + "See all: /downloading");
     } else {
       ctx.reply("No valid magnet link or URL found in your input.");
     }
@@ -357,25 +327,14 @@ const handleDownload = async (ctx, input) => {
 const handleStatus = async (ctx, downloadId) => {
   try {
     const downloadData = await getDownloadStatus(downloadId);
-    const completedSize = (
-      downloadData.result.completedLength /
-      1024 /
-      1024
-    ).toFixed(2);
-    const totalSize = (downloadData.result.totalLength / 1024 / 1024).toFixed(
-      2
-    );
+    const completedSize = (downloadData.result.completedLength / 1024 / 1024).toFixed(2);
+    const totalSize = (downloadData.result.totalLength / 1024 / 1024).toFixed(2);
     const percent = ((completedSize / totalSize) * 100).toFixed(1);
-    let reply =
-      `Download Status\n` +
-      `Status: ${downloadData.result.status}\n` +
-      `Progress: ${completedSize} MB / ${totalSize} MB (${percent}%)\n`;
+    let reply = `Download Status\n` + `Status: ${downloadData.result.status}\n` + `Progress: ${completedSize} MB / ${totalSize} MB (${percent}%)\n`;
     if (downloadData.result.status === "active") {
       reply += `Cancel: /cancel_${downloadId}\n`;
     }
-    const files = downloadData.result.files
-      .map((file) => `File: ${file.path}`)
-      .join("\n");
+    const files = downloadData.result.files.map((file) => `File: ${file.path}`).join("\n");
     reply += `\nFiles:\n${files}`;
     ctx.reply(reply);
   } catch (error) {
@@ -445,14 +404,23 @@ const handleFind = async (ctx, imdbInput) => {
       return;
     }
     torrents.slice(0, 20).forEach((t, i) => {
-      ctx.reply(`${t.title}\n\n${t.magnet}`);
+      // Extract just the hash from the magnet link
+      const hashMatch = t.magnet.match(/btih:([a-zA-Z0-9]+)/);
+      const hash = hashMatch ? hashMatch[1] : null;
+
+      let message = `${t.title}\n\n`;
+      if (hash) {
+        message += `/dl_${hash}\n\n`;
+      }
+      message += t.magnet;
+
+      ctx.reply(message);
     });
   } catch (error) {
     console.error(error);
     ctx.reply("Failed to fetch torrents. Try again later.");
   }
 };
-
 const downloading = async (ctx) => {
   try {
     const { result: ongoingDownloads } = await getOngoingDownloads();
@@ -506,9 +474,7 @@ bot.on("message", async (ctx) => {
       const trimmedArgs = args.map((arg) => arg.trim());
 
       if (isWhitelistEnabled && !whiteListSet.has(ctx.from.id + "")) {
-        ctx.reply(
-          `@${ctx.from.username} (ID: ${ctx.from.id}): is not available!`
-        );
+        ctx.reply(`@${ctx.from.username} (ID: ${ctx.from.id}): is not available!`);
         return;
       }
 
@@ -546,14 +512,17 @@ bot.on("message", async (ctx) => {
           else ctx.reply("Please provide an IMDb URL or IMDb ID.");
           break;
         default:
-          if (lowerCaseCommand.startsWith("/status_"))
-            handleStatus(ctx, lowerCaseCommand.split("_")[1]);
-          else if (lowerCaseCommand.startsWith("/cancel_"))
-            handleCancel(ctx, lowerCaseCommand.split("_")[1]);
-          else
-            ctx.reply(
-              `Unknown command: ${lowerCaseCommand}\n\nType /start to see available commands.`
-            );
+          if (lowerCaseCommand.startsWith("/status_")) handleStatus(ctx, lowerCaseCommand.split("_")[1]);
+          else if (lowerCaseCommand.startsWith("/cancel_")) handleCancel(ctx, lowerCaseCommand.split("_")[1]);
+          else if (lowerCaseCommand.startsWith("/dl_")) {
+            const hash = lowerCaseCommand.split("_")[1];
+            if (hash) {
+              const magnetLink = `magnet:?xt=urn:btih:${hash}`;
+              handleDownload(ctx, magnetLink);
+            } else {
+              ctx.reply("Invalid download command. Hash missing.");
+            }
+          } else ctx.reply(`Unknown command: ${lowerCaseCommand}\n\nType /start to see available commands.`);
       }
     } catch (error) {
       console.error(error);
