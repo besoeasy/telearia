@@ -213,7 +213,17 @@ function getImdbId(url) {
 
 async function fetchTorrent(contentid) {
   const urltype = contentid.includes(":") ? "series" : "movie";
-  const response = await axios.get("https://torrentio.strem.fun/sort=seeders" + "/stream/" + urltype + "/" + contentid + ".json", { timeout: 2000 });
+  const serverurl = [
+    "https://torrentio.strem.fun/sort=seeders/",
+    "https://comet.elfhosted.com/eyJtYXhSZXN1bHRzUGVyUmVzb2x1dGlvbiI6MCwibWF4U2l6ZSI6MCwiY2FjaGVkT25seSI6ZmFsc2UsInJlbW92ZVRyYXNoIjp0cnVlLCJyZXN1bHRGb3JtYXQiOlsiYWxsIl0sImRlYnJpZFNlcnZpY2UiOiJ0b3JyZW50IiwiZGVicmlkQXBpS2V5IjoiIiwiZGVicmlkU3RyZWFtUHJveHlQYXNzd29yZCI6IiIsImxhbmd1YWdlcyI6eyJleGNsdWRlIjpbXSwicHJlZmVycmVkIjpbXX0sInJlc29sdXRpb25zIjp7InI3MjBwIjpmYWxzZSwicjQ4MHAiOmZhbHNlLCJyMzYwcCI6ZmFsc2V9LCJvcHRpb25zIjp7InJlbW92ZV9yYW5rc191bmRlciI6LTEwMDAwMDAwMDAwLCJhbGxvd19lbmdsaXNoX2luX2xhbmd1YWdlcyI6ZmFsc2UsInJlbW92ZV91bmtub3duX2xhbmd1YWdlcyI6ZmFsc2V9fQ==/",
+  ];
+
+  const randomServer = serverurl[Math.floor(Math.random() * serverurl.length)];
+
+  const requrl = randomServer + urltype + "/" + contentid + ".json";
+  console.log("Fetching torrents from:", requrl);
+
+  const response = await axios.get(requrl, { timeout: 1000 * 7 });
   const torrentdatafinal = response.data.streams;
   const torrents = [];
   for (let i = 0; i < torrentdatafinal.length; i++) {
@@ -235,25 +245,25 @@ async function getSmbCredentials() {
   try {
     const credentials = await fs.readFile("/var/run/smb_credentials.txt", "utf8");
     const trimmedCredentials = credentials.trim();
-    
+
     if (!trimmedCredentials) {
       console.error("SMB credentials file is empty");
       return null;
     }
-    
+
     const parts = trimmedCredentials.split(":");
     if (parts.length !== 2) {
       console.error("SMB credentials file format is invalid. Expected format: username:password, got:", trimmedCredentials);
       return null;
     }
-    
+
     const [username, password] = parts;
-    
+
     if (!username || !password) {
       console.error("SMB credentials are incomplete. Username:", username, "Password length:", password?.length || 0);
       return null;
     }
-    
+
     console.log("SMB credentials loaded successfully. Username:", username, "Password length:", password.length);
     return { username, password };
   } catch (error) {
