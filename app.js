@@ -213,17 +213,7 @@ function getImdbId(url) {
 
 async function fetchTorrent(contentid) {
   const urltype = contentid.includes(":") ? "series" : "movie";
-  const serverurl = [
-    "https://torrentio.strem.fun/sort=seeders/",
-    "https://comet.elfhosted.com/eyJtYXhSZXN1bHRzUGVyUmVzb2x1dGlvbiI6MCwibWF4U2l6ZSI6MCwiY2FjaGVkT25seSI6ZmFsc2UsInJlbW92ZVRyYXNoIjp0cnVlLCJyZXN1bHRGb3JtYXQiOlsiYWxsIl0sImRlYnJpZFNlcnZpY2UiOiJ0b3JyZW50IiwiZGVicmlkQXBpS2V5IjoiIiwiZGVicmlkU3RyZWFtUHJveHlQYXNzd29yZCI6IiIsImxhbmd1YWdlcyI6eyJleGNsdWRlIjpbXSwicHJlZmVycmVkIjpbXX0sInJlc29sdXRpb25zIjp7InI3MjBwIjpmYWxzZSwicjQ4MHAiOmZhbHNlLCJyMzYwcCI6ZmFsc2V9LCJvcHRpb25zIjp7InJlbW92ZV9yYW5rc191bmRlciI6LTEwMDAwMDAwMDAwLCJhbGxvd19lbmdsaXNoX2luX2xhbmd1YWdlcyI6ZmFsc2UsInJlbW92ZV91bmtub3duX2xhbmd1YWdlcyI6ZmFsc2V9fQ==/",
-  ];
-
-  const randomServer = serverurl[Math.floor(Math.random() * serverurl.length)];
-
-  const requrl = randomServer + urltype + "/" + contentid + ".json";
-  console.log("Fetching torrents from:", requrl);
-
-  const response = await axios.get(requrl, { timeout: 1000 * 7 });
+  const response = await axios.get("https://torrentio.strem.fun/sort=seeders" + "/stream/" + urltype + "/" + contentid + ".json", { timeout: 2000 });
   const torrentdatafinal = response.data.streams;
   const torrents = [];
   for (let i = 0; i < torrentdatafinal.length; i++) {
@@ -238,7 +228,7 @@ async function fetchTorrent(contentid) {
 
 // Command handlers
 const handleAbout = (ctx) => {
-  ctx.reply("TeleAria - Telegram-controlled cloud downloader\nGitHub: https://github.com/besoeasy/telearia");
+  ctx.reply("TeleAria - Telegram-controlled cloud downloader\n\nGitHub: https://github.com/besoeasy/telearia");
 };
 
 async function getSmbCredentials() {
@@ -433,8 +423,7 @@ const handleFind = async (ctx, imdbInput) => {
       ctx.reply("No torrents found for this IMDb ID.");
       return;
     }
-    torrents.slice(0, 20).forEach((t, i) => {
-      // Extract just the hash from the magnet link
+    torrents.slice(0, 200).forEach((t, i) => {
       const hashMatch = t.magnet.match(/btih:([a-zA-Z0-9]+)/);
       const hash = hashMatch ? hashMatch[1] : null;
 
