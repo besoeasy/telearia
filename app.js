@@ -234,7 +234,27 @@ const handleAbout = (ctx) => {
 async function getSmbCredentials() {
   try {
     const credentials = await fs.readFile("/var/run/smb_credentials.txt", "utf8");
-    const [username, password] = credentials.trim().split(":");
+    const trimmedCredentials = credentials.trim();
+    
+    if (!trimmedCredentials) {
+      console.error("SMB credentials file is empty");
+      return null;
+    }
+    
+    const parts = trimmedCredentials.split(":");
+    if (parts.length !== 2) {
+      console.error("SMB credentials file format is invalid. Expected format: username:password, got:", trimmedCredentials);
+      return null;
+    }
+    
+    const [username, password] = parts;
+    
+    if (!username || !password) {
+      console.error("SMB credentials are incomplete. Username:", username, "Password length:", password?.length || 0);
+      return null;
+    }
+    
+    console.log("SMB credentials loaded successfully. Username:", username, "Password length:", password.length);
     return { username, password };
   } catch (error) {
     console.error("Failed to read SMB credentials:", error.message);

@@ -1,9 +1,6 @@
-FROM node:lts-slim
+FROM node:lts
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-      aria2 samba python3 make g++ \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update &&  apt-get install -y aria2 samba
 
 WORKDIR /app
 

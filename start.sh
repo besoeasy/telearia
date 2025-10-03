@@ -19,7 +19,14 @@ echo "$SMB_USER:$SMB_PASS" | chpasswd
 # Save credentials for the bot to display (outside web-accessible directory)
 echo "$SMB_USER:$SMB_PASS" > /var/run/smb_credentials.txt
 
-echo "SMB Credentials: $SMB_USER / $SMB_PASS"
+# Verify credentials file was written correctly
+if [ -f /var/run/smb_credentials.txt ]; then
+    echo "SMB credentials file created successfully"
+    echo "SMB Credentials: $SMB_USER / $SMB_PASS"
+else
+    echo "ERROR: Failed to create SMB credentials file"
+    exit 1
+fi
 
 sleep 2
 
