@@ -177,7 +177,7 @@ const downloadAria = async (id, url) => {
   const day = String(date.getDate()).padStart(2, "0");
   const dateString = `${year}${month}${day}`;
 
-  const downloadDir = path.join(SAVE_DIR, dateString, id);
+  const downloadDir = path.join(SAVE_DIR, id, dateString);
 
   const options = {
     dir: downloadDir,
