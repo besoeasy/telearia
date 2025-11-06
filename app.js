@@ -512,7 +512,21 @@ const http = require("http");
 const serveHandler = require("serve-handler");
 
 http
-  .createServer((request, response) => {
+  .createServer(async (request, response) => {
+    // Health check endpoint
+    if (request.url === "/health") {
+      try {
+        await getGlobalStats();
+        response.writeHead(200, { "Content-Type": "application/json" });
+        response.end(JSON.stringify({ status: "healthy", timestamp: new Date().toISOString() }));
+      } catch (error) {
+        response.writeHead(503, { "Content-Type": "application/json" });
+        response.end(JSON.stringify({ status: "unhealthy", error: error.message }));
+      }
+      return;
+    }
+
+    // Serve files
     return serveHandler(request, response, {
       public: SAVE_DIR,
       directoryListing: true,

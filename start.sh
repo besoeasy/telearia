@@ -37,7 +37,7 @@ cat >/etc/samba/smb.conf <<EOL
    guest account = nobody
    server min protocol = SMB2
    disable netbios = yes
-   smb ports = 445
+   smb ports = 4445
 
 [telearia]
    comment = Read-only downloads
