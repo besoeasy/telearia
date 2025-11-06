@@ -21,12 +21,13 @@ docker run -d \
   --name telearia \
   --restart unless-stopped \
   -p 6799:6799 \
-  -p 4445:4445 \
+  -p 445:4445 \
   -p 6888:6888/tcp \
   -p 6888:6888/udp \
   -v telearia-data:/tmp/telearia \
   -e TELEGRAMBOT=your-telegram-bot-token \
   ghcr.io/besoeasy/telearia:main
+
 ```
 
 - **Restrict access:** `-e WHITE_LIST_USER=123456,654321`
