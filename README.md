@@ -1,3 +1,11 @@
+### Announcement: TeleAria Update
+
+**TeleAria** is now in read-only mode. It remains stable and reliable for continued use without any issues.
+
+For an enhanced alternative with additional features, we recommend our upgraded project: **[StreamBox](https://github.com/besoeasy/StreamBox)**.
+
+
+
 # TeleAria: Telegram-Controlled Cloud Downloader
 
 TeleAria is a lightweight, self-hosted solution that combines the power of [Aria2](https://aria2.github.io/) and [Telegram](https://telegram.org/) to enable remote downloading of files, torrents, and videos. With real-time updates, bandwidth controls, and seamless sharing via HTTP and Samba (SMB), TeleAria makes it easy to manage and access your downloads from any device.
